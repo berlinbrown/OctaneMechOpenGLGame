@@ -1,0 +1,62 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: glAnt - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP2184.TMP" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/glAnt.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\blbprojs\src\glAntsV04\lights.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP2184.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP2185.TMP" with contents
+[
+opengl32.lib glu32.lib glaux.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/glAnt.pdb" /debug /machine:I386 /out:"Debug/glAnt.exe" /pdbtype:sept 
+.\Debug\Ant.obj
+.\Debug\bitmap.obj
+.\Debug\bot.obj
+.\Debug\Camera.obj
+.\Debug\collision.obj
+.\Debug\commands.obj
+.\Debug\Cube.obj
+.\Debug\fireants.obj
+.\Debug\garden.obj
+.\Debug\glAnt.obj
+.\Debug\glDrawLib.obj
+.\Debug\globals.obj
+.\Debug\Grid.obj
+.\Debug\lights.obj
+.\Debug\list.obj
+.\Debug\los.obj
+.\Debug\maps.obj
+.\Debug\norm_cube.obj
+.\Debug\Objects.obj
+.\Debug\octree.obj
+.\Debug\particles.obj
+.\Debug\pheromone.obj
+.\Debug\plist.obj
+.\Debug\pyramid.obj
+.\Debug\stars.obj
+.\Debug\static.obj
+.\Debug\text.obj
+.\Debug\tree.obj
+.\Debug\wirebox.obj
+.\Debug\world.obj
+.\Debug\glAnt.res
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP2185.TMP"
+<h3>Output Window</h3>
+Compiling...
+lights.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+glAnt.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

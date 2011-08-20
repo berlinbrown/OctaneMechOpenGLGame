@@ -1,0 +1,42 @@
+** GLANTS FOR LINUX **
+v0.6
+
+Berlin Brown
+bigbinc@hotmail.com
+
+10/27/2002
+ - Added simple networking and sound support.
+ In order to get network working, you pretty much have to follow
+ these steps exactly.
+ Oh yeah, the server doesnt display the client movements(not done yet)
+ 1. on client side: start glants
+ 2. on server side: start glants
+ 3. on server side: select settings->start server->wait for connects
+ 4. on client side: connect to server
+ 5. on server side: press esc->select new game, server is in motion
+ 6. play game, that is it
+ 
+10/2/2002
+
+visit http://glants.sourceforge.net for more information
+
+** Instructions **
+There is a pre-compiled version of glants in this directory.
+It probably will not work, but you can try it with
+ 
+ 	./glants
+
+Or the best way is to do a clean and then make with
+	make clean
+	make
+
+and run ./glants again. 
+
+Of course you have to make sure that OPENGL/MESA is installed
+as well as GLX and of course update xwindows.  I installed
+the nvidia drivers for opengl and the program ran ok on 
+my 400mhz machine.   I think the linux version runs a little better
+than the windows version<shrug>.
+
+You can edit the config.ini file to change the speed of the game
+or how many characters you fight against.

@@ -1,0 +1,11 @@
+** CHANGES **
+** Berlin Brown **
+bigbinc@hotmail.com
+
+10/22/2002:
+	still working on the network code
+	the client and server are working
+	I only need to fix the messages
+	and matching up who is the client
+	and who is server.
+	It is at 85%
