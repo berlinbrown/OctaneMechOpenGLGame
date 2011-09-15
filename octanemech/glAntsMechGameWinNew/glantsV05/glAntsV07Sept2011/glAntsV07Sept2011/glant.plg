@@ -1,0 +1,208 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: glAnt - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\bbrown\LOCALS~1\Temp\RSP660.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/glAnt.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\Ant.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\bitmap.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\bot.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\Camera.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\collision.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\commands.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\Cube.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\fireants.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\garden.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\glAnt.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\glDrawLib.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\globals.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\Grid.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\lights.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\list.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\los.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\maps.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\norm_cube.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\Objects.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\particles.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\pheromone.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\plist.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\pyramid.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\stars.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\static.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\tree.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\wirebox.cpp"
+"C:\projects\tools\cygwin\home\bbrown\src\git\OctaneMechOpenGLGame\octanemech\glAntsMechGameWinNew\glantsV05\glAntsV07Sept2011\glAntsV07Sept2011\world.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\bbrown\LOCALS~1\Temp\RSP660.tmp" 
+Creating temporary file "C:\DOCUME~1\bbrown\LOCALS~1\Temp\RSP661.tmp" with contents
+[
+opengl32.lib glu32.lib glaux.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/glAnt.pdb" /debug /machine:I386 /out:"Debug/glAnt.exe" /pdbtype:sept 
+.\Debug\Ant.obj
+.\Debug\bitmap.obj
+.\Debug\bot.obj
+.\Debug\Camera.obj
+.\Debug\collision.obj
+.\Debug\commands.obj
+.\Debug\Cube.obj
+.\Debug\fireants.obj
+.\Debug\garden.obj
+.\Debug\glAnt.obj
+.\Debug\glDrawLib.obj
+.\Debug\globals.obj
+.\Debug\Grid.obj
+.\Debug\lights.obj
+.\Debug\list.obj
+.\Debug\los.obj
+.\Debug\maps.obj
+.\Debug\norm_cube.obj
+.\Debug\Objects.obj
+.\Debug\octree.obj
+.\Debug\particles.obj
+.\Debug\pheromone.obj
+.\Debug\plist.obj
+.\Debug\pyramid.obj
+.\Debug\stars.obj
+.\Debug\static.obj
+.\Debug\text.obj
+.\Debug\tree.obj
+.\Debug\wirebox.obj
+.\Debug\world.obj
+.\Debug\glAnt.res
+]
+Creating command line "link.exe @C:\DOCUME~1\bbrown\LOCALS~1\Temp\RSP661.tmp"
+<h3>Output Window</h3>
+Compiling...
+Ant.cpp
+bitmap.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(330) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(330) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(333) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(333) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(336) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(336) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(339) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(339) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(375) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(375) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(378) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(378) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(381) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(381) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(384) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(384) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(393) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(393) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(394) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(394) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(401) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(401) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(402) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(402) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(409) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(409) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(410) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(410) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(417) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(417) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(418) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bitmap.cpp(418) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+bot.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bot.cpp(266) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bot.cpp(452) : warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bot.cpp(495) : warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\bot.cpp(439) : warning C4101: 'col_ptr' : unreferenced local variable
+Camera.cpp
+collision.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\camera.cpp(293) : warning C4700: local variable 'mouse_pos' used without having been initialized
+commands.cpp
+Cube.cpp
+fireants.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(604) : warning C4305: '*=' : truncation from 'const double' to 'float'
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(678) : warning C4101: 'd_h' : unreferenced local variable
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(1753) : warning C4101: 'col_ptr' : unreferenced local variable
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(2218) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(2436) : warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\fireants.cpp(2456) : warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+garden.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\garden.cpp(178) : warning C4018: '>=' : signed/unsigned mismatch
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\garden.cpp(273) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\garden.cpp(514) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+glAnt.cpp
+glDrawLib.cpp
+globals.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(580) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(978) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(989) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(996) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1003) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1010) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1015) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1022) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1030) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1037) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1044) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1051) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1058) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1065) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1072) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1079) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1086) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1093) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1102) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1109) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1116) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1121) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1129) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1136) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1143) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1150) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1157) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1164) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1171) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1180) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1185) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1192) : warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1201) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\globals.cpp(1208) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+Grid.cpp
+lights.cpp
+list.cpp
+los.cpp
+maps.cpp
+norm_cube.cpp
+Objects.cpp
+particles.cpp
+pheromone.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\pheromone.cpp(146) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\pheromone.cpp(272) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+plist.cpp
+pyramid.cpp
+stars.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(96) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(96) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(96) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(106) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(106) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(106) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(116) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(116) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\stars.cpp(116) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+static.cpp
+c:\projects\tools\cygwin\home\bbrown\src\git\octanemechopenglgame\octanemech\glantsmechgamewinnew\glantsv05\glantsv07sept2011\glantsv07sept2011\static.cpp(111) : warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+tree.cpp
+wirebox.cpp
+world.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+glAnt.exe - 0 error(s), 92 warning(s)
+</pre>
+</body>
+</html>
