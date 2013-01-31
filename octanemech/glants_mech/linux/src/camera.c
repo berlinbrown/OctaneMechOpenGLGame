@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2013 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -828,8 +828,7 @@ void ToggleViewMode(void)
 //
 // Handle Camera Keys
 //
-// - also handles the following camera
-//
+// Also handles the following camera
 void HandleCameraKeys(bool *keys)
 {
 	if (ant_globals->paused == 0)
@@ -850,4 +849,4 @@ void HandleCameraKeys(bool *keys)
 
 	} // end of the if else
 
-} // end of the functino
+} // end of the function 
