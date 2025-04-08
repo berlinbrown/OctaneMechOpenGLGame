@@ -42,9 +42,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 #include "camera.h"
 #include "bot.h"
@@ -52,7 +52,6 @@
 #include "globals.h"
 #include "fireants.h"
 #include "menu.h"
-
 
 static int mouse_x = SCREEN_WIDTH / 2;
 static int mouse_y = SCREEN_HEIGHT / 2;
@@ -759,10 +758,6 @@ static void FirstPersonMode(bool *keys)
 } // end of the function 
 
 
-
-//
-// ThirdPersonMode
-//
 static void ThirdPersonMode(bool *keys)
 {
 	float x, y;

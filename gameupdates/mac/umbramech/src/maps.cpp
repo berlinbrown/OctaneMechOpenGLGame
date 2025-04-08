@@ -50,8 +50,6 @@
 // a bit of a pickle...
 //
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,7 +66,6 @@ int max_maps;
 
 // Note: max_maps and MAX_MAPS should probably not match
 
-
 //
 // Create Map
 // - only sets everything to zero
@@ -80,25 +77,25 @@ Map *CreateMap(int id_no)
 	map = malloc(sizeof(Map));
 
 	// I like to be extra careful
-	ZeroMemory((Map *)map, 
-			sizeof(Map));
+	ZeroMemory((Map *)map,
+			   sizeof(Map));
 
 	map->id = id_no;
-	map->list= NULL;
+	map->list = NULL;
 
 	map->list = CreatePtrList();
 
-	map->x_max=map->x_min = 0.0f;
-	map->y_max=map->y_min = 0.0f;
+	map->x_max = map->x_min = 0.0f;
+	map->y_max = map->y_min = 0.0f;
 
 	return map;
 
-} // end of the function 
+} // end of the function
 
 //
 // Load Map
 //
-void LoadMap(Map *map, float x_min, float x_max, 
+void LoadMap(Map *map, float x_min, float x_max,
 			 float y_min, float y_max)
 {
 	map->x_max = x_max;
@@ -106,8 +103,7 @@ void LoadMap(Map *map, float x_min, float x_max,
 	map->y_max = y_max;
 	map->y_min = y_min;
 
-} // end of the function 
-
+} // end of the function
 
 //
 // DeleteMap
@@ -115,8 +111,8 @@ void LoadMap(Map *map, float x_min, float x_max,
 void DeleteMap(Map *map)
 {
 
-	//free(map->list);
-	//free(map);
+	// free(map->list);
+	// free(map);
 	RELEASE_OBJECT(map->list);
 	RELEASE_OBJECT(map);
 
@@ -133,44 +129,44 @@ void DestroyMaps(void)
 	{
 		DeleteMap(map_ptrs[index]);
 
-	} // end of the functino 
+	} // end of the functino
 
 	// this might need to go above the for
 	DestroyPtrList(map_list);
 
-} // end of the function 
+} // end of the function
 
 //
 // PrintList
 //
 void PrintMapList(PtrList *list)
 {
- PtrNode *current_ptr;
- Map *x;
+	PtrNode *current_ptr;
+	Map *x;
 
- //if (isempty(list))
- //	return;
+	// if (isempty(list))
+	//	return;
 
- if (list->head == NULL)
-   return;
- 
- current_ptr = list->head;
- 
- while(current_ptr != NULL)
- {
-	// interesting 
-	x = (Map *)current_ptr->ptr;
+	if (list->head == NULL)
+		return;
 
-	printf("xmin: %0.2f xmax: %0.2f\n", x->x_min, x->x_max);
+	current_ptr = list->head;
 
- 	current_ptr = current_ptr->next;
- } // end of while
+	while (current_ptr != NULL)
+	{
+		// interesting
+		x = (Map *)current_ptr->ptr;
 
-} // end of the function 
+		printf("xmin: %0.2f xmax: %0.2f\n", x->x_min, x->x_max);
+
+		current_ptr = current_ptr->next;
+	} // end of while
+
+} // end of the function
 
 //
 // Build The map list
-// 
+//
 void BuildMap(void)
 {
 
@@ -185,11 +181,13 @@ void BuildMap(void)
 
 	// create a new list of maps
 	CREATE_MAPS;
-	
-	// Build a set a of maps
-	for (i = MAP_MIN; i < MAP_MAX; i+=  map_height) {
 
-		for (j = MAP_MIN; j < MAP_MAX; j+= map_width) {
+	// Build a set a of maps
+	for (i = MAP_MIN; i < MAP_MAX; i += map_height)
+	{
+
+		for (j = MAP_MIN; j < MAP_MAX; j += map_width)
+		{
 
 			x_min = j;
 			y_min = i;
@@ -197,23 +195,20 @@ void BuildMap(void)
 			y_max = i + map_height;
 
 			map_ptrs[index] = CreateMap(index);
-			LoadMap(map_ptrs[index],x_min,x_max, y_min, y_max);
+			LoadMap(map_ptrs[index], x_min, x_max, y_min, y_max);
 
 			INSERT_MAP(map_ptrs[index]);
 
-			index++;		// number of maps
+			index++; // number of maps
 			if (index >= MAX_MAPS)
 				break;
 
-		} // end of the for 
+		} // end of the for
 
-	} // end of the for 
+	} // end of the for
 
 	max_maps = index;
 
 	DESTROY_MAPS;
 
-} // end of the function 
-
-
-
+} // end of the function

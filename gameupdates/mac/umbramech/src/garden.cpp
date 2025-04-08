@@ -41,9 +41,9 @@
 
 #include <math.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 #include "camera.h"
 #include "bot.h"
@@ -56,29 +56,28 @@
 #include "lights.h"
 
 #undef CURRENT_PTR
-#define CURRENT_PTR		StaticBotPtr
+#define CURRENT_PTR StaticBotPtr
 
 #undef CURRENT_OBJECT
-#define CURRENT_OBJECT	StaticBot
+#define CURRENT_OBJECT StaticBot
 
 #undef CURRENT_BOT
-#define CURRENT_BOT		garden
+#define CURRENT_BOT garden
 
-#define CUBE_SIZE			1.5f
+#define CUBE_SIZE 1.5f
 
 static CURRENT_PTR CreateGarden(int bot_id);
 static void RenderGarden(CURRENT_PTR boid);
 static void DestroyGarden(CURRENT_PTR b);
 static void ProcessGarden(CURRENT_PTR b);
 
-
 static void Draw_Gardens(void);
 static void Generate_Gardens(void);
 static void Shutdown_Gardens(void);
 
 void ResetGarden(CURRENT_PTR bot);
-void PlaceGardenArea(CURRENT_PTR bot, 
-						float x, float y, float width);
+void PlaceGardenArea(CURRENT_PTR bot,
+					 float x, float y, float width);
 
 void RandomPlacement(CURRENT_PTR bot);
 
@@ -89,28 +88,27 @@ static int total_respawns = 0;
 // place the food between the nest or in front of the nest
 // or on the side
 float food_pos[3][3] = {
-	{ 0.0f, 15.0f, 6.3f },
-	{ 0.0f, -15.0f, 6.3f },
-	{ 10.0f, 0.0f, 5.4f } };
-
+	{0.0f, 15.0f, 6.3f},
+	{0.0f, -15.0f, 6.3f},
+	{10.0f, 0.0f, 5.4f}};
 
 // call 1. garden.generate
 // call 2. garden.drawall
 // call 3. garden.shutdown
 DriverSentinel CURRENT_BOT =
-{
+	{
 
-	CreateGarden,		// create
-	DestroyGarden,	// destroy
-	RenderGarden,		// render
-	ProcessGarden,		// process
+		CreateGarden,  // create
+		DestroyGarden, // destroy
+		RenderGarden,  // render
+		ProcessGarden, // process
 
-	Generate_Gardens,		// generate
-	Shutdown_Gardens,		// shutdown
-	Draw_Gardens,			// drawall
+		Generate_Gardens, // generate
+		Shutdown_Gardens, // shutdown
+		Draw_Gardens,	  // drawall
 
-	NULL,				// ptr
-	0			// max_items
+		NULL, // ptr
+		0	  // max_items
 };
 
 //
@@ -120,49 +118,46 @@ void GardenRespawn(void)
 {
 
 	int i = 0;
+	int tol = (rand() % GARD_RESPAWN_RATE) + 5;
 
-	//printf("%d\n", GARD_RESPAWN_RATE);
-	int tol = (rand()%GARD_RESPAWN_RATE)+5;
-
-	static int total=0;
-	float dead_plant=0;
+	static int total = 0;
+	float dead_plant = 0;
 
 	for (i = 0; i < MAX_GARDENS; i++)
 	{
 
 		if (CURRENT_BOT.objects[i]->state == DEAD_STATE)
 		{
-	
-			ResetGarden(CURRENT_BOT.objects[i]);				
 
-			SetGardenSize(1);	// send to globals for HUD
+			ResetGarden(CURRENT_BOT.objects[i]);
+
+			SetGardenSize(1); // send to globals for HUD
 
 			total_respawns++;
 			if (total_respawns > (tol - 1))
 			{
 				total_respawns = 0;
 				break;
-			} // end of the if 
+			} // end of the if
 
-		} // end of if		
+		} // end of if
 
 		// randomly check and kill garden
 		// to keep a fresh garden
-		dead_plant = INITIAL_GARD_FOOD * 0.28f; 
+		dead_plant = INITIAL_GARD_FOOD * 0.28f;
 		if (CURRENT_BOT.objects[i]->food < dead_plant)
 		{
-			if ((rand()%3) == 1)
+			if ((rand() % 3) == 1)
 			{
 				CURRENT_BOT.objects[i]->state = DEAD_STATE;
 				SetGardenSize(-1);
-			} // end of the if 
+			} // end of the if
 
-		} // end of the if 
+		} // end of the if
 
 	} // end of the for
-	
 
-} // end of the functino 
+} // end of the functino
 
 //
 // Respawing the garden has to be done here
@@ -173,13 +168,13 @@ void CheckRespawn(void)
 {
 
 	if (game_ticks++ >= CHECK_RESPAWN)
-	{	
+	{
 
 		GardenRespawn();
 
 		game_ticks = 0;
 
-	} // end of the if 
+	} // end of the if
 
 } // end of the function
 
@@ -215,31 +210,28 @@ int BruteCheckFood(DriverBotPtr bot)
 		//y_width = CURRENT_BOT.objects[i]->size[2]*CUBE_SIZE;
 #endif
 
-		x_width = FOOD_WIDTH*CUBE_SIZE;
-		y_width = FOOD_WIDTH*CUBE_SIZE;
-
+		x_width = FOOD_WIDTH * CUBE_SIZE;
+		y_width = FOOD_WIDTH * CUBE_SIZE;
 
 		x_min = CURRENT_BOT.objects[i]->position[0] -
-			x_width;
-		x_max = CURRENT_BOT.objects[i]->position[0] + 
-			x_width;
+				x_width;
+		x_max = CURRENT_BOT.objects[i]->position[0] +
+				x_width;
 
 		y_min = CURRENT_BOT.objects[i]->position[2] -
-			y_width;
-		y_max = CURRENT_BOT.objects[i]->position[2] + 
-			y_width;
+				y_width;
+		y_max = CURRENT_BOT.objects[i]->position[2] +
+				y_width;
 
 		if ((bot->x > x_min) && (bot->x < x_max) &&
 			(bot->y > y_min) && (bot->y < y_max))
 		{
 			return i + 1;
-		} // end of the if 
+		} // end of the if
 
 	} // end of the for
 
-
 	return 0;
-
 
 } // end of the function
 
@@ -255,19 +247,19 @@ void CollectFood(DriverBotPtr bot, float food_rate)
 
 //
 // Drop Food
-// - extract the food and then have the bot eat the food 
-// 
+// - extract the food and then have the bot eat the food
+//
 void DropFood(DriverBotPtr bot, int id, float food_rate)
 {
-	
+
 	float perc;
-	float food_amt=0;
+	float food_amt = 0;
 	int t;
 	float tmp;
 
 	t = (int)(INIT_FOOD_RATE / 10);
-	
-	tmp = rand()%t;
+
+	tmp = rand() % t;
 
 	food_rate = (float)INIT_FOOD_RATE - tmp;
 
@@ -279,8 +271,7 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
 
 		CURRENT_BOT.objects[id]->state = DEAD_STATE;
 		return;
-	} // end of the if 
-
+	} // end of the if
 
 	if ((CURRENT_BOT.objects[id]->food - food_amt) < 0)
 	{
@@ -292,18 +283,18 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
 		CURRENT_BOT.objects[id]->state = DEAD_STATE;
 		SetGardenSize(-1);
 
-	} // end of if 
-	else {
-		
+	} // end of if
+	else
+	{
+
 		CURRENT_BOT.objects[id]->food -= food_amt;
 
 	} // end of if-else
 
-
 	// decrease the size of the piece of food
-	perc = ((float)INITIAL_GARD_FOOD - food_amt)/
-				(float)INITIAL_GARD_FOOD;
-	
+	perc = ((float)INITIAL_GARD_FOOD - food_amt) /
+		   (float)INITIAL_GARD_FOOD;
+
 	CURRENT_BOT.objects[id]->size[0] *= perc;
 	CURRENT_BOT.objects[id]->size[1] *= perc;
 	CURRENT_BOT.objects[id]->size[2] *= perc;
@@ -311,8 +302,7 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
 	// eat the food
 	CollectFood(bot, food_amt);
 
-} // end of the function 
-
+} // end of the function
 
 //
 // Generate Nests
@@ -325,38 +315,38 @@ static void Generate_Gardens(void)
 
 	// create the array of pointers
 	CURRENT_BOT.objects = (CURRENT_OBJECT **)malloc(
-			sizeof(CURRENT_OBJECT *)*CURRENT_BOT.max_items);
+		sizeof(CURRENT_OBJECT *) * CURRENT_BOT.max_items);
 
-	for (index = 0; index <  CURRENT_BOT.max_items; index++)
+	for (index = 0; index < CURRENT_BOT.max_items; index++)
 	{
 
 		SetGardenSize(1);
 
 		// this bordering on insane
 		// allocate an array of bot pointers, duh for nest
-		 CURRENT_BOT.objects[index] =  CURRENT_BOT.create(index);
-		
-			
-if (USE_GARDEN_AREA)
-{
-	int sel=0;
-	int r = rand()%3;
+		CURRENT_BOT.objects[index] = CURRENT_BOT.create(index);
 
-	if (r == 2)
-		sel = 2;
-	else if (r == 1)
-		sel = 1;
-	else
-		sel = 0;
+		if (USE_GARDEN_AREA)
+		{
+			int sel = 0;
+			int r = rand() % 3;
 
-	PlaceGardenArea(CURRENT_BOT.objects[index],
-		food_pos[sel][0], food_pos[sel][1], food_pos[sel][2]);
-} else {
-	RandomPlacement(CURRENT_BOT.objects[index]);
-} // end of if 
-		
+			if (r == 2)
+				sel = 2;
+			else if (r == 1)
+				sel = 1;
+			else
+				sel = 0;
+
+			PlaceGardenArea(CURRENT_BOT.objects[index],
+							food_pos[sel][0], food_pos[sel][1], food_pos[sel][2]);
+		}
+		else
+		{
+			RandomPlacement(CURRENT_BOT.objects[index]);
+		} // end of if
+
 	} // end of the for
-	
 
 } // end of the function
 
@@ -367,19 +357,17 @@ static void Shutdown_Gardens(void)
 {
 	int index = 0;
 
-	for (index = 0; index <  CURRENT_BOT.max_items; index++)
+	for (index = 0; index < CURRENT_BOT.max_items; index++)
 	{
-		 CURRENT_BOT.destroy( CURRENT_BOT.objects[index]);
+		CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
 
-	} // end of the for 
+	} // end of the for
 
 	// Shrug, free the ptr-to-ptrs
-	//free(CURRENT_BOT.objects);	
+	// free(CURRENT_BOT.objects);
 	RELEASE_OBJECT(CURRENT_BOT.objects);
 
-
 } // end of the function
-
 
 //
 // Draw Nests
@@ -388,16 +376,15 @@ static void Draw_Gardens(void)
 {
 	int index = 0;
 
-	for (index = 0; index <  CURRENT_BOT.max_items; index++)
+	for (index = 0; index < CURRENT_BOT.max_items; index++)
 	{
-		 CURRENT_BOT.process( CURRENT_BOT.objects[index]);
+		CURRENT_BOT.process(CURRENT_BOT.objects[index]);
 
-		 CURRENT_BOT.render( CURRENT_BOT.objects[index]);
+		CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 
-	} // end of the for 
+	} // end of the for
 
-} // end of the function 
-
+} // end of the function
 
 //
 // Process Events
@@ -412,39 +399,36 @@ static void ProcessGarden(CURRENT_PTR b)
 } // end of the function
 
 //
-// - place the garden somewhere in a predefined 
+// - place the garden somewhere in a predefined
 // region
 // - used to test the pheromone collection
 //
 void PlaceGardenArea(CURRENT_PTR bot, float x, float y, float width)
-{	
+{
 	float x_min;
 	float y_min;
 	float h_width;
 	int rand_num = 0;
 	float res;
 
-		//bot->position[0] += tmp_x;
-		//bot->position[2] += tmp_y;
+	// bot->position[0] += tmp_x;
+	// bot->position[2] += tmp_y;
 
 	// place between the min and max randomly
 	h_width = width / 2.0f;
 	y_min = y - h_width;
 	x_min = x - h_width;
 
-
 	// we need a random number for the max
 	rand_num = (int)(width * 1000.0f);
-	res = (float)(rand()%rand_num)/1000.0f;
+	res = (float)(rand() % rand_num) / 1000.0f;
 
 	bot->position[0] = x_min + res;
 
-	res = (float)(rand()%rand_num)/1000.0f;
+	res = (float)(rand() % rand_num) / 1000.0f;
 	bot->position[2] = y_min + res;
 
-		
-} // end of the function 
-
+} // end of the function
 
 //
 // RandomPlacement
@@ -455,30 +439,28 @@ void RandomPlacement(CURRENT_PTR bot)
 	float tmp_x;
 	float tmp_y;
 
-	 // position a bit of away from nest
-		bot->position[0] =
-			 (((float)(rand()%4000)/100.0f)-20.0f);
+	// position a bit of away from nest
+	bot->position[0] =
+		(((float)(rand() % 4000) / 100.0f) - 20.0f);
 
-		 tmp_x =((float)(rand()%4000)/400.0f);
-		 if (bot->position[0] < 0)
-			 tmp_x = -tmp_x;
-		 
-		 bot->position[1] = 0.0f;
-		 
-		 tmp_y =((float)(rand()%4000)/400.0f);
-		 bot->position[2] =
-			 (((float)(rand()%4000)/100.0f)-20.0f);
+	tmp_x = ((float)(rand() % 4000) / 400.0f);
+	if (bot->position[0] < 0)
+		tmp_x = -tmp_x;
 
-		 if (bot->position[2] < 0)
-			 tmp_y = -tmp_y;
+	bot->position[1] = 0.0f;
 
-	
-		 // attempt to pos away from the nest
-		bot->position[0] += tmp_x;
-		bot->position[2] += tmp_y;
-		
-} // end of the function 
+	tmp_y = ((float)(rand() % 4000) / 400.0f);
+	bot->position[2] =
+		(((float)(rand() % 4000) / 100.0f) - 20.0f);
 
+	if (bot->position[2] < 0)
+		tmp_y = -tmp_y;
+
+	// attempt to pos away from the nest
+	bot->position[0] += tmp_x;
+	bot->position[2] += tmp_y;
+
+} // end of the function
 
 //
 // LoadGardParms
@@ -486,13 +468,12 @@ void RandomPlacement(CURRENT_PTR bot)
 void LoadGardParms(CURRENT_PTR bot)
 {
 	// I like to be extra careful
-	ZeroMemory((CURRENT_PTR)bot, 
-			sizeof(CURRENT_OBJECT));
-	
+	ZeroMemory((CURRENT_PTR)bot,
+			   sizeof(CURRENT_OBJECT));
+
 	bot->position[0] = 0;
 	bot->position[1] = 0;
 	bot->position[2] = 0;
-
 
 	bot->rotation[0] = 0;
 	bot->rotation[1] = 0;
@@ -510,26 +491,24 @@ void LoadGardParms(CURRENT_PTR bot)
 
 	bot->food = INITIAL_GARD_FOOD;
 
-} // end of the function 
+} // end of the function
 
 //
 // Create bot
 //
 static CURRENT_PTR CreateGarden(int bot_id)
 {
-	CURRENT_PTR		bot;
+	CURRENT_PTR bot;
 
 	bot = (CURRENT_PTR)malloc(sizeof(CURRENT_OBJECT));
 
 	LoadGardParms(bot);
-	
+
 	bot->list_id = bot_id;
 
 	return bot;
 
 } // end of the function
-
-
 
 //
 // Reset Garden
@@ -542,43 +521,44 @@ void ResetGarden(CURRENT_PTR bot)
 	int bot_id = bot->list_id;
 
 	// I like to be extra careful
-	ZeroMemory((CURRENT_PTR)bot, 
-			sizeof(CURRENT_OBJECT));
+	ZeroMemory((CURRENT_PTR)bot,
+			   sizeof(CURRENT_OBJECT));
 
 	LoadGardParms(bot);
-	
+
 	bot->list_id = bot_id;
-	
-if (USE_GARDEN_AREA)
-{
-		int sel=0;
-	int r = rand()%3;
 
-	if (r == 2)
-		sel = 2;
-	else if (r == 1)
-		sel = 1;
+	if (USE_GARDEN_AREA)
+	{
+		int sel = 0;
+		int r = rand() % 3;
+
+		if (r == 2)
+			sel = 2;
+		else if (r == 1)
+			sel = 1;
+		else
+			sel = 0;
+
+		PlaceGardenArea(bot,
+						food_pos[sel][0], food_pos[sel][1], food_pos[sel][2]);
+	}
 	else
-		sel = 0;
+	{
+		RandomPlacement(bot);
+	}
 
-	PlaceGardenArea(bot,
-		food_pos[sel][0], food_pos[sel][1], food_pos[sel][2]);
-} else {
-	RandomPlacement(bot);
-}
-
-
-} // end of the function 
+} // end of the function
 
 //
 // DestroyBot
 //
 static void DestroyGarden(CURRENT_PTR b)
 {
-	//free(b);
+	// free(b);
 	RELEASE_OBJECT(b);
 
-} // end of the functino 
+} // end of the functino
 
 //
 // RenderBot
@@ -590,31 +570,28 @@ static void RenderGarden(CURRENT_PTR boid)
 		return;
 
 	BEGIN_BOT;
- 
-		// Translate then rotate
-		glTranslatef(boid->position[0],boid->position[1],
-				boid->position[2]);
 
-		// rotate based on the ship struct
-		glRotatef(boid->rotation[1], 0.0f, 1.0f, 0.0f);
-		glRotatef(boid->rotation[0], 1.0f, 0.0f, 0.0f);
-		glRotatef(boid->rotation[2], 0.0f, 0.0f, 1.0f);
+	// Translate then rotate
+	glTranslatef(boid->position[0], boid->position[1],
+				 boid->position[2]);
 
-		// Scale accordingly
+	// rotate based on the ship struct
+	glRotatef(boid->rotation[1], 0.0f, 1.0f, 0.0f);
+	glRotatef(boid->rotation[0], 1.0f, 0.0f, 0.0f);
+	glRotatef(boid->rotation[2], 0.0f, 0.0f, 1.0f);
 
-		glScalef(boid->size[0], boid->size[1], boid->size[2]);
+	// Scale accordingly
 
+	glScalef(boid->size[0], boid->size[1], boid->size[2]);
 
-		// This may or may not change the color
-		glColor3f(boid->color[0], boid->color[1], boid->color[2]);
+	// This may or may not change the color
+	glColor3f(boid->color[0], boid->color[1], boid->color[2]);
 
-
-		// draw the object to screen
-		//driver_objects[ANT_OBJECT]->render();
-		//gluSphere(quadric, 0.5f, 18, 8);	// draw sphere for hood
-		driver_objects[NORM_CUBE_OBJECT]->render();
+	// draw the object to screen
+	// driver_objects[ANT_OBJECT]->render();
+	// gluSphere(quadric, 0.5f, 18, 8);	// draw sphere for hood
+	driver_objects[NORM_CUBE_OBJECT]->render();
 
 	END_BOT;
 
-} // end of the function 
-
+} // end of the function

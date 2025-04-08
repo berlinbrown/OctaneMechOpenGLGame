@@ -41,181 +41,176 @@
 #include "bot.h"
 #include "list.h"
 
-
 static int isempty(List *list)
 {
 
- if (list->head == NULL)
-	return 1;	// return 1
- else
-	return 0;
+    if (list->head == NULL)
+        return 1; // return 1
+    else
+        return 0;
 
-} // end of the function 
-
-
+} // end of the function
 
 //
 // CreateNode
 //
-Node *CreateNode(int data) {
+Node *CreateNode(int data)
+{
 
-    Node *h = (Node *) malloc(sizeof(Node));
+    Node *h = (Node *)malloc(sizeof(Node));
 
     h->data = data;
     h->next = NULL;
 
     return h;
 
-} // end of the function 
+} // end of the function
 
 //
 // DestroyNode
 //
-void DestroyNode(Node *node) {
+void DestroyNode(Node *node)
+{
 
     RELEASE_OBJECT(node);
 
-} // end of the functino 
+} // end of the functino
 
-// 
+//
 // Create List
 //
-List *CreateList() {
+List *CreateList()
+{
 
-    List *result = (List *) malloc(sizeof(List));
+    List *result = (List *)malloc(sizeof(List));
 
     result->head = NULL;
 
-	return result;
+    return result;
 
-} // end of the function 
+} // end of the function
 
-
-//
-// Delete
-// 
 void DeleteNode(List *list, int val)
 {
     Node *current = list->head;
     Node *previous = NULL;
- 
-    while (current != NULL ) {
 
-        if( current->data != val) {
+    while (current != NULL)
+    {
+
+        if (current->data != val)
+        {
 
             previous = current;
             current = previous->next;
+        }
+        else
+        {
 
-        } else {
-
-            if (previous != NULL ) {
+            if (previous != NULL)
+            {
 
                 previous->next = current->next;
 
-            } // end of the if 
+            } // end of the if
 
-            //free(current);
-			RELEASE_OBJECT(current);
+            // free(current);
+            RELEASE_OBJECT(current);
             break;
 
         } // end of the if - else
 
-    } // end of the while 
+    } // end of the while
 
 } // end of the function
-
-
 
 //
 // DestroyList
 //
-void DestroyList(List *list) {
+void DestroyList(List *list)
+{
 
     Node *pos, *next;
     pos = list->head;
 
-    while(pos != NULL) {
+    while (pos != NULL)
+    {
         next = pos->next;
-        //free(pos);
-		RELEASE_OBJECT(pos);
+        // free(pos);
+        RELEASE_OBJECT(pos);
 
         pos = next;
-    } // end of the while 
+    } // end of the while
 
     free(list);
 
-} // end of the function 
-
+} // end of the function
 
 //
 // Insert Front
-static void InsertFront(List *list, int data) {
+static void InsertFront(List *list, int data)
+{
 
-	Node *new_node = NULL;
+    Node *new_node = NULL;
 
-	new_node = CreateNode(data) ;
+    new_node = CreateNode(data);
 
-	if (isempty(list))
+    if (isempty(list))
 
-  		list->head = new_node;
+        list->head = new_node;
 
-	else {
- 		
-		new_node->next = list->head;
-		list->head = new_node;
+    else
+    {
 
-	} // end if 
+        new_node->next = list->head;
+        list->head = new_node;
 
-} // end of the function 
+    } // end if
+
+} // end of the function
 
 //
 // PrintTest
 //
 void PrintList(List *list)
 {
- Node *current_ptr;
+    Node *current_ptr;
 
- if (isempty(list))
-	return;
- 
- current_ptr = list->head;
- 
- while(current_ptr != NULL)
- {
-	printf("<%d>\n", current_ptr->data);
- 	current_ptr = current_ptr->next;
- } // end of while
+    if (isempty(list))
+        return;
 
-} // end of the function 
+    current_ptr = list->head;
+
+    while (current_ptr != NULL)
+    {
+        printf("<%d>\n", current_ptr->data);
+        current_ptr = current_ptr->next;
+    } // end of while
+
+} // end of the function
 
 //
 // ListTest
-// 
+//
 void LinkTest(void)
 {
-	List *list;
+    List *list;
 
-	list =  CreateList();
-	
-	InsertFront(list, 4);
-	InsertFront(list, 5);
-	InsertFront(list, 3);
-	InsertFront(list, 2);
+    list = CreateList();
 
-	PrintList(list);
+    InsertFront(list, 4);
+    InsertFront(list, 5);
+    InsertFront(list, 3);
+    InsertFront(list, 2);
 
+    PrintList(list);
 
-	DeleteNode(list, 3);
-	DeleteNode(list, 5);
-	
-	printf("\n\nNew List\n");
-	PrintList(list);
+    DeleteNode(list, 3);
+    DeleteNode(list, 5);
 
-	DestroyList(list);
+    printf("\n\nNew List\n");
+    PrintList(list);
 
-} // end of the function 
+    DestroyList(list);
 
-
-
-
-
+} // end of the function

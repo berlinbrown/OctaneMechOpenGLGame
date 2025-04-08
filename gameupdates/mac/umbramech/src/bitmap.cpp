@@ -33,8 +33,9 @@
 #include <time.h>  // used for randomizing
 #include <float.h> // used for _control
 
-#include <GL/gl.h> // OpenGl includes
-#include <GL/glu.h>
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 #include "globals.h"
 #include "gldrawlib.h"

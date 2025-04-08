@@ -43,9 +43,9 @@
 #include <string.h>
 #include <math.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 #include "camera.h"
 #include "bot.h"
@@ -56,18 +56,16 @@
 #include "lights.h"
 #include "fireants.h"
 
-
-static GLfloat no_mat[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-static GLfloat mat_ambient[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-static GLfloat mat_diffuse[] = { 0.9f, 0.8f, 0.8f, 1.0f };
-static GLfloat mat_specular[] = { 0.0f, 1.0f, 1.0f, 1.0f };
-static GLfloat no_shininess[] = { 0.0f };
-static GLfloat low_shininess[] = { 5.0f };
-static GLfloat high_shininess[] = { 100.0f};
+static GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
+static GLfloat mat_ambient[] = {0.9f, 0.9f, 0.9f, 1.0f};
+static GLfloat mat_diffuse[] = {0.9f, 0.8f, 0.8f, 1.0f};
+static GLfloat mat_specular[] = {0.0f, 1.0f, 1.0f, 1.0f};
+static GLfloat no_shininess[] = {0.0f};
+static GLfloat low_shininess[] = {5.0f};
+static GLfloat high_shininess[] = {100.0f};
 static GLfloat mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
-static struct tagDriverLights	*light_ptrs[MAX_LIGHTS] = { NULL };
-
+static struct tagDriverLights *light_ptrs[MAX_LIGHTS] = {NULL};
 
 //
 // Materials
@@ -87,10 +85,10 @@ void setmaterial(float amb[], float diff[], float spec[],
 //
 void InitMaterial(void)
 {
- // Change the main properities for all objects
- setmaterial(no_mat, mat_diffuse, mat_specular, low_shininess, no_mat);
+	// Change the main properities for all objects
+	setmaterial(no_mat, mat_diffuse, mat_specular, low_shininess, no_mat);
 
-} // end of the function 
+} // end of the function
 
 //
 // CreateBot
@@ -98,16 +96,16 @@ void InitMaterial(void)
 //
 struct tagDriverLights *CreateLight(int id)
 {
-	struct tagDriverLights	*light;
+	struct tagDriverLights *light;
 
 	light = malloc(sizeof(struct tagDriverLights));
 
 	// I like to be extra careful
-	ZeroMemory((struct tagDriverLights *)light, 
-			sizeof(struct tagDriverLights));
+	ZeroMemory((struct tagDriverLights *)light,
+			   sizeof(struct tagDriverLights));
 
-	light->index_id  = id;
-	light->light_id  =  GL_LIGHT0 + id;
+	light->index_id = id;
+	light->light_id = GL_LIGHT0 + id;
 
 	light->position[0] = 3.8f;
 	light->position[1] = LIGHT_HEIGHT_0;
@@ -125,10 +123,10 @@ struct tagDriverLights *CreateLight(int id)
 //
 void DestroyLight(DriverLightsPtr b)
 {
-	//free(b);
+	// free(b);
 	RELEASE_OBJECT(b);
 
-} // end of the functino 
+} // end of the functino
 
 //
 // RenderWirebox
@@ -136,14 +134,14 @@ void DestroyLight(DriverLightsPtr b)
 void RenderWirebox(DriverLightsPtr b)
 {
 	BEGIN_BOT;
-			// Translate then rotate
-		glTranslatef(b->position[0],b->position[1],b->position[2]);
+	// Translate then rotate
+	glTranslatef(b->position[0], b->position[1], b->position[2]);
 
-		// draw the object to screen
-		driver_objects[WIREBOX_OBJECT]->render();
-		
+	// draw the object to screen
+	driver_objects[WIREBOX_OBJECT]->render();
+
 	END_BOT;
-} // end of the function 
+} // end of the function
 
 //
 // SetLight
@@ -151,33 +149,33 @@ void RenderWirebox(DriverLightsPtr b)
 void set_Light(DriverLightsPtr bulb)
 {
 
- 	 // Now Prepare for opengl drawing
-	 //....................................
+	// Now Prepare for opengl drawing
+	//....................................
 
-	 // Enablelighting
-	 glEnable(GL_LIGHTING);
-	  
-	 // Note: I want to keep lighting in general but not this light
-	 if (bulb->state)
-	 {
-	  glEnable(bulb->light_id);
+	// Enablelighting
+	glEnable(GL_LIGHTING);
 
-	  // Setup the light
-	  glLightfv(bulb->light_id, GL_POSITION, bulb->position);
-	  glDisable(GL_LIGHTING);
+	// Note: I want to keep lighting in general but not this light
+	if (bulb->state)
+	{
+		glEnable(bulb->light_id);
 
-	  // Draw a wire  box....
-	  RenderWirebox(bulb);
+		// Setup the light
+		glLightfv(bulb->light_id, GL_POSITION, bulb->position);
+		glDisable(GL_LIGHTING);
 
-	  glEnable(GL_LIGHTING);
+		// Draw a wire  box....
+		RenderWirebox(bulb);
 
-	 } // end of the if
-	 else {
-		 glDisable(bulb->light_id);
-	 } // end of if-else
+		glEnable(GL_LIGHTING);
 
-} // end of the function 
+	} // end of the if
+	else
+	{
+		glDisable(bulb->light_id);
+	} // end of if-else
 
+} // end of the function
 
 //
 // GenerateBots
@@ -188,22 +186,18 @@ void GenerateLights(void)
 
 	for (index = 0; index < MAX_LIGHTS; index++)
 	{
-	  light_ptrs[index] = CreateLight(index);
-	
-	      
-	} // END of the for 
+		light_ptrs[index] = CreateLight(index);
 
+	} // END of the for
 
 	// for now only set the first one
 	light_ptrs[0]->state = ALIVE_STATE;
 	light_ptrs[1]->position[1] = 12.0f;
 
-
 	light_ptrs[1]->state = ALIVE_STATE;
 	light_ptrs[1]->position[0] = -1.0f;
 	light_ptrs[1]->position[1] = LIGHT_HEIGHT_1;
 	light_ptrs[1]->position[2] = 12.0f;
-
 
 } // end of the function
 
@@ -217,9 +211,9 @@ void ShutdownLights(void)
 	for (index = 0; index < MAX_LIGHTS; index++)
 	{
 		DestroyLight(light_ptrs[index]);
-	} // end of the for 
+	} // end of the for
 
-} // end of the function 
+} // end of the function
 //
 // Set
 //
@@ -227,12 +221,11 @@ void SetLights(void)
 {
 	int index = 0;
 
-
 	for (index = 0; index < MAX_LIGHTS; index++)
 	{
-	
+
 		set_Light(light_ptrs[index]);
 
-	} // end of the for 
+	} // end of the for
 
-} // end of the function 
+} // end of the function

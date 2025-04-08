@@ -44,60 +44,61 @@
 
 #include <math.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 #include "bot.h"
-
 
 //
 // GetStartCommand
 //
 int GetStartState(int cmd)
 {
-	switch(cmd)
+	switch (cmd)
 	{
-		case ATTACK_COMMAND:
-			return RECHECK_STATE;
+	case ATTACK_COMMAND:
+		return RECHECK_STATE;
 		break;
 
-		case WANDER_COMMAND:
-			return MOVE_STATE;
+	case WANDER_COMMAND:
+		return MOVE_STATE;
 		break;
 
-		case MOVE_COMMAND:
-			return GENERATE_STATE;
+	case MOVE_COMMAND:
+		return GENERATE_STATE;
 		break;
 
-		default: break;
+	default:
+		break;
 	};
 
 	return MOVE_STATE;
-} // end of the function 
- 
+} // end of the function
 
 //
 // GenerateCommand
-// 
+//
 //
 void Generate_Command(DriverBotPtr bot, int cmd)
 {
 
-	switch(cmd)
+	switch (cmd)
 	{
-		case ATTACK_COMMAND:
-			bot->run = Attack_Command;
+	case ATTACK_COMMAND:
+		bot->run = Attack_Command;
 		break;
 
-		case WANDER_COMMAND:
-			bot->run = Wander_Command;
+	case WANDER_COMMAND:
+		bot->run = Wander_Command;
 		break;
 
-		case MOVE_COMMAND:
-			bot->run = Move_Command;
+	case MOVE_COMMAND:
+		bot->run = Move_Command;
 		break;
 
-		default: break;
+	default:
+		break;
 	};
 
 	bot->state = GetStartState(cmd);
@@ -105,4 +106,4 @@ void Generate_Command(DriverBotPtr bot, int cmd)
 	bot->last_command = bot->command;
 	bot->command = cmd;
 
-} // end of the function 
+} // end of the function

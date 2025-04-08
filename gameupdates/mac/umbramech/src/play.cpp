@@ -32,7 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // Berlin Brown
 // bigbinc@hotmail.com
@@ -64,7 +63,6 @@ int musicCount;
 int soundOn;
 int musicOn;
 
-
 //
 // Kill_Sounds
 //
@@ -73,7 +71,7 @@ void Kill_Sounds(void)
 
   Snd_restore();
 
-} // end of the fnuction 
+} // end of the fnuction
 
 //
 // Turn_SoundOff
@@ -81,7 +79,7 @@ void Kill_Sounds(void)
 void Turn_SoundOff(void)
 {
   soundOn = 0;
-} //  end of the function 
+} //  end of the function
 
 //
 // Turn on
@@ -89,7 +87,7 @@ void Turn_SoundOff(void)
 void Turn_SoundOn(void)
 {
   soundOn = 1;
-} // end of the function 
+} // end of the function
 
 //
 // Toggle_Sound(void0
@@ -97,7 +95,7 @@ void Turn_SoundOn(void)
 void Toggle_Sound(void)
 {
   soundOn = !soundOn;
-} // end of the fnction 
+} // end of the fnction
 
 //
 // get Sound On
@@ -107,7 +105,7 @@ int Get_SoundOn(void)
 
   return soundOn;
 
-} // end of the function 
+} // end of the function
 
 //
 // Turn_MusicOff
@@ -123,7 +121,7 @@ void Turn_MusicOff(void)
 void Turn_MusicOn(void)
 {
   musicOn = 1;
-} // end of the function 
+} // end of the function
 
 //
 // Toggle Music
@@ -140,8 +138,7 @@ void Toggle_Music(void)
 int Get_MusicOn(void)
 {
   return musicOn;
-} // end of the function 
-
+} // end of the function
 
 //
 // Load_Audio
@@ -159,38 +156,38 @@ void Load_Audio(void)
   soundOn = 1;
   musicOn = 1;
 
-  if (stat(audio_dev, &st) >= 0) 
+  if (stat(audio_dev, &st) >= 0)
+  {
+    audiofd = open(audio_dev, O_WRONLY);
+
+    if (audiofd >= 0)
     {
-      audiofd = open(audio_dev, O_WRONLY);
+      noSound = 0;
+      close(audiofd);
 
-      if (audiofd >= 0)
-	{
-	  noSound = 0;
-	  close(audiofd);
-	  
-	} // end of the if 
+    } // end of the if
 
-    } // end of the if 
+  } // end of the if
 
   if (!noSound)
-    {
-      
-      // load all the sound effects into memory
-      Snd_loadRawSample("misc/tech.raw", &snd[0]);
-      Snd_loadRawSample("misc/1.raw", &snd[1]);
+  {
 
-    } // end of th eif 
+    // load all the sound effects into memory
+    Snd_loadRawSample("misc/tech.raw", &snd[0]);
+    Snd_loadRawSample("misc/1.raw", &snd[1]);
+
+  } // end of th eif
 
   if (Snd_init(NUM_SAMPLES, snd, SAMPLE_RATE, NUM_CHANNELS, audio_dev) == EXIT_FAILURE)
-    {
+  {
 
-      fprintf(stderr, "Cannot load sound library\n");      
-      return;
+    fprintf(stderr, "Cannot load sound library\n");
+    return;
 
-    } // end of the if 
+  } // end of the if
 #endif
-  
-} // end of the function 
+
+} // end of the function
 
 //
 // flushSounds
@@ -202,11 +199,11 @@ void flushSounds(void)
   playingMusic--;
 
   if (playingMusic < 0)
-    {
-      playingMusic = 0;
-    } // end of the if 
+  {
+    playingMusic = 0;
+  } // end of the if
 
-} // end of the functino 
+} // end of the functino
 
 //
 // outAudio
@@ -215,10 +212,10 @@ void outAudio(int sCounter)
 {
   if ((sCounter < 0) || (sCounter >= NUM_SAMPLES))
     return;
-  
+
   Snd_effect(sCounter, sCounter);
-  
-} // end of the functino 
+
+} // end of the functino
 
 //
 // doSound
@@ -226,11 +223,11 @@ void outAudio(int sCounter)
 void doSound(int theSound)
 {
   if (!noSound)
-    {
-      
-    } // end of the if 
+  {
 
-} // end of the function 
+  } // end of the if
+
+} // end of the function
 
 //
 // Do_FireSound
@@ -242,7 +239,7 @@ void Do_FireSound(void)
   outAudio(0);
 #endif
 
-} // end of the fnuctino 
+} // end of the fnuctino
 
 //
 // Play_Music
@@ -254,4 +251,4 @@ void Play_Music(void)
   outAudio(1);
 #endif
 
-} // end of the function 
+} // end of the function

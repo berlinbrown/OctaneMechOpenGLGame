@@ -33,7 +33,7 @@
  */
 //
 // particles.cpp
-// 
+//
 // particles or explosion engine
 //
 
@@ -41,23 +41,23 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
+#include <GL/gl.h>	// Header File For The OpenGL32 Library
+#include <GL/glu.h> // Header File For The GLu32 Library
 
 #include "bot.h"
 #include "particles.h"
 
-static ParticleList	*particle_set[MAX_PARTICLE_SET];
-static int	particle_index = 0;
+static ParticleList *particle_set[MAX_PARTICLE_SET];
+static int particle_index = 0;
 
-// 
+//
 // Create Particle
 //
-ParticleList *CreateParticleList(void) {
+ParticleList *CreateParticleList(void)
+{
 
-    ParticleList *result = malloc(
-				sizeof(ParticleList));
+	ParticleList *result = malloc(
+		sizeof(ParticleList));
 
 	result->x = 0;
 	result->y = 0;
@@ -67,16 +67,16 @@ ParticleList *CreateParticleList(void) {
 
 	return result;
 
-} // end of the function 
+} // end of the function
 
 //
 // Destroy List
 //
-void DestroyParticleList(ParticleList *list) 
+void DestroyParticleList(ParticleList *list)
 {
-    RELEASE_OBJECT(list);
+	RELEASE_OBJECT(list);
 
-} // end of the function 
+} // end of the function
 
 //
 // New_Speed
@@ -84,26 +84,26 @@ void DestroyParticleList(ParticleList *list)
 static void New_Speed(float d[3], float speed)
 {
 
-	float	x, y, z;
-	float	r;
-	float	tmp;
+	float x, y, z;
+	float r;
+	float tmp;
 
 	tmp = 2.0f * speed;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
+	r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
 	x = r;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
+	r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
 	y = r;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
+	r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
 	z = r;
 
 	d[0] = x;
 	d[1] = y;
 	d[2] = z;
 
-} // end of the function 
+} // end of the function
 
 //
 // Set Explosion
@@ -136,17 +136,16 @@ void Set_Explosion(ParticleList *list, float x, float y)
 		// Set the speed
 		New_Speed(list->particles[i].p_speed, PARTICLE_SPEED);
 
-	} // end of the for 
+	} // end of the for
 
-	
-} // end of the function 
+} // end of the function
 
 //
 // Draw_Particles
 //
 void Draw_Particles(ParticleList *list)
 {
-	int i=0;
+	int i = 0;
 
 	if (list->state == ALIVE_STATE)
 	{
@@ -155,29 +154,27 @@ void Draw_Particles(ParticleList *list)
 
 		glPushMatrix();
 
-			glBegin(GL_POINTS);
+		glBegin(GL_POINTS);
 
-			for(i =0; i < MAX_PARTICLES; i++)
-			{
-				if (list->particles[i].p_state == DEAD_STATE)
-					continue;
+		for (i = 0; i < MAX_PARTICLES; i++)
+		{
+			if (list->particles[i].p_state == DEAD_STATE)
+				continue;
 
-				glColor3fv(list->particles[i].p_color);
-				glVertex3fv(list->particles[i].p_pos);
+			glColor3fv(list->particles[i].p_color);
+			glVertex3fv(list->particles[i].p_pos);
 
-			} // end of the for 
+		} // end of the for
 
-			glEnd();
+		glEnd();
 
 		glPopMatrix();
 
 		glEnable(GL_LIGHTING);
 
+	} // end of the if
 
-	} // end of the if 
-
-} // end of the function 
-
+} // end of the function
 
 //
 // Wrapper Functions
@@ -189,7 +186,7 @@ void Build_ParticleSet(void)
 	for (i = 0; i < MAX_PARTICLE_SET; i++)
 	{
 		particle_set[i] = CreateParticleList();
-	} // end of the for 
+	} // end of the for
 
 	particle_index = 0;
 
@@ -207,7 +204,7 @@ void Destroy_ParticleSet(void)
 		DestroyParticleList(particle_set[i]);
 	} // end of the of r
 
-} // end of the function 
+} // end of the function
 
 //
 // SetExplosion
@@ -220,8 +217,7 @@ void SetExplosion(float x, float y)
 	if (particle_index >= MAX_PARTICLE_SET)
 		particle_index = 0;
 
-} // end of the function 
-
+} // end of the function
 
 //
 // AnimateExplisions
@@ -235,21 +231,20 @@ void Anim_Particles(ParticleList *list)
 	if (list->state == ALIVE_STATE)
 	{
 
-
-		for(i =0; i < MAX_PARTICLES; i++)
+		for (i = 0; i < MAX_PARTICLES; i++)
 		{
-		
-			for (j = 0; j < 3; j++) 
+
+			for (j = 0; j < 3; j++)
 			{
-				list->particles[i].p_pos[j] += 
-						list->particles[i].p_speed[j];
+				list->particles[i].p_pos[j] +=
+					list->particles[i].p_speed[j];
 
 				// kill if this one hits the ground
 				if (list->particles[i].p_pos[1] < 0.0f)
 					list->particles[i].p_state = DEAD_STATE;
 
 				dv = 1.0f / 500.0f;
-	
+
 				list->particles[i].p_color[j] -= dv;
 
 				if (list->particles[i].p_color[j] < 0.0f)
@@ -257,18 +252,18 @@ void Anim_Particles(ParticleList *list)
 
 			} // end of the for
 
-		} // end of the for 
-
+		} // end of the for
 
 		// subtract life
 		list->life--;
 
-		if (list->life < 0) {
+		if (list->life < 0)
+		{
 
 			list->life = 0;
 			list->state = DEAD_STATE;
 
-		} // end of the if 
+		} // end of the if
 
 	} // end of big if
 
@@ -288,10 +283,9 @@ void AnimateExplosions(void)
 
 		Anim_Particles(particle_set[i]);
 
-	} // end of the functino 
+	} // end of the functino
 
 } // end of the function
-
 
 //
 // Now draw the entire set
@@ -307,9 +301,6 @@ void DrawExplosions(void)
 
 		Draw_Particles(particle_set[i]);
 
-	} // end of the functino 
+	} // end of the functino
 
-} // end of the function 
-
-
-
+} // end of the function

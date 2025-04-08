@@ -37,19 +37,17 @@
 // - do we need a file for each object....yes!
 //
 
-
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
-
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 #include "gldrawlib.h"
 #include "objects.h"
 
 #undef CURRENT_OBJECT
-#define CURRENT_OBJECT			wirebox
+#define CURRENT_OBJECT wirebox
 
 static void init_wirebox(int list_id);
 static void compile_wirebox(void);
@@ -63,14 +61,13 @@ static void draw_wirebox(void);
 // in objects.h
 //
 DriverObjects CURRENT_OBJECT =
-{
-	init_wirebox,			// init, must be called first
-	compile_wirebox,		// compile
-	draw_wirebox,			// draw 
-	render_wirebox,			// render to scene
-	0					// loaded by INIT
+	{
+		init_wirebox,	 // init, must be called first
+		compile_wirebox, // compile
+		draw_wirebox,	 // draw
+		render_wirebox,	 // render to scene
+		0				 // loaded by INIT
 };
-
 
 //=========================================================
 static void draw_wirebox(void)
@@ -78,51 +75,50 @@ static void draw_wirebox(void)
 	float size = 0.4f;
 
 	glColor3f(1.0f, 1.0f, 1.0f);
-	 glBegin(GL_LINE_LOOP);
+	glBegin(GL_LINE_LOOP);
 	// Front Face
-	glVertex3f(-size,  0.0f,  size);	// left bottom 
-	glVertex3f( size,  0.0f,  size);	// right bottom
-	glVertex3f( size,  size,  size);	// top right
-	glVertex3f(-size,  size,  size);	// top left
+	glVertex3f(-size, 0.0f, size); // left bottom
+	glVertex3f(size, 0.0f, size);  // right bottom
+	glVertex3f(size, size, size);  // top right
+	glVertex3f(-size, size, size); // top left
 	// Back Face
 
-	glVertex3f(-size,  0.0f, -size);
-	glVertex3f(-size,  size, -size);
-	glVertex3f( size,  size, -size);
-	glVertex3f( size,  0.0f, -size);
- 
+	glVertex3f(-size, 0.0f, -size);
+	glVertex3f(-size, size, -size);
+	glVertex3f(size, size, -size);
+	glVertex3f(size, 0.0f, -size);
+
 	// Top Face
-	glVertex3f(-size,  size, -size);
-	glVertex3f(-size,  size,  size);
-	glVertex3f( size,  size,  size);
-	glVertex3f( size,  size, -size);
+	glVertex3f(-size, size, -size);
+	glVertex3f(-size, size, size);
+	glVertex3f(size, size, size);
+	glVertex3f(size, size, -size);
 
 	// Bottom Face
-	glVertex3f(-size,  0.0f, -size);
-	glVertex3f( size,  0.0f, -size);
-	glVertex3f( size,  0.0f,  size);
-	glVertex3f(-size,  0.0f,  size);
+	glVertex3f(-size, 0.0f, -size);
+	glVertex3f(size, 0.0f, -size);
+	glVertex3f(size, 0.0f, size);
+	glVertex3f(-size, 0.0f, size);
 
 	// Right face
-	glVertex3f( size,  0.0f, -size);
-	glVertex3f( size,  size, -size);
-	glVertex3f( size,  size,  size);
-	glVertex3f( size,  0.0f,  size);		
+	glVertex3f(size, 0.0f, -size);
+	glVertex3f(size, size, -size);
+	glVertex3f(size, size, size);
+	glVertex3f(size, 0.0f, size);
 
 	// Left Face
-	glVertex3f(-size,  0.0f, -size);
-	glVertex3f(-size,  0.0f,  size);
-	glVertex3f(-size,  size,  size);
-	glVertex3f(-size,  size, -size);
+	glVertex3f(-size, 0.0f, -size);
+	glVertex3f(-size, 0.0f, size);
+	glVertex3f(-size, size, size);
+	glVertex3f(-size, size, -size);
 	glEnd();
 
 } // end of the function
 
-
 //
 // init
 // - load anything special about the
-// one important function 
+// one important function
 //
 static void init_wirebox(int list_id)
 {
@@ -131,21 +127,20 @@ static void init_wirebox(int list_id)
 
 	// store the id through the function
 	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;	
-	
-} // end of the functino
+	CURRENT_OBJECT.call_id = list_id;
 
+} // end of the functino
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_wirebox(void)
 {
-		//glPushMatrix();
+	// glPushMatrix();
 
-			glCallList(CURRENT_OBJECT.call_id);
+	glCallList(CURRENT_OBJECT.call_id);
 
-		//glPopMatrix();
+	// glPopMatrix();
 
 } // end of the function
 
@@ -156,17 +151,16 @@ static void compile_wirebox(void)
 {
 	int id;
 	// setup a spot for display list for background
-	//object = getcurrentobject();
+	// object = getcurrentobject();
 	id = CURRENT_OBJECT.call_id;
 
 	// apply list
 	glNewList(id, GL_COMPILE);
 
-		// call drawing function
-		// but this may method make it a little better
-		CURRENT_OBJECT.draw();
+	// call drawing function
+	// but this may method make it a little better
+	CURRENT_OBJECT.draw();
 
 	glEndList();
 
 } // end of the function
-
