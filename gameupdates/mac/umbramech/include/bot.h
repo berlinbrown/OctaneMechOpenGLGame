@@ -32,7 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // bot.h
 //
@@ -94,7 +93,6 @@ typedef int bool;
 #define STAR_RADIUS			710.0
 #define STAR_ROT_SPEED		0.1f;
 
-
 #define __straight_steps	(MAX_STRAIGHT_STEPS-MIN_STRAIGHT_STEPS)	
 
 #define __go_home_steps_2	(MAX_STRAIGHT_STEPS_2-MIN_STRAIGHT_STEPS_2)	
@@ -142,139 +140,6 @@ typedef int bool;
 
 #define INVALID_BOT			-1
 
-// static bot
-//
-typedef struct tagStaticBot {
-
-	int		list_id;
-	float	position[3];
-	float	rotation[3];
-	float	size[3];
-	float	color[3];
-	float	state;
-
-	float	food;
-
-	bool	delete_flag;		// deleted from pheromone list
-
-	float	heading;		// you can use rotation or heading
-	float	linearv;
-
-	//
-	// for the collision
-	//
-	float	travel;		// distance traveled
-	float	final_x;
-	float	final_y;
-	float	max_dist;
-
-	
-	//
-	// 
-	float	old_x;
-	float	old_y;			// for drawing a line strip
-
-	// used with bullets
-	float	virt_x;
-	float	virt_y;
-	float	virt_heading;
-	int		owner;			// owner of this bullet
-
-	struct tagStaticBot *next;
-
-} StaticBot, *StaticBotPtr;
-
-// functions for static bot
-typedef struct tagDriverSentinel {
-
-	StaticBotPtr (*create)(int bot_id);
-	void (*destroy)(StaticBotPtr b);
-	void (*render)(StaticBotPtr boid);
-	void (*process)(StaticBotPtr b);
-
-	void (*generate)(void);
-	void (*shutdown)(void);
-	void (*drawall)(void);
-
-	StaticBot	**objects;
-
-	int		max_items;
-
-} DriverSentinel, *DriverSentinelPtr;
-
-
-typedef struct tagDriverBots {
-		
-	float	x;
-	float	y;
-	float	linearv;	// speed
-	float	size[3];	// scale 
-	float	heading;		// direction
-	float	target_dir;	// target heading
-	float	color[3];
-	int		id;
-	int		alive;
-	int		numSteps;	// how many steps ant has moved
-	float	turning_speed;
-
-	int		state;			// what is bot doing
-	int		straightSteps;	// steps before changing direction
-	float	food;
-	float	foodstore;
-	int		turn_rand;
-	int		turn_direction;	
-
-	bool	go_home;
-
-	int		gun_reset;		// delay befor firing
-	int		gun_index;
-
-	bool	move_back;		// for move and turn
-
-
-	// camera helper variables
-	float	look_x;
-	float	look_y;
-	float	look_h;		// look height, actually the y
-	float	cam_x;
-	float	cam_y;
-	int		view_mode;		// first or third person
-
-	float	score;
-	int		kills;
-
-	//
-	// the rectangle of the bot
-	// Note: you have to add
-	// the x,y to this value, but dont
-	// do to this variable, use temps
-	float	x_min;
-	float	x_max;
-	float	y_min;
-	float	y_max;
-
-	//
-	// crosshair object 
-	//
-	int		crosshair_state;
-	float	crosshair_scale;
-
-	// Add the fire ant bullets
-	//StaticBot	bullets[MAX_BULLETS];
-	StaticBot	*bullets;
-
-	// Command interface
-	void (*run)(struct tagDriverBots *bot);
-
-	int		last_command;
-	int		command;
-	float	attack_angle;
-	int		target_moves;
-	int		move_index;
-	int		enemy_id;
-
-} DriverBots, *DriverBotPtr;
-
 void Super_LoadBots(void);
 void Super_KillBots(void);
 
@@ -285,24 +150,10 @@ void Super_KillFires(void);
 void Reset_FireAnts(void);
 void Player_Control(bool *keys);
 
-void LoadBotParms(DriverBotPtr bot_ptr);
-
-void Wander_Command(DriverBotPtr bot);
-void Move_Command(DriverBotPtr bot);
-void Attack_Command(DriverBotPtr bot);
 
 int GetStartState(int cmd);
 int GetLastState(int cmd);
-void Generate_Command(DriverBotPtr bot, int cmd);
 
-void GenerateBots(void);
-void ShutdownBots(void);
-
-void DrawBots(void);
-void InitFood(void);
-
-int BruteCheckFood(DriverBotPtr bot);
-void DropFood(DriverBotPtr bot, int id, float food_rate);
 
 void CreateAnts(int food);
 
@@ -312,29 +163,24 @@ void CheckRespawn(void);
 
 void ActivatePheromone(float x, float y, float dir);
 
-DriverBotPtr CreateBot(int bot_id);
-void DestroyBot(DriverBotPtr b);
-void GetAntFood(DriverBotPtr bot);
-void ResetBot(DriverBotPtr bot_ptr);
-
 void GenerateFireAnts(void);
 void ShutdownFireAnts(void);
 void DrawFireAnts(void);
 void AnimFireAnts(void);
 
-bool CheckSight(DriverBotPtr bot, DriverBotPtr nme);
-
 void MoveFire0(int dir, int turn);
-
-void PositionBot(DriverBotPtr bot);
 
 void AnimNetworkBots(void);
 
+void GenerateBots(void);
+void ShutdownBots(void);
+
+void DrawBots(void);
+void InitFood(void);
 
 extern DriverSentinel nest;
 extern DriverSentinel garden;
 extern DriverSentinel trail_set; 
-
 
 #endif
 

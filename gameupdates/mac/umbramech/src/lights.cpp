@@ -100,7 +100,6 @@ struct tagDriverLights *CreateLight(int id)
 
 	light = malloc(sizeof(struct tagDriverLights));
 
-	// I like to be extra careful
 	ZeroMemory((struct tagDriverLights *)light,
 			   sizeof(struct tagDriverLights));
 

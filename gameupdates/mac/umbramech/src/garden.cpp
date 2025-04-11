@@ -201,14 +201,9 @@ int BruteCheckFood(DriverBotPtr bot)
 	{
 
 		// save some iterations
-		if (CURRENT_BOT.objects[i]->state == DEAD_STATE)
+		if (CURRENT_BOT.objects[i]->state == DEAD_STATE) {
 			continue;
-
-#if 0
-		// This code is more accurate
-		//x_width = CURRENT_BOT.objects[i]->size[0]*CUBE_SIZE;
-		//y_width = CURRENT_BOT.objects[i]->size[2]*CUBE_SIZE;
-#endif
+		}
 
 		x_width = FOOD_WIDTH * CUBE_SIZE;
 		y_width = FOOD_WIDTH * CUBE_SIZE;
@@ -467,7 +462,6 @@ void RandomPlacement(CURRENT_PTR bot)
 //
 void LoadGardParms(CURRENT_PTR bot)
 {
-	// I like to be extra careful
 	ZeroMemory((CURRENT_PTR)bot,
 			   sizeof(CURRENT_OBJECT));
 
@@ -520,7 +514,6 @@ void ResetGarden(CURRENT_PTR bot)
 	// the only thing we need to save
 	int bot_id = bot->list_id;
 
-	// I like to be extra careful
 	ZeroMemory((CURRENT_PTR)bot,
 			   sizeof(CURRENT_OBJECT));
 

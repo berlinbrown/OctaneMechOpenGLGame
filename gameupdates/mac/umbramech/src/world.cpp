@@ -130,134 +130,13 @@ void CreateWorld(void) { world_ptr = InitWorld(); }
 void ShutdownWorld(void)
 {
 
-// This is messing me up, maybe need to bring
-// back if there are memory leaks
-#if 0
-
-	free((DriverWorldPtr)world_ptr);
-#endif
-
 } // end of if
 
 //=========================================================
 //=========================================================
 static void draw_walls(void)
 {
-#if 0
-	float v[3][3] = { 0 };
-	
-	float x_min = world_ptr->x_min;
-	float y_min = world_ptr->y_min;
-	float x_max = world_ptr->x_max;
-	float y_max = world_ptr->y_max;
-	float height = world_ptr->height;
 
-	float n[3];
-
-
-	// change the size here
-	// Note: starts from ground
-
-	glBegin(GL_TRIANGLES);
-
-	  // right front of wall
-	  v[0][0] = x_min;
-	  v[0][1] = height;
-	  v[0][2] = y_max;
-
-	  v[1][0] = x_min;
-	  v[1][1] = 0.0f;
-	  v[1][2] = y_max;
-
-	  v[2][0] = x_max;
-	  v[2][1] = height;
-	  v[2][2] = y_max;
-
-	  WORLD_COLOR
-
-	  N_1;
-	  glNormal3fv(n);
-
-	  // Calc normal and draw
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
-
-	  v[0][0] = x_min;
-	  v[0][1] = 0.0f;
-	  v[0][2] = y_max;
-
-	  v[1][0] = x_max;
-	  v[1][1] = 0.0f;
-	  v[1][2] = y_max;
-
-	  v[2][0] = x_max;
-	  v[2][1] = height;
-	  v[2][2] = y_max;
-
-	  WORLD_COLOR
-
-	  N_1;
-	  glNormal3fv(n);
-
-
-	  // Calc normal and draw
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
-
-	  // we are only going to draw part of the wall
-	  // left side of wall
-	  v[0][0] = x_min;
-	  v[0][1] = 0.0f;
-	  v[0][2] = y_min;
-
-	  v[1][0] = x_min;
-	  v[1][1] = height;
-	  v[1][2] = y_min;
-
-	  v[2][0] = x_min;
-	  v[2][1] = height;
-	  v[2][2] = y_max;
-
-	  WORLD_COLOR_2
-	  // Calc normal and draw
-
-	  N_0;
-	  glNormal3fv(n);
-
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
-
-	   // finish left side of 
-	  v[0][0] = x_min;
-	  v[0][1] = 0.0f;
-	  v[0][2] = y_max;
-
-	  v[1][0] = x_min;
-	  v[1][1] = height;
-	  v[1][2] = y_max;
-
-	  v[2][0] = x_min;
-	  v[2][1] = 0.0f;
-	  v[2][2] = y_min;
-
-
-		WORLD_COLOR_2
-	  // Calc normal and draw
-
-	  N_1;
-	  glNormal3fv(n);
-
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
-
-	
-	glEnd();
-
-#endif
 } // end of the function
 
 //

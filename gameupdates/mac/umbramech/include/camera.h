@@ -31,9 +31,9 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
+
 //
-// Berlin Brown
-// bigbinc@hotmail.com
+// Berlin Brown - berlin _dot_ brown __at __ gmail 
 //
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
@@ -54,7 +54,6 @@
 typedef float Vector[3];
 
 #define MAX_CAMERAS		4	
-
 
 #define BEGIN_CAMERA 	glPushMatrix(); SetCamera();		
 #define END_CAMERA		glPopMatrix();

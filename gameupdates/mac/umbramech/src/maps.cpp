@@ -76,7 +76,6 @@ Map *CreateMap(int id_no)
 
 	map = malloc(sizeof(Map));
 
-	// I like to be extra careful
 	ZeroMemory((Map *)map,
 			   sizeof(Map));
 

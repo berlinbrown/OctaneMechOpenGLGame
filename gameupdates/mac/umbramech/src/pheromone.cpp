@@ -241,7 +241,6 @@ static CURRENT_PTR CreatePheromone(int bot_id)
 
 	bot = (CURRENT_PTR)malloc(sizeof(CURRENT_OBJ));
 
-	// I like to be extra careful
 	ZeroMemory((CURRENT_PTR)bot, 
 			sizeof(CURRENT_OBJ));
 	

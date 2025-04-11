@@ -1083,21 +1083,6 @@ void PrintGlobals(void)
 	// PrintText("FOOD: %ld", ant_globals.ticks);
 #endif
 
-#if HUD_SCORE
-
-	for (i = 0; i < MAX_SCORE_DISPLAY; i++)
-	{
-#if 0
-		glRasterPos2i(10, (SCREEN_HEIGHT-14)-(i*14));
-		PrintText("P%d %0.2f %d", 
-			ant_globals->score_obj[i].name, 
-			ant_globals->score_obj[i].score, 
-			ant_globals->score_obj[i].kills);
-#endif
-	} // end of the for
-
-#endif
-
 } // end of the function
 
 //

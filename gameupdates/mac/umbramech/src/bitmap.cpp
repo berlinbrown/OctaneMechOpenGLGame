@@ -27,8 +27,10 @@
 // - Sept 18, 2002
 */
 
+#include <cstdio>
+#include <cstdlib>
 #include <stdio.h>
-#include <math.h> // math libraries
+#include <math.h>  // math libraries
 #include <stdlib.h>
 #include <time.h>  // used for randomizing
 #include <float.h> // used for _control
@@ -44,7 +46,7 @@
 #include "menu.h"
 #include "camera.h"
 #include "fireants.h"
-#include "network/include/connect.h"
+#include "network/connect.h"
 
 static float mTextHeight = 36.0f;
 
@@ -59,10 +61,8 @@ static float m_size_z = 0.01f;
 // Main globals
 //=========================================================
 static unsigned int texture[MAX_TEXTURES];
-static int textureindex = 0; // counter of what textures are available
-
+static int textureindex = 0;	// counter of what textures are available
 static int funky_texture = 0;
-
 static unsigned int titlesID = 5;
 
 //
@@ -75,12 +75,13 @@ static unsigned int titlesID = 5;
 #define SETTINGS_H 239
 #define DEMO_H 273
 
-static int cursor_heights[MAX_MENU_ITEMS] =
-	{NEW_GAME_H,
-	 EXIT_H,
-	 HELP_H,
-	 SETTINGS_H,
-	 DEMO_H};
+static int cursor_heights[MAX_MENU_ITEMS] = {
+	NEW_GAME_H,
+	EXIT_H,
+	HELP_H,
+	SETTINGS_H,
+	DEMO_H
+};
 static int cursor_index = NEW_GAME_ID;
 
 //
@@ -110,9 +111,7 @@ void Reset_DeadText(void)
 //
 void SetFunkyTexture(void)
 {
-
 	LoadTexture("data/tile.bmp");
-
 	funky_texture = textureindex - 1;
 
 } // end of the function
@@ -144,19 +143,6 @@ void NextTexture(void)
 //=========================================================
 void *LoadBitmap(char *filename)
 {
-#if 0
-	FILE *f=fopen(filename,"r");	// open the image file for reading
-
-
-	// check for the file
-	if (f)			
-	{
-		fclose(f);							// Close the handel
-		return auxDIBImageLoad(filename);	// load using the glaux lib
-	} // end of the if
-
-#endif
-
 	return NULL;
 } // end of the function
 

@@ -66,14 +66,6 @@ bool TestFuncA(int val, TreeNode *current)
 	return (val < current->data);
 } // end of the function
 
-#if 0
-bool TestFuncB(int val, int data)
-{
-	printf("[%d<%d]",val, data); 
-	return (val < data);
-} // end of the function
-#endif
-
 #define TestFuncB(val, data) ((val < data) ? 1 : 0)
 
 //

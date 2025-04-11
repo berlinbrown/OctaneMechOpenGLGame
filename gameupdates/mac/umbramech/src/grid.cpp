@@ -165,9 +165,6 @@ static void drawbackxz(float gridsize, float sections)
 //=========================================================
 static void draw_grid(void)
 {
-#if 0
-   //drawbackxz(GRID_SIZE, 1.0f);
-#endif
 	drawbackxy(GRID_SIZE, 1.0f);
 	drawbackyz(GRID_SIZE, 1.0f);
 

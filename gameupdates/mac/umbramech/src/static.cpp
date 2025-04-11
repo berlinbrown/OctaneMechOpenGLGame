@@ -193,8 +193,6 @@ static CURRENT_PTR CreateSentinel(int bot_id)
 	CURRENT_PTR bot;
 
 	bot = (CURRENT_PTR)malloc(sizeof(CURRENT_OBJECT));
-
-	// I like to be extra careful
 	ZeroMemory((CURRENT_PTR)bot,
 			   sizeof(CURRENT_OBJECT));
 
@@ -244,10 +242,6 @@ static void RenderSentinel(CURRENT_PTR boid)
 	glRotatef(boid->rotation[1], 0.0f, 1.0f, 0.0f);
 	glRotatef(boid->rotation[0], 1.0f, 0.0f, 0.0f);
 	glRotatef(boid->rotation[2], 0.0f, 0.0f, 1.0f);
-
-#if 0
-		//RenderBounds(0.0f, 0.0f, 1.5*boid->size[0]);
-#endif
 
 	// Scale accordingly
 	glScalef(boid->size[0], boid->size[1], boid->size[2]);

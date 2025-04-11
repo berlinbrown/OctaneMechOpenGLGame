@@ -543,30 +543,6 @@ void MoveBot(DriverBotPtr bot)
 
 	bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
 	bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
-
-#if 0
-	// perform collision test using driver
-	col_ptr = CheckCollisionList((DriverBotPtr)bot, FREE_OBJECT);
-
-	// we have a hit
-	if (col_ptr != NULL)
-	{
-		// check for wall first
-		if (col_ptr->move_type == STATIC_OBJECT)
-		{
-			// change state
-			bot->state = CHANGE_DIR_STATE;
-
-			// reset back 
-			bot->x += (float)sin(bot->heading*PI_180) * bot->linearv;
-			bot->y += (float)cos(bot->heading*PI_180) * bot->linearv;
-
-			return;
-		} // end of the if
-
-	} // end of the if
-#endif
-
 	bot->state = MOVE_STATE;
 
 	return;
@@ -616,7 +592,6 @@ void ProcessBotEvent(DriverBotPtr bot)
 //
 void LoadBotParms(DriverBotPtr bot_ptr)
 {
-	// I like to be extra careful
 	ZeroMemory((DriverBotPtr)bot_ptr,
 			   sizeof(DriverBots));
 
@@ -700,8 +675,6 @@ void ResetBot(DriverBotPtr bot_ptr)
 	float tmp_heading = 0;
 
 	int bot_id = bot_ptr->id;
-
-	// I like to be extra careful
 	ZeroMemory((DriverBotPtr)bot_ptr,
 			   sizeof(DriverBots));
 

@@ -27,6 +27,8 @@ include_directories(
 #    set(PLATFORM_LIBS GL GLU X11 Xi Xmu Xxf86vm pthread m)
 #endif()
 
+add_compile_options(-Wno-deprecated-declarations)
+
 # Add executable
 add_executable(umbramech ${SRC_FILES})
 
