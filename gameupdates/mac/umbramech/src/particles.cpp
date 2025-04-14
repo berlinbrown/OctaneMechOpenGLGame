@@ -41,11 +41,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <GL/gl.h>	// Header File For The OpenGL32 Library
-#include <GL/glu.h> // Header File For The GLu32 Library
-
-#include "bot.h"
-#include "particles.h"
+#include <OpenGL/gl.h>      // Core OpenGL functions
+#include <OpenGL/glu.h>     // OpenGL Utility Library
+#include <GLUT/glut.h>      // GLUT for window/context
 
 static ParticleList *particle_set[MAX_PARTICLE_SET];
 static int particle_index = 0;

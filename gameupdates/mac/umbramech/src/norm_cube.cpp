@@ -44,10 +44,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "gldrawlib.h"
-#include "objects.h"
-#include "lights.h"
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT norm_cube
 

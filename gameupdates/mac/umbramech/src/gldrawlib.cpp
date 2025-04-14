@@ -34,7 +34,7 @@
 
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 // glDrawLib.cpp
 //
 // a couple of drawing routines
@@ -49,9 +49,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-
-#include "gldrawlib.h"
 
 // Reduces a normal vector specified as a set of three coordinates,
 // to a unit normal vector of length one.

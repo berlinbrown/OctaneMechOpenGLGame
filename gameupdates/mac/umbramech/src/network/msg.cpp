@@ -33,7 +33,7 @@
  */
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 // 
 // msg.c
 // - some msg networking code

@@ -48,8 +48,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "bot.h"
-
 //
 // GetStartCommand
 //

@@ -31,82 +31,25 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
-// fireants.h
-//
-// constants that deal with the
-// enemy char
-//
-#ifndef _FIREANTS_H_
-#define _FIREANTS_H_
 
-#define PLAYER_0		0
+// KEYS.H
 
-//
-// the drawing size
-// in x/z
-//
-#define FIRE_ANT_SIZE	1.5f
+#define MAX_INPUT_STR             32
 
-// length of the vision
-#define PERSPECTIVE_Z	600.0f
+// see keys.c
+#define SEL_SERVER_MODE           0
+#define SEL_CLIENT_MODE           1
 
-// first person mode camera
-#define FIRST_PERSON_Z	4.3f
-#define FIRST_HEIGHT	2.4f
+#define START_SEL                 0
+#define SEL_SERVER_MAX            5
+#define SEL_CLIENT_MAX            5
 
-#define DRAW_LINE_SIGHT	1
+#define SEL_TYPE_TEXT             0
+#define SEL_TYPE_BOOL             1
+#define SEL_TYPE_IP               2
+#define SEL_TYPE_NUMERIC          3
+#define SEL_TYPE_APPLY            4
+#define SEL_TYPE_NOCHANGE         5
 
-#define LIGHT_HEIGHT_0	100.0f
-#define LIGHT_HEIGHT_1	180.0f
-
-//
-// max distance a bullet can travel
-//
-#define MAX_BULLET_TRAVEL	600.0f
-
-
-// bullet height
-#define BULLET_H1		1.8f
-#define BULLET_H2		2.3f
-
-#define BULLET_LEN		6.0f
-
-//
-// For the hex grid
-#define HEX_SIZE		12.0f
-
-// the height should be 4 times othe size
-#define HEX_HEIGHT		35.0f
-
-#define WORLD_X_MIN		-300.0f
-#define WORLD_X_MAX		300.0f
-
-#define WORLD_Y_MIN		-300.0f
-#define WORLD_Y_MAX		300.0f
-
-#define VK_ESC 0
-#define VK_F1 1
-#define VK_f 3
-#define VK_UP 7
-#define VK_DOWN 8
-#define VK_LEFT 9
-#define VK_RIGHT 10
-#define VK_s 11
-#define VK_S 12
-#define VK_r 13
-#define VK_R 14
-#define VK_F 15
-#define VK_SPACE 16
-
-void Reset_NetworkBots(void);
-
-//
-void Prepare_DemoMode(void);
-
-void Run_NetworkBots(void);
-
-extern int keyCodes[20];
-
-#endif
-
+void Display_NetSel(char str[26][80]);
+void Alpha_Keys(char *buffer);

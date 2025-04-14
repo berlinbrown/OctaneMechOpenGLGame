@@ -33,29 +33,74 @@
  */
 
 //
+// Berlin Brown
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
+// 
+// objects.h
+// driver for object source
 //
-// KEYS.H
-#ifndef _KEYS_H_
-#define _KEYS_H_
 
-#define MAX_INPUT_STR             32
+#pragma once
 
-// see keys.c
-#define SEL_SERVER_MODE           0
-#define SEL_CLIENT_MODE           1
+#define CUBE_OBJECT			0
+#define GRID_OBJECT			1
+#define ANT_OBJECT			2
+#define WORLD_OBJECT		3
+#define WIREBOX_OBJECT		4
+#define NORM_CUBE_OBJECT	5
+#define SQUARE_OBJECT		6
+#define PLANE_OBJECT		7
+#define FIREANT_OBJECT		8
+#define PYRAMID_OBJECT		9
+#define STARS_OBJECT		10
 
-#define START_SEL                 0
-#define SEL_SERVER_MAX            5
-#define SEL_CLIENT_MAX            5
+#define MAX_OBJECTS			11
 
-#define SEL_TYPE_TEXT             0
-#define SEL_TYPE_BOOL             1
-#define SEL_TYPE_IP               2
-#define SEL_TYPE_NUMERIC          3
-#define SEL_TYPE_APPLY            4
-#define SEL_TYPE_NOCHANGE         5
+#define GRID_SIZE			300.0f
 
-void Display_NetSel(char str[26][80]);
-void Alpha_Keys(char *buffer);
+extern GLUquadricObj *quadric;	// main Quadric Object
 
-#endif
+//
+// major struct for driver objects
+//
+typedef struct tagDriverObjects {
+
+	void (*init)(int list_id);
+	void (*compile)(void);
+	void (*draw)(void);		// used with compile
+	void (*render)(void);	// render object to scenes
+
+	int	call_id;			// id used to compile object
+	int visible;
+
+} DriverObjects;
+
+void InitObjects(void);
+void DeleteObjects(void);
+void RenderObjects(void);
+void RenderGrid(void);
+
+void RenderWalls(void);
+
+void RenderBounds(float x, float y, float width);
+
+void Bot_Triangle(float x, float y);
+
+//
+// set of the objects
+//
+extern DriverObjects	colorcube;
+extern DriverObjects	grid;
+extern DriverObjects	ant;
+extern DriverObjects	walls;
+extern DriverObjects	wirebox;
+extern DriverObjects	norm_cube;
+extern DriverObjects	pheromone;
+extern DriverObjects	plane;
+extern DriverObjects	fireant;
+extern DriverObjects	pyramid;
+extern DriverObjects	stars;
+
+extern DriverObjects *driver_objects[MAX_OBJECTS];
+
+void RenderPlane(void);

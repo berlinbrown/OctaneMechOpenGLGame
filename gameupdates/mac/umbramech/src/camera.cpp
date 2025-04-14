@@ -34,7 +34,7 @@
 
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 //
 // camera.cpp
 //
@@ -45,13 +45,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-#include "camera.h"
-#include "bot.h"
-#include "gldrawlib.h"
-#include "globals.h"
-#include "fireants.h"
-#include "menu.h"
 
 static int mouse_x = SCREEN_WIDTH / 2;
 static int mouse_y = SCREEN_HEIGHT / 2;

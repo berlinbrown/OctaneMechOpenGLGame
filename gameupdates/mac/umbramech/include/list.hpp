@@ -33,43 +33,20 @@
  */
 
 //
-// octree.h
-//
-#ifndef _OCTREE_H_
-#define _OCTREE_H_
+// list.h
+#pragma once
 
-#include "bot.h"
-#include "plist.h"
-#include "gldrawlib.h"
+typedef struct tagNode {
+	int data;
 
-#define MAX_TRAIL_STEPS		500
+	struct tagNode *next; 
+} Node;
 
-#define MAX_OCTREE			2000
-
-
-// 
-// Dont tell you CS instructor that this
-// is a octree, it is merely a hashtable
-// the key is generated from the xmin,xmax, etc
-// - good number of elements is 2000
-typedef struct tagOctree {
-	float x_min;
-	float x_max;
-	float y_min;
-	float y_max;
-
-	int max_elements;
-	PtrList	*list;
-
-} Octree;
+typedef struct tagList {
+	Node *head;
+} List;
 
 
-void pheromoneBuild(void);
-void pheromoneDestroy(void);
-void pheromoneInsert(StaticBotPtr bot);
-void pheromoneDelete(StaticBotPtr bot);
-StaticBotPtr pheromoneSearch(DriverBotPtr bot);
+void LinkTest(void);
 
 
-
-#endif 

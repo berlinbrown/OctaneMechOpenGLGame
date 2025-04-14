@@ -45,16 +45,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "camera.h"
-#include "bot.h"
-#include "objects.h"
-
-#include "gldrawlib.h"
-#include "bot.h"
-#include "globals.h"
-
-#include "lights.h"
-
 #undef CURRENT_PTR
 #define CURRENT_PTR StaticBotPtr
 

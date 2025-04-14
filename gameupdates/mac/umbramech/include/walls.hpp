@@ -33,40 +33,18 @@
  */
 
 //
-// world.h
+// walls.h
 //
-#ifndef _WORLD_H_
-#define _WORLD_H_
+#pragma once
 
-#define WORLD_HEIGHT		6.0f
-#define WORLD_COLOR glColor3f(world_ptr->color[0],		\
-			world_ptr->color[1], world_ptr->color[2]);	\
+#define WALL_HEIGHT				12.0f
 
-  // till we implement lights
-#define WORLD_COLOR_2 glColor3f(world_ptr->color[0]-0.2f,		\
-			world_ptr->color[1]-0.2f, world_ptr->color[2]-0.2f);	\
 
-//
-// world object
-// - think 2d, x = x, y = z
-typedef struct tagDriverWorld {
+void Draw_Wall_List(void);
+void Create_Wall_List(void);
+void Delete_Wall_List(void);
+void Print_Wall_List(void);
 
-	float	x_min;
-	float	y_min;
-	float	x_max;
-	float	y_max;
+void CreateWalls(void);
 
-	float	height;
-
-	float	color[3];
-
-} DriverWorld, *DriverWorldPtr;
-
-// place in initgl
-void CreateWorld(void);
-void ShutdownWorld(void);
-
-extern DriverWorldPtr	world_ptr;
-
-#endif
 

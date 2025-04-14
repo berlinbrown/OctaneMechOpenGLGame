@@ -32,36 +32,36 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
-// menu.h
+// maps.h
+// - see maps.cpp
 //
 
-#ifndef _MENU_H_
-#define _MENU_H_
+#pragma once
 
-#include "bot.h"
+#define	MAX_MAPS		120;
 
-// menu mode
-#define MENU_TITLE_MODE			1
-#define MENU_RUN_MODE			2
-#define MENU_HELP_MODE			3
-#define MENU_SETTINGS_MODE      4
+#define MAP_WIDTH		7.2f;
+#define MAP_HEIGHT		7.2f;
 
-#define NEW_GAME_ID			0
-#define EXIT_ID				1
-#define HELP_ID				2
-#define SETTINGS_ID			3
-#define DEMO_ID				4
+#define MAP_MIN			-30.0f;
+#define MAP_MAX			30.0f;
 
-// These are used with _menu_state
-#define MENU_DEAD_MODE			4
-#define FIRST_TIME_TRUE			1
-#define FIRST_TIME_FALSE		2
+typedef struct tagMap {
+	int id;
 
-void Toggle_MenuItems(int dir);
-bool Set_MenuMode(void);
-void Reset_DeadText(void);
+	float x_min;
+	float x_max;
+	float y_min;
+	float y_max;
 
-#endif
+	PtrList	*list;
+
+} Map;
+
+void BuildMap(void);
+
+#define INSERT_MAP(val)	InsertFront(map_list, (Map *)val)
+#define DESTROY_MAPS DestroyPtrList(map_list);DestroyMaps()
+#define CREATE_MAPS map_list = CreatePtrList()
 

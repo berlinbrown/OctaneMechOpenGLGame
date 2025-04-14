@@ -44,12 +44,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "globals.h"
-#include "gldrawlib.h"
-#include "objects.h"
-#include "bot.h"
-#include "octree.h"
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT			pheromone
 

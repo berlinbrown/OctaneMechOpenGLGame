@@ -34,7 +34,7 @@
 
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 //
 // grid.cpp
 //
@@ -46,8 +46,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-#include "objects.h"
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT grid

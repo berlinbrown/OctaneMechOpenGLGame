@@ -57,8 +57,8 @@ void DriverBots::moveFireAnt()
 	} // end of the if
 
 	// movement code
-	bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
-	bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
+	this->x -= (float)sin(this->heading * PI_180) * this->linearv;
+	this->y -= (float)cos(this->heading * PI_180) * this->linearv;
 
 	// use the worst algorithm ever, brute force
 	// to check for a bot in the path
@@ -72,17 +72,17 @@ void DriverBots::moveFireAnt()
 	if (col_flag)
 	{
 		// change state
-		bot->state = CHANGE_DIR_STATE;
+		this->state = CHANGE_DIR_STATE;
 
 		// reset back
-		bot->x += (float)sin(bot->heading * PI_180) * bot->linearv;
-		bot->y += (float)cos(bot->heading * PI_180) * bot->linearv;
+		this->x += (float)sin(this->heading * PI_180) * this->linearv;
+		this->y += (float)cos(this->heading * PI_180) * this->linearv;
 
 		return;
 
 	} // end of the if
 
-	bot->state = MOVE_STATE;
+	this->state = MOVE_STATE;
 
 	return;
 
@@ -99,7 +99,7 @@ static int FindBot(DriverBotPtr bot)
 	for (index = 0; index < MAX_FIRE_ANTS; index++)
 	{
 		// I hope these match up
-		if (bot->id == index)
+		if (this->id == index)
 			continue; // skip yourself
 
 		// if the guy is dead, skip searching
@@ -120,7 +120,7 @@ static int FindBot(DriverBotPtr bot)
 // - use another state
 // for processing the search events
 //
-static bool SearchEvent(DriverBotPtr bot)
+bool DriverBots::SearchEvent(DriverBotPtr bot)
 {
 	int res;
 	float tmp_targ;
@@ -130,19 +130,19 @@ static bool SearchEvent(DriverBotPtr bot)
 	if (res == -1)
 		return false;
 
-	bot->enemy_id = res; // save for later
+	this->enemy_id = res; // save for later
 
 	// we found a valid nme
 	// Note: for turret rotation, you have to include
 	// the heading direction
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	// bot->state = SET_MOUNT_STATE;
-	bot->state = GO_MOVE_COMMAND;
+	// this->state = SET_MOUNT_STATE;
+	this->state = GO_MOVE_COMMAND;
 
 	return true;
 
@@ -151,7 +151,7 @@ static bool SearchEvent(DriverBotPtr bot)
 //
 // FindCameraPos
 //
-void FindCameraPos(DriverBotPtr bot)
+void DriverBots::FindCameraPos(DriverBotPtr bot)
 {
 	float tmp_heading;
 	float tmp_x, tmp_y;
@@ -160,7 +160,7 @@ void FindCameraPos(DriverBotPtr bot)
 	//
 	// Set the camera lookat and position
 	//
-	tmp_heading = bot->heading + 90.0f;
+	tmp_heading = this->heading + 90.0f;
 	if (tmp_heading > 360.0f)
 		tmp_heading -= 360.0f;
 
@@ -169,14 +169,14 @@ void FindCameraPos(DriverBotPtr bot)
 	tmp_x = LOOKAT_OFFSET * (float)cos(rad) * CAMERA->zoom_factor;
 	tmp_y = LOOKAT_OFFSET * (float)sin(rad) * CAMERA->zoom_factor;
 
-	tmp_x = tmp_x + bot->x;
-	tmp_y = (-tmp_y) + bot->y;
+	tmp_x = tmp_x + this->x;
+	tmp_y = (-tmp_y) + this->y;
 
-	bot->look_x = tmp_x;
-	bot->look_y = tmp_y;
+	this->look_x = tmp_x;
+	this->look_y = tmp_y;
 
 	// the camera pos
-	tmp_heading = bot->heading + 270.0f;
+	tmp_heading = this->heading + 270.0f;
 	if (tmp_heading > 360.0f)
 		tmp_heading -= 360.0f;
 
@@ -185,27 +185,27 @@ void FindCameraPos(DriverBotPtr bot)
 	tmp_x = CAMERA_BOT_OFFSET * (float)cos(rad) * CAMERA->zoom_factor;
 	tmp_y = CAMERA_BOT_OFFSET * (float)sin(rad) * CAMERA->zoom_factor;
 
-	tmp_x = tmp_x + bot->x;
-	tmp_y = (-tmp_y) + bot->y;
+	tmp_x = tmp_x + this->x;
+	tmp_y = (-tmp_y) + this->y;
 
-	bot->cam_x = tmp_x;
-	bot->cam_y = tmp_y;
+	this->cam_x = tmp_x;
+	this->cam_y = tmp_y;
 
 } // end of the function
 
 //
 // Process FireEvent
 //
-void Wander_Command(DriverBotPtr bot)
+void DriverBots::wanderCommand(DriverBotPtr bot)
 {
 
 	// bot is dead cant do too much
-	if (bot->alive == DEAD_STATE)
+	if (this->alive == DEAD_STATE)
 		return;
 
 	FindCameraPos(bot);
 
-	switch (bot->state)
+	switch (this->state)
 	{
 	case MOVE_STATE:
 		MoveFireAnt(bot);
@@ -228,7 +228,7 @@ void Wander_Command(DriverBotPtr bot)
 		// turn state is used to set the direction
 		TurnAntState(bot, TURN_STATE, MOVE_STATE);
 
-		bot->state = GetStartState(WANDER_COMMAND);
+		this->state = GetStartState(WANDER_COMMAND);
 		break;
 
 	case GO_MOVE_COMMAND:
@@ -236,9 +236,9 @@ void Wander_Command(DriverBotPtr bot)
 		break;
 
 	case EXPLODE_STATE:
-		SetExplosion(bot->x, bot->y);
-		bot->alive = DEAD_STATE;
-		bot->state = TEMP_STATE;
+		SetExplosion(this->x, this->y);
+		this->alive = DEAD_STATE;
+		this->state = TEMP_STATE;
 
 		break;
 
@@ -257,7 +257,7 @@ void Wander_Command(DriverBotPtr bot)
 // spot, hmm, not very effective
 // so use GenerateBoxMove also
 //
-void GenerateMove(DriverBotPtr bot, int next_state)
+void DriverBots::GenerateMove(DriverBotPtr bot, int next_state)
 {
 
 	int res;
@@ -267,49 +267,49 @@ void GenerateMove(DriverBotPtr bot, int next_state)
 	float radius;
 	float rand_rad;
 
-	res = bot->enemy_id;
+	res = this->enemy_id;
 
 	radius = (((float)(rand() % 100) / 20.0f) - 2.5f);
 	radius += ATTACK_RADIUS;
 
 	rand_rad = (((float)(rand() % 1000) / 15.0f) - 33.0f);
 
-	bot->attack_angle += rand_rad;
+	this->attack_angle += rand_rad;
 
-	if (bot->attack_angle < 0)
-		bot->attack_angle += 360.0f;
-	else if (bot->attack_angle > 360)
-		bot->attack_angle -= 360.0f;
+	if (this->attack_angle < 0)
+		this->attack_angle += 360.0f;
+	else if (this->attack_angle > 360)
+		this->attack_angle -= 360.0f;
 
 	// generate a point at a circle away
 	// from the nme and then turn
-	tmp_x = radius * (float)cos(bot->attack_angle);
-	tmp_y = radius * (float)sin(bot->attack_angle);
+	tmp_x = radius * (float)cos(this->attack_angle);
+	tmp_y = radius * (float)sin(this->attack_angle);
 
 	tmp_x = fire_cluster[res]->x + tmp_x;
 	tmp_y = fire_cluster[res]->y + tmp_y;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y, tmp_x, tmp_y);
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y, tmp_x, tmp_y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
 	// we also need the number of moves it takes to
 	// get there
-	bot->target_moves = (int)(radius / bot->linearv);
+	this->target_moves = (int)(radius / this->linearv);
 
-	if (bot->target_moves <= 0)
-		bot->target_moves = 2;
+	if (this->target_moves <= 0)
+		this->target_moves = 2;
 
-	bot->move_index = 0;
+	this->move_index = 0;
 
-	bot->state = next_state;
+	this->state = next_state;
 
 } // end of the function
 
@@ -317,7 +317,7 @@ void GenerateMove(DriverBotPtr bot, int next_state)
 // Generate Box Move
 // A little bit more effective
 //
-void GenerateBoxMove(DriverBotPtr bot, int next_state)
+void DriverBots::GenerateBoxMove(DriverBotPtr bot, int next_state)
 {
 	int res;
 	float tmp_targ;
@@ -329,9 +329,9 @@ void GenerateBoxMove(DriverBotPtr bot, int next_state)
 	float zx, zy;
 	float tol;
 
-	res = bot->enemy_id;
-	nme_x = bot->x;
-	nme_y = bot->y;
+	res = this->enemy_id;
+	nme_x = this->x;
+	nme_y = this->y;
 
 	zx = fire_cluster[res]->x;
 	zy = fire_cluster[res]->y;
@@ -340,45 +340,45 @@ void GenerateBoxMove(DriverBotPtr bot, int next_state)
 	tmp_x = ((float)(rand() % 100) / 30.0f);
 	tmp_y = (((float)(rand() % 100) / 20.0f) - 2.5f);
 
-	dx = zx - bot->x;
-	dy = zy - bot->y;
+	dx = zx - this->x;
+	dy = zy - this->y;
 
 	radius = (float)sqrt((dx * dx) + (dy * dy));
 	tol = LINE_OF_SIGHT / 1.9f;
 
-	if ((zx > bot->x) ||
+	if ((zx > this->x) ||
 		(radius > tol))
 		tmp_x = -tmp_x;
 
 	tmp_x = nme_x + tmp_x;
 	tmp_y = nme_y + tmp_y;
 
-	dx = tmp_x - bot->x;
-	dy = tmp_y - bot->y;
+	dx = tmp_x - this->x;
+	dy = tmp_y - this->y;
 
 	radius = (float)sqrt((dx * dx) + (dy * dy));
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y, tmp_x, tmp_y);
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y, tmp_x, tmp_y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 tmp_x, tmp_y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
 	// we also need the number of moves it takes to
 	// get there
-	bot->target_moves = (int)(radius / bot->linearv);
+	this->target_moves = (int)(radius / this->linearv);
 
-	if (bot->target_moves <= 0)
-		bot->target_moves = 2;
+	if (this->target_moves <= 0)
+		this->target_moves = 2;
 
-	bot->move_index = 0;
+	this->move_index = 0;
 
-	bot->state = next_state;
+	this->state = next_state;
 
 } // end of the function
 
@@ -388,30 +388,30 @@ void GenerateBoxMove(DriverBotPtr bot, int next_state)
 // if you want something basic, this is it
 // no thrills, just shoot
 //
-void Assault_Move(DriverBotPtr bot, int next_state)
+void DriverBots::assaultMove(DriverBotPtr bot, int next_state)
 {
 	int res;
 	float tmp_targ;
 
-	res = bot->enemy_id;
+	res = this->enemy_id;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y, fire_cluster[res]->x, fire_cluster[res]->y);
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y, fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
 	// we also need the number of moves it takes to
 	// get there
-	bot->target_moves = 0;
-	bot->move_index = 0;
+	this->target_moves = 0;
+	this->move_index = 0;
 
-	bot->state = next_state;
+	this->state = next_state;
 
 } // end of the function
 
@@ -419,20 +419,20 @@ void Assault_Move(DriverBotPtr bot, int next_state)
 // Generate_Turn
 // - turn towards the nme again
 //
-void Generate_Turn(DriverBotPtr bot)
+void DriverBots::generateTurn(DriverBotPtr bot)
 {
 	int res;
 	float tmp_targ;
 
-	res = bot->enemy_id;
+	res = this->enemy_id;
 
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	bot->state = SET_MOUNT_STATE;
+	this->state = SET_MOUNT_STATE;
 
 } // end of the function
 
@@ -441,7 +441,7 @@ void Generate_Turn(DriverBotPtr bot)
 // - travel so many moves based
 // on target_moves
 //
-void Reach_Target(DriverBotPtr bot)
+void DriverBots::Reach_Target(DriverBotPtr bot)
 {
 	CollisionObj *col_ptr;
 	int tol_1;
@@ -450,14 +450,14 @@ void Reach_Target(DriverBotPtr bot)
 	bool col_flag = false;
 
 	// skip if we have zero move target
-	if (bot->target_moves <= 0)
+	if (this->target_moves <= 0)
 	{
-		bot->state = GENERATE_TURN;
+		this->state = GENERATE_TURN;
 		return;
 	} // end of the if
 
-	bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
-	bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
+	this->x -= (float)sin(this->heading * PI_180) * this->linearv;
+	this->y -= (float)cos(this->heading * PI_180) * this->linearv;
 
 	// perform collision test using driver
 	col_flag = CheckCollisionBot((DriverBotPtr)bot);
@@ -465,23 +465,23 @@ void Reach_Target(DriverBotPtr bot)
 	// we have a hit
 	if (col_flag)
 	{
-		bot->x +=
-			(float)sin(bot->heading * PI_180) * bot->linearv;
-		bot->y +=
-			(float)cos(bot->heading * PI_180) * bot->linearv;
+		this->x +=
+			(float)sin(this->heading * PI_180) * this->linearv;
+		this->y +=
+			(float)cos(this->heading * PI_180) * this->linearv;
 
 	} // end of the if
 
 	// Now check how many times we have moved
-	bot->move_index++;
+	this->move_index++;
 
-	tol_1 = bot->target_moves - 1;
-	tol_2 = bot->target_moves + 1;
+	tol_1 = this->target_moves - 1;
+	tol_2 = this->target_moves + 1;
 
-	if ((bot->move_index >= tol_1) && (bot->move_index <= tol_2))
+	if ((this->move_index >= tol_1) && (this->move_index <= tol_2))
 	{
 		// done, now move to next state
-		bot->state = GENERATE_TURN;
+		this->state = GENERATE_TURN;
 	} // end of the if
 
 } // end of the functino
@@ -489,17 +489,17 @@ void Reach_Target(DriverBotPtr bot)
 //
 // Move Command
 //
-void Move_Command(DriverBotPtr bot)
+void DriverBots::moveCommand(DriverBotPtr bot)
 {
 	int check_rand;
 
 	// bot is dead cant do too much
-	if (bot->alive == DEAD_STATE)
+	if (this->alive == DEAD_STATE)
 		return;
 
 	FindCameraPos(bot);
 
-	switch (bot->state)
+	switch (this->state)
 	{
 	case GENERATE_STATE:
 
@@ -510,7 +510,7 @@ void Move_Command(DriverBotPtr bot)
 		// find a location to move to
 		//
 
-		if (bot->food > DYING_STATE)
+		if (this->food > DYING_STATE)
 		{
 			if (check_rand == 1)
 				Assault_Move(bot, SET_TURN_STATE);
@@ -521,9 +521,9 @@ void Move_Command(DriverBotPtr bot)
 		{
 
 			// also increase the speed a little bit
-			bot->linearv *= 1.1f;
-			if (bot->linearv >= BOT_MAX_SPEED)
-				bot->linearv = BOT_MAX_SPEED;
+			this->linearv *= 1.1f;
+			if (this->linearv >= BOT_MAX_SPEED)
+				this->linearv = BOT_MAX_SPEED;
 
 			Assault_Move(bot, SET_TURN_STATE);
 		} // end of if
@@ -569,9 +569,9 @@ void Move_Command(DriverBotPtr bot)
 		break;
 
 	case EXPLODE_STATE:
-		SetExplosion(bot->x, bot->y);
-		bot->alive = DEAD_STATE;
-		bot->state = TEMP_STATE;
+		SetExplosion(this->x, this->y);
+		this->alive = DEAD_STATE;
+		this->state = TEMP_STATE;
 
 		break;
 
@@ -596,37 +596,37 @@ void Rescan_Enemy(DriverBotPtr bot)
 	{
 		// no enemy, go back to
 		// wandering
-		bot->state = GO_WANDER_COMMAND;
+		this->state = GO_WANDER_COMMAND;
 
 		return;
 	} // end of the function
 
-	bot->enemy_id = res; // save for later
+	this->enemy_id = res; // save for later
 
 	// otherwise, go into attack state
-	tmp_targ = FindAngle(bot->heading,
-						 bot->x, bot->y,
+	tmp_targ = FindAngle(this->heading,
+						 this->x, this->y,
 						 fire_cluster[res]->x, fire_cluster[res]->y);
 
-	bot->target_dir = tmp_targ;
+	this->target_dir = tmp_targ;
 
-	bot->state = SET_MOUNT_STATE;
+	this->state = SET_MOUNT_STATE;
 
 } // end of the function
 
 //
 // Attack Command
 //
-void Attack_Command(DriverBotPtr bot)
+void DriverBots::attackCommand(DriverBotPtr bot)
 {
 
 	// bot is dead cant do too much
-	if (bot->alive == DEAD_STATE)
+	if (this->alive == DEAD_STATE)
 		return;
 
 	FindCameraPos(bot);
 
-	switch (bot->state)
+	switch (this->state)
 	{
 
 	case RECHECK_STATE:
@@ -651,9 +651,9 @@ void Attack_Command(DriverBotPtr bot)
 		break;
 
 	case EXPLODE_STATE:
-		SetExplosion(bot->x, bot->y);
-		bot->alive = DEAD_STATE;
-		bot->state = TEMP_STATE;
+		SetExplosion(this->x, this->y);
+		this->alive = DEAD_STATE;
+		this->state = TEMP_STATE;
 
 		break;
 

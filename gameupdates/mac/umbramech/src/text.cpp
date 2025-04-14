@@ -47,11 +47,6 @@
 #include <string.h>
 #include <assert.h>
 
-#include "bot.h"
-#include "gldrawlib.h"
-#include "text.h"
-#include "globals.h"
-
 // The text texture only needs to be initialized once
 static unsigned int fontID = 0;
 

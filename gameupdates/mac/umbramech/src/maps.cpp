@@ -54,10 +54,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bot.h"
-#include "plist.h"
-#include "maps.h"
-
 PtrList *map_list;
 
 // we need a place to hold the pointers, that is map_ptrs

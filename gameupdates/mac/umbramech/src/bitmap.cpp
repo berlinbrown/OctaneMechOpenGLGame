@@ -39,15 +39,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "globals.h"
-#include "gldrawlib.h"
-#include "objects.h"
-#include "bot.h"
-#include "menu.h"
-#include "camera.h"
-#include "fireants.h"
-#include "network/connect.h"
-
 static float mTextHeight = 36.0f;
 
 // Note: the terrain should be about 1/2 what the
@@ -131,8 +122,9 @@ void NextTexture(void)
 {
 
 	textureindex++; // up the index
-	if (textureindex > MAX_TEXTURES)
+	if (textureindex > MAX_TEXTURES) {
 		textureindex = MAX_TEXTURES;
+	}
 
 } // end of the function
 

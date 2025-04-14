@@ -33,62 +33,36 @@
  */
 
 //
-// connect.h
+// octree.h
 //
-#ifndef _CONNECT_H_
-#define _CONNECT_H_
+#pragma once
 
-#define CONNECT_STR "127.0.0.1"
-#define CONNECT_PORT 9000
+#define MAX_TRAIL_STEPS		500
 
-#define SNAP_ELAPSED SnapEndTime.tv_sec - SnapStartTime.tv_sec + \
-             ((SnapEndTime.tv_usec - SnapStartTime.tv_usec)/1.0E6);
-
-//
-// Snapshot time
-//
-#define SNAP_SHOT_T            60
-
-//
-// Place server object Here
+#define MAX_OCTREE			2000
 
 
-void Start_Service(char final_str[4][80], int mode);
-void Get_NetworkMsg(char *buffer);
-void Set_NetworkMsg(char *buffer);
+// 
+// Dont tell you CS instructor that this
+// is a octree, it is merely a hashtable
+// the key is generated from the xmin,xmax, etc
+// - good number of elements is 2000
+typedef struct tagOctree {
+	float x_min;
+	float x_max;
+	float y_min;
+	float y_max;
 
-// clients.c
-void Build_StartMsg(void);
+	int max_elements;
+	PtrList	*list;
 
-// super functions
-//
-void Super_InitNetwork(void);
-void Super_DeleteNetwork(void);
-
-void Launch_Server(void);
-void Kill_Server(void);
-
-//
-// call in bitmaps.c or glant.c
-//
-void Build_StartMsg(void);
-
-//
-// should be called in fireants.c
-//
-void Build_MoveMsg(float x, float y, float heading, int type);
-
-//
-// network.c
-void Kill_Client(void);
-void Connect_Server(char *buffer);
-void Print_NetRun(void);
-
-void Snapshot_StartTime(void);
-void mPerformSnapshot(void);
-
-// call this outside of the network interface
-void Perform_Snapshots(void);
+} Octree;
 
 
-#endif
+void pheromoneBuild(void);
+void pheromoneDestroy(void);
+void pheromoneInsert(StaticBotPtr bot);
+void pheromoneDelete(StaticBotPtr bot);
+StaticBotPtr pheromoneSearch(DriverBotPtr bot);
+
+

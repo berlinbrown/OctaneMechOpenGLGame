@@ -32,61 +32,30 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
-// particles.h
-//
-#ifndef _PARTICLES_H_
-#define _PARTICLES_H_
-
-#define MAX_PARTICLES		90
-
-#define MAX_PARTICLE_LIFE	70
-#define MAX_PARTICLE_SIZE	1.0f
-
-// max number of particles
-// on the floor at one time
-#define MAX_PARTICLE_SET	60
-
-#define PARTICLE_SPEED		0.3f
 
 //
-// particles will be made up
-// of debris and particles
+// menu.h
 //
-typedef struct tagParticle {
 
-	int					p_id;
+#pragma once
 
-	float				p_pos[3];
-	float				p_speed[3];
-	float				p_color[3];
+// menu mode
+#define MENU_TITLE_MODE			1
+#define MENU_RUN_MODE			2
+#define MENU_HELP_MODE			3
+#define MENU_SETTINGS_MODE      4
 
-	int					p_state;
+#define NEW_GAME_ID			0
+#define EXIT_ID				1
+#define HELP_ID				2
+#define SETTINGS_ID			3
+#define DEMO_ID				4
 
-} Particle, *ParticlePtr;
+// These are used with _menu_state
+#define MENU_DEAD_MODE			4
+#define FIRST_TIME_TRUE			1
+#define FIRST_TIME_FALSE		2
 
-//
-// Particle List
-//
-typedef struct tagParticleList {
-
-	Particle	particles[MAX_PARTICLES];
-
-	float		x;
-	float		y;
-
-	int			life;	
-	int			state;
-
-} ParticleList;
-
-
-void SetExplosion(float x, float y);
-void AnimateExplosions(void);
-void DrawExplosions(void);
-
-void Build_ParticleSet(void);
-void Destroy_ParticleSet(void);
-
-#endif
-
+void Toggle_MenuItems(int dir);
+bool Set_MenuMode(void);
+void Reset_DeadText(void);

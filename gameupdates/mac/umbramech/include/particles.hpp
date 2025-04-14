@@ -33,56 +33,56 @@
  */
 
 //
-// clients.h
+// particles.h
 //
-#ifndef _CLIENTS_H_
-#define _CLIENTS_H_
 
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+#pragma once
 
-typedef struct tagClient {
-  
-  int list_id;              // the list id
-  int object_id;            // the client connect id, should match msg
-  
-  int sock;                 // may not be needed
+#define MAX_PARTICLES		90
 
-  // use memset to fill
-  struct sockaddr_in client_addr;
-  
+#define MAX_PARTICLE_LIFE	70
+#define MAX_PARTICLE_SIZE	1.0f
 
-  // client data --
-  char ip_address[32];      // may not be needed
-  char user_name[32];
-  char os_str[10];
-  int vers;
-  
+// max number of particles
+// on the floor at one time
+#define MAX_PARTICLE_SET	60
 
-  struct tagClient *next;
-
-} Client, *ClientPtr;
+#define PARTICLE_SPEED		0.3f
 
 //
-// Client List
-// This will also hold server data
+// particles will be made up
+// of debris and particles
 //
-typedef struct tagClientList {
-  
-  // list --
-  Client *front;
-  int objects;
-} ClientList;
+typedef struct tagParticle {
 
-Client *CreateClientObj(void);
-void Create_Client_List(void);
-void Delete_Client_List(void);
-void Client_AddQueue(int sock, struct sockaddr_in *c_addr,
-		     int object_id, char *msg);
-int Set_ClientID(void);
-void Print_Connections(void);
-void printConnections(void);
+	int					p_id;
 
-#endif
+	float				p_pos[3];
+	float				p_speed[3];
+	float				p_color[3];
+
+	int					p_state;
+
+} Particle, *ParticlePtr;
+
+//
+// Particle List
+//
+typedef struct tagParticleList {
+	Particle	particles[MAX_PARTICLES];
+	float		x;
+	float		y;
+	int			life;	
+	int			state;
+} ParticleList;
+
+
+void SetExplosion(float x, float y);
+void AnimateExplosions(void);
+void DrawExplosions(void);
+
+void Build_ParticleSet(void);
+void Destroy_ParticleSet(void);
+
+
+

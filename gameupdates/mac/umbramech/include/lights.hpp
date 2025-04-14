@@ -35,8 +35,6 @@
 //
 // lights.h
 //
-#ifndef _LIGHTS_H_
-#define _LIGHTS_H_
 
 #define ENABLE_LIGHTS		1
 
@@ -54,7 +52,6 @@ typedef struct tagDriverLights {
 
 } DriverLights, *DriverLightsPtr;
 
-
 void InitMaterial(void);
 //
 // GenerateBots
@@ -66,6 +63,4 @@ void SetLights(void);
 
 void setmaterial(float amb[], float diff[], float spec[],
 				 float shine[], float emiss[]);
-
-#endif
 

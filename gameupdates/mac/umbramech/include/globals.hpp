@@ -34,13 +34,6 @@
 
 //
 // global.h
-// - we need to keep a running tab
-// of everything
-// for processing and what not
-//
-#ifndef _GLOBALS_H_
-
-#include <time.h>
 
 #define LOADED_TRUE		1
 #define LOADED_FALSE	0
@@ -312,7 +305,3 @@ extern AntGlobals	*ant_globals;
 extern float framerate;
 
 extern int mSuper_Loaded;
-
-#endif
-
-

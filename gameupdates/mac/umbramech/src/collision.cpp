@@ -66,11 +66,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "collision.h"
-#include "gldrawlib.h"
-#include "camera.h"
-#include "fireants.h"
-
 static void Reset_DistStack(void);
 static void Insert_DistStack(CollisionPtr ptr);
 static CollisionPtr Find_DistStack(float x, float y);

@@ -35,9 +35,8 @@
 //
 // collision.h
 //
-#ifndef _COLLISION_H_
-#define _COLLISION_H_
-#include "bot.h"
+
+#pragma once
 
 #define MOVING_COL_TYPE			3
 #define PLANE_COL_TYPE			1	// i.e a wall
@@ -58,7 +57,8 @@
 //
 // The bullet has to stop somewhere, so
 // create some insane value for the desination
-#define MAX_BULLET_DEST			2000.0f
+#define MAX_BULLET_DEST     2000.0f
+
 
 //
 // collisionobj
@@ -66,38 +66,38 @@
 // objects with a width and position
 //
 typedef struct tagCollisionObj {
-	
-	int id;
-	
-	// used for a line segment
-	//
-	float	pos_0[2];
-	float	pos_1[2];
+    
+    int id;
+    
+    // used for a line segment
+    //
+    float	pos_0[2];
+    float	pos_1[2];
 
-	//
-	// collision x,y
-	// the predicted positions
-	float	collision_x;
-	float	collision_y;
-	float	dist;		// distance of collision
+    //
+    // collision x,y
+    // the predicted positions
+    float	collision_x;
+    float	collision_y;
+    float	dist;		// distance of collision
 
-	//
-	// 
-	int		movement_type;
+    //
+    // 
+    int		movement_type;
 
-	//
-	// drawing plane object
-	float	box_x;
-	float	box_y;
-	float	size[3];
+    //
+    // drawing plane object
+    float	box_x;
+    float	box_y;
+    float	size[3];
 
-	// object can be a driverbot or staticbot
-	StaticBotPtr	static_ptr;
+    // object can be a driverbot or staticbot
+    StaticBotPtr	static_ptr;
 
-	DriverBotPtr	bot_ptr;
+    DriverBotPtr	bot_ptr;
 
-	// we need to stop using static arrays
-	struct tagCollisionObj	*next;
+    // we need to stop using static arrays
+    struct tagCollisionObj	*next;
 
 } CollisionObj, *CollisionPtr;
 
@@ -108,8 +108,8 @@ void Build_DistStack(void);
 // CollisionList
 //
 typedef struct tagCollisionList {
-	CollisionObj *front;
-	int			objects;
+    CollisionObj *front;
+    int			objects;
 } CollisionList;
 
 
@@ -149,7 +149,3 @@ bool CheckCollisionBot(DriverBotPtr test_obj);
 //
 CollisionPtr CheckCollisionMoving(StaticBotPtr test_obj);
 void Insert_MovingObj(DriverBotPtr bot);
-
-#endif
-
-

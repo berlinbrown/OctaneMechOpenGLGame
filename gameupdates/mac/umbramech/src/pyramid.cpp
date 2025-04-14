@@ -46,13 +46,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "gldrawlib.h"
-#include "objects.h"
-#include "lights.h"
-#include "plist.h"
-#include "collision.h"
-#include "walls.h"
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT pyramid
 

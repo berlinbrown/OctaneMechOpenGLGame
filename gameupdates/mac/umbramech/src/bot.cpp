@@ -55,16 +55,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "camera.h"
-#include "bot.h"
-#include "objects.h"
-#include "gldrawlib.h"
-#include "world.h"
-#include "globals.h"
-#include "octree.h"
-#include "plist.h"
-#include "collision.h"
-
 void ProcessBotEvent(DriverBotPtr bot);
 
 static DriverBotPtr *bot_cluster;

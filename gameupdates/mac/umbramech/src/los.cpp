@@ -48,11 +48,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "globals.h"
-#include "bot.h"
-#include "gldrawlib.h"
-#include "fireants.h"
-
 #define UP 1
 #define DOWN 2
 #define DIRECTION(dir, val) dir = val

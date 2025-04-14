@@ -33,112 +33,101 @@
  */
 
 //
-// bot.h
+// bot.hpp
 //
-#ifndef _BOT_H_
-#define _BOT_H_
+
+#pragma once
 
 // used for network
-#define __VERSION__                         6
-#define __OS__                              "LIN"
+#define __VERSION__                         6;
+#define __OS__                              "MAC";
 
-typedef unsigned long DWORD;
-typedef int bool;
-
-#define ZeroMemory(S, N) memset((S), 0, (N))
-
-#define true 1
-#define false 0
+#define true = 1;
+#define false = 0;
 
 // the number of commands in the 
 // command process
 //
-#define ATTACK_COMMAND		1
-#define WANDER_COMMAND		2
-#define MOVE_COMMAND		3
+#define ATTACK_COMMAND = 1;
+#define WANDER_COMMAND = 2;
+#define MOVE_COMMAND		3;
 
 //
 // use TAB to toggle between modes
 //
-#define THIRD_PERSON_MODE	1
-#define FIRST_PERSON_MODE	2
+#define THIRD_PERSON_MODE	1;
+#define FIRST_PERSON_MODE	2;
 
 //
 // crosshairs
 // 
-#define CROSSHAIRS_SCALE	4.5f
-#define CROSSHAIRS_GROWTH	1.3f
+#define CROSSHAIRS_SCALE	4.5f;
+#define CROSSHAIRS_GROWTH	1.3f;
 
-#define LOOKAT_OFFSET		5.0f
-#define CAMERA_BOT_OFFSET	8.0f
-#define CAMERA_HEIGHT		3.2f
+#define LOOKAT_OFFSET		5.0f;
+#define CAMERA_BOT_OFFSET	8.0f;
+#define CAMERA_HEIGHT		3.2f;
 
 #define RELEASE_OBJECT(x)	\
-	if (x != NULL)			\
-		free(x);			\
-	x = NULL				\
+    if (x != NULL)			\
+        free(x);			\
+    x = NULL				\
 
 //
 // The multiplier for kills or 
 // just normal hits
 //
-#define SCORE_NORMAL		2.0f
-#define SCORE_KILL			10.0f
+#define SCORE_NORMAL		2.0f;
+#define SCORE_KILL			10.0f;
 
 
 // stars.cpp
 //
-#define MAX_RAND			4096	// 4096?
-#define MAX_STARS			1200	// 2000
-#define STAR_RADIUS			710.0
+#define MAX_RAND			4096;
+#define MAX_STARS			1200;
+#define STAR_RADIUS			710.0;
 #define STAR_ROT_SPEED		0.1f;
-
-#define __straight_steps	(MAX_STRAIGHT_STEPS-MIN_STRAIGHT_STEPS)	
-
-#define __go_home_steps_2	(MAX_STRAIGHT_STEPS_2-MIN_STRAIGHT_STEPS_2)	
 
 //
 // based on how much food is avaible
 // respawn so many ants
-#define USE_FOOD_RESPAWN	0
-#define ANT_RESPAWN			8
-#define FOOD_RESPAWN	(ANT_RESPAWN * INITIAL_ANT_FOOD)
-
+#define USE_FOOD_RESPAWN	0;
+#define ANT_RESPAWN			8;
 
 #define BEGIN_BOT		glPushMatrix()
 #define END_BOT			glPopMatrix()
 
-#define TURN_RIGHT			1
-#define TURN_LEFT			2
+#define TURN_RIGHT			1;
+#define TURN_LEFT			2;
 
 
-#define MOVE_STATE			0
-#define TURN_STATE			1
-#define CHANGE_DIR_STATE	2
-#define MOUNT_STATE			3
-#define SHOOT_STATE			4
-#define	SET_TURN_STATE		6
-#define SET_MOUNT_STATE		7
-#define GENERATE_STATE		8
-#define GENERATE_TURN		9
-#define RECHECK_STATE		10
+#define MOVE_STATE			0;
+#define TURN_STATE			1;
+#define CHANGE_DIR_STATE	2;
+#define MOUNT_STATE			3;
+#define SHOOT_STATE			4;
+#define	SET_TURN_STATE		6;
+#define SET_MOUNT_STATE		7;
+#define GENERATE_STATE		8;
+#define GENERATE_TURN		9;
+#define RECHECK_STATE		10;
 
-#define TEMP_STATE			99
-#define GO_MOVE_COMMAND		999
-#define GO_ATTACK_COMMAND	998
-#define GO_WANDER_COMMAND	997
-#define EXPLODE_STATE		995
+#define TEMP_STATE			99;
+#define GO_MOVE_COMMAND		999;
+#define GO_ATTACK_COMMAND	998;
+#define GO_WANDER_COMMAND	997;
+#define EXPLODE_STATE		995;
 
-#define ALIVE_STATE			1
-#define DEAD_STATE			0	
-#define	READY_STATE			2
+#define ALIVE_STATE			1;
+#define DEAD_STATE			0;	
+#define	READY_STATE			2;
 
 
 #define GET_NEST_WIDTH		(1.5f*nest.objects[0]->size[0])
 #define GET_NEST_HWID		(GET_NEST_WIDTH/2.0f)
 #define NEST_FOOD_OBJECT	nest.objects[0]->food
 
-#define INVALID_BOT			-1
+#define INVALID_BOT			-1;
 
 void Super_LoadBots(void);
 void Super_KillBots(void);
@@ -181,6 +170,4 @@ void InitFood(void);
 extern DriverSentinel nest;
 extern DriverSentinel garden;
 extern DriverSentinel trail_set; 
-
-#endif
 

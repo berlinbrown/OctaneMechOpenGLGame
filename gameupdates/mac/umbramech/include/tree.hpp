@@ -32,74 +32,30 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
+
 //
-// Copyright (C) Dante Treglia II, 2000. 
+// tree.h
 //
-#ifndef _TEXT_H
-#define _TEXT_H
 
-#define MAX_STR 4096
+#pragma once
 
-#define TEXT_NONE 0x00
-#define TEXT_DRAW_BOX 0x04
-#define TEXT_DRAW_SPACES 0x02
-#define TEXT_WRAP_SPACES 0x08
-#define TEXT_DRAW_BACKGROUND 0x01
+// class for binary tree
 
-typedef struct {unsigned char r, g, b, a;} COLOR;
-#define MALLOC malloc
+typedef struct tagTreeNode {
+	
+	int		data;
 
-#define SET_COLOR(c, rIn, gIn, bIn, aIn) \
-	c.r = rIn; \
-	c.g = gIn; \
-	c.b = bIn; \
-	c.a = aIn
+	struct tagTreeNode *left;
+	struct tagTreeNode *right;
 
-typedef struct tagTextBox {
+} TreeNode;
 
-	// Bounding Box
-	int boxL;
-	int boxR;
-	int boxT;
-	int boxB;
+typedef struct tagTree {
 
-	// Text Buffers
-	char *buffer;
-	char *drawBufferPtr;
+	TreeNode *root;
 
-	// Info
-	int pageLineCnt;
-	int scrollCnt;
-	int currX;
-	int currY;
+} Tree;
 
-	COLOR color;
+void TreeTest(void);
+void TreeFuncTest(void);
 
-	unsigned int mode;
-
-} TextBox, *TextBoxPtr;
-
-void Paginate(TextBoxPtr text);
-void DrawStr(TextBoxPtr text, 
-			 int x, int y, int maxFlag, int maxY, char* string);
-void DrawBoundingBox(TextBoxPtr text);
-
-
-void TextBegin(TextBoxPtr text);
-void TextEnd(void);
-void DrawString(TextBoxPtr text, int x, int y, char *str);
-
-TextBoxPtr InitTextBox(int inL, int inR, int inT, int inB);
-void DestroyTextBox(TextBoxPtr text);
-void SetTextMode(TextBoxPtr text, unsigned int modeIn);
-void DrawText(TextBoxPtr text);
-void Printf(TextBoxPtr text,char* fmt, ... );
-
-void FormatStrCat(TextBoxPtr text, char *str);
-
-void SetTextColor(TextBoxPtr text, unsigned char r,
-				  unsigned char g, unsigned char b);
-
-void Reset_FontID(void);
-
-#endif 

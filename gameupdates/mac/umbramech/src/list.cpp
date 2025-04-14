@@ -38,9 +38,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "bot.h"
-#include "list.h"
-
 static int isempty(List *list)
 {
 

@@ -57,24 +57,6 @@
 
 #include <math.h>
 
-#include "gldrawlib.h"
-#include "objects.h"
-#include "lights.h"
-#include "bot.h"
-#include "camera.h"
-#include "world.h"
-#include "particles.h"
-#include "collision.h"
-#include "globals.h"
-#include "camera.h"
-#include "fireants.h"
-#include "menu.h"
-#include "sound.h"
-
-#include "network/include/msg.h"
-#include "network/network.h"
-#include "network/include/connect.h"
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT fireant
 

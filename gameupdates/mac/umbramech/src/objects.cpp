@@ -33,7 +33,7 @@
  */
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 //
 // objects.cpp
 //
@@ -45,12 +45,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-#include "lights.h"
-#include "objects.h"
-#include "bot.h"
-#include "gldrawlib.h" // for texture object
-#include "fireants.h"
 
 #define SQRT_75 0.8660254038f
 

@@ -47,15 +47,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "camera.h"
-#include "bot.h"
-#include "objects.h"
-
-#include "gldrawlib.h"
-
-#include "lights.h"
-#include "fireants.h"
-
 static GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
 static GLfloat mat_ambient[] = {0.9f, 0.9f, 0.9f, 1.0f};
 static GLfloat mat_diffuse[] = {0.9f, 0.8f, 0.8f, 1.0f};

@@ -34,7 +34,7 @@
 
 //
 // Berlin Brown
-// bigbinc@hotmail.com
+// berlin _dot__ brown  __at_ g_mail _ dot_ com
 //
 // glAnt.cpp
 //
@@ -64,36 +64,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-#include <X11/extensions/xf86vmode.h>
-#include <X11/keysym.h>
-// to get the frames per second
-#include <bits/time.h>
-
-#include "resource.h"
-#include "gldrawlib.h"
-#include "objects.h"
-#include "camera.h"
-#include "bot.h"
-#include "world.h"
-#include "lights.h"
-#include "globals.h"
-#include "list.h"
-#include "plist.h"
-#include "tree.h"
-#include "octree.h"
-#include "particles.h"
-#include "maps.h"
-#include "world.h"
-#include "collision.h"
-#include "walls.h"
-#include "fireants.h"
-#include "menu.h"
-#include "text.h"
-#include "keys.h"
-#include "sound.h"
-
-#include "network/include/connect.h"
 
 void Cmd_Keys(KeySym key);
 

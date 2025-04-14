@@ -50,14 +50,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include <X11/extensions/xf86vmode.h>
-#include <X11/keysym.h>
-
-#include "globals.h"
-#include "keys.h"
-#include "menu.h"
-#include "network/include/connect.h"
-
 // bad, bad! using globals
 extern char network_str_[22][80];
 

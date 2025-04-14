@@ -49,9 +49,6 @@
 #include <time.h>
 #include <string.h>
 
-#include "bot.h"
-#include "tree.h"
-
 #define TEST_VALUES 10
 
 static unsigned long tree_searches = 0;

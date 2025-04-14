@@ -32,19 +32,36 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by glAnt.rc
 //
-#define IDI_ICON1                       101
+// list.h
+#pragma once
 
-// Next default values for new objects
-// 
-#ifdef APSTUDIO_INVOKED
-#ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        104
-#define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           101
-#endif
-#endif
+typedef struct tagPtrNode {
+	void *ptr;
+
+	struct tagPtrNode *next; 
+} PtrNode;
+
+typedef struct tagPtrList {
+	PtrNode *head;
+	int items;
+} PtrList;
+
+void InsertFront(PtrList *list, void *data);
+
+void PtrLinkTest(void);
+
+PtrList *CreatePtrList();
+void DestroyPtrList(PtrList *list);
+int isempty(PtrList *list);
+void DeletePtrNode(PtrList *list, void *val);
+void *RemoveFront(PtrList *list);
+void PrintPtrList(PtrList *list);
+
+// STACK MACROS
+#define POP_STACK(list)		RemoveFront(list)
+#define PUSH_STACK(list, data)		InsertFront(list, data)
+#define CREATE_STACK		CreatePtrList()
+#define DESTROY_STACK(list)	DestroyPtrList(list)
+	
+

@@ -43,8 +43,6 @@
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-#include "gldrawlib.h"
-#include "objects.h"
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT wirebox

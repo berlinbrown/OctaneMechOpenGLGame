@@ -49,18 +49,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
 #include <OpenGL/gl.h>      // Core OpenGL functions
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
-
-#include "globals.h"
-#include "camera.h"
-#include "bot.h"
-#include "objects.h"
-
-#include "gldrawlib.h"
-#include "plist.h"
-#include "lights.h"
 
 #undef CURRENT_PTR
 #define CURRENT_PTR StaticBotPtr

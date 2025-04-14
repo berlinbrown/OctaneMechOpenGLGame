@@ -58,13 +58,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "objects.h"
-#include "bot.h"
-#include "tree.h"
-#include "gldrawlib.h"
-#include "plist.h"
-#include "octree.h"
-
 Octree **pheromone_tree;
 Octree **GenerateOctree(void);
 

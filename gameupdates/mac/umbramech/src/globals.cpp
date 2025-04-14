@@ -50,21 +50,9 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-
-#include "defaults.h"
-#include "bot.h"
-#include "gldrawlib.h"
-#include "globals.h"
-#include "camera.h"
-#include "text.h"
-#include "menu.h"
-#include "keys.h"
-#include "fireants.h"
-#include "network/include/connect.h"
-#include "network/include/clients.h"
-
 #define CONFIG_FILE_NAME "config.ini"
 #define ERROR_FILE_NAME "error.log"
+
 FILE *f_config = NULL;
 FILE *f_errorlog = NULL;
 FILE *f_newfile = NULL;

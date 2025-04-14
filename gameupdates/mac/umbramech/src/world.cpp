@@ -45,12 +45,6 @@
 #include <OpenGL/glu.h>     // OpenGL Utility Library
 #include <GLUT/glut.h>      // GLUT for window/context
 
-#include "bot.h"
-#include "gldrawlib.h"
-#include "objects.h"
-#include "world.h"
-#include "lights.h"
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT walls
 

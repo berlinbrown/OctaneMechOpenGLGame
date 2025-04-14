@@ -98,8 +98,11 @@ typedef struct tagDriverBots {
 
 } DriverBots, *DriverBotPtr;
 
-//
-// Driver bots class, contains position and speeds
+
+/**
+ * @class DriverBots
+ * Driver bots class, contains position and speeds
+ */ 
 class DriverBots {
     public:
         DriverBots();
