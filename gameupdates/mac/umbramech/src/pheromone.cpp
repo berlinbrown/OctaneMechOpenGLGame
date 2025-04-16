@@ -288,9 +288,7 @@ static void RenderPheromone(CURRENT_PTR boid)
 	if (boid->state == DEAD_STATE)
 		return;
 
-#if ENABLE_LIGHTS
 	glDisable(GL_LIGHTING);
-#endif
 
 	BEGIN_BOT;
  
@@ -316,9 +314,7 @@ static void RenderPheromone(CURRENT_PTR boid)
 
 	END_BOT;
 
-#if ENABLE_LIGHTS
 	glEnable(GL_LIGHTING);
-#endif
 
 } // end of the function 
 

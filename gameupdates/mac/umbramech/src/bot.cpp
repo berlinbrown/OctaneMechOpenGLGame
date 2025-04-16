@@ -99,9 +99,7 @@ void CreateAnts(int food)
 	int food_tol = 0;
 	float perct = 0;
 
-#if USE_FOOD_RESPAWN
 	food_tol = FOOD_RESPAWN
-#else
 	perct = 0.05f * (float)GetAnts();
 
 	if (perct > 1)
@@ -114,9 +112,8 @@ void CreateAnts(int food)
 
 	} // end of if-else
 
-#endif
 
-		if (food >= food_tol)
+	if (food >= food_tol)
 	{
 
 		// generate more ants
@@ -478,10 +475,7 @@ void MoveBot(DriverBotPtr bot)
 			// Once we have enough food
 			// create a new ant
 			CreateAnts(NEST_FOOD_OBJECT);
-
-#if HUD_NEST_FOOD
 			SetNestFood(NEST_FOOD_OBJECT);
-#endif
 
 		} // end of the if
 

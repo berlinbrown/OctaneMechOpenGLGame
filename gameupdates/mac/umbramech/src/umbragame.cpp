@@ -86,12 +86,9 @@ static void draw_ant(void)
 
 	float n[3]; // remember to free
 
-#if ENABLE_LIGHTS
-				// set the material for this object
+	// set the material for this object
 	setmaterial(xmat_ambient, xmat_diffuse,
 				xmat_specular, xlow_shininess, xmat_emission);
-
-#endif
 
 	// change the size here
 	// Note: starts from ground

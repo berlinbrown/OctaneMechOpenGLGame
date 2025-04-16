@@ -244,12 +244,10 @@ static void RenderSentinel(CURRENT_PTR boid)
 	// draw the object to screen
 	// driver_objects[ANT_OBJECT]->render();
 
-#if ENABLE_LIGHTS
 	// set the material for this object
 	setmaterial(funk_ambient, funk_diffuse,
 				funk_specular, zlow_shininess, zmat_emission);
 
-#endif
 
 	gluSphere(quadric, 0.5f, 18, 8); // draw sphere for hood
 

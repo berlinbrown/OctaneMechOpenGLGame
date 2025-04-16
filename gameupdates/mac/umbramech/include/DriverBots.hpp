@@ -28,8 +28,7 @@
  * Date: 4/2025
  */
 
-#ifndef _BOT_DRIVER_HPP_
-#define _BOT_DRIVER_HPP_
+ #pragma once
 
 // static bot
 //
@@ -196,7 +195,3 @@ class DriverBots {
         int		enemy_id;    
 
 };
-
-
-
-#endif

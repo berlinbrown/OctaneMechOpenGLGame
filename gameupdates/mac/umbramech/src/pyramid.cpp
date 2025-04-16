@@ -269,12 +269,9 @@ static void draw_pyramid(void)
 
 	float size = 0.5f;
 
-#if ENABLE_LIGHTS
 	// set the material for this object
 	setmaterial(dmat_ambient, dmat_diffuse,
 				dmat_specular, dlow_shininess, dmat_emission);
-
-#endif
 
 	// Note: normals are messed up for now
 	// select between n0-n3

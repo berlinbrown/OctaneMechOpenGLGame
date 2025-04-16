@@ -1032,44 +1032,27 @@ void PrintGlobals(void)
 {
 	int i = 0;
 
-#if HUD_ANTS
 	glRasterPos2i(10, 48 + 14);
 	PrintText("ANTS: %d", ant_globals->alive_ants);
-#endif
 
-#if HUD_SECS
 	glRasterPos2i(10, 48 + 28);
 	PrintText("TIME: %0.1f", ant_globals->seconds);
-#endif
 
-#if HUD_TIME_T
 	glRasterPos2i(10, 48 + 42);
 	PrintText("TIME_T: %0.0f", ant_globals->time_t);
-#endif
 
-#if HUD_NEST_FOOD
 	glRasterPos2i(10, 48 + 56);
 	PrintText("FOOD: %0.0f", ant_globals->nest_food);
-	// PrintText("FOOD: %ld", ant_globals.ticks);
-#endif
 
-#if HUD_GARDEN
 	glRasterPos2i(10, 48 + 70);
 	PrintText("GARD: %d", ant_globals->garden);
-	// PrintText("FOOD: %ld", ant_globals.ticks);
-#endif
 
-#if HUD_POS
 	// note: hud_NEST_FOOD must be turned off
 	glRasterPos2i(10, 48 + 56);
 	PrintText("x: %0.2f y: %0.2f", GetBotX(), GetBotY());
-#endif
 
-#if HUD_HEALTH
 	glRasterPos2i(10, 48 + 70);
 	PrintText("LIFE: %0.2f", ant_globals->player_health);
-	// PrintText("FOOD: %ld", ant_globals.ticks);
-#endif
 
 } // end of the function
 

@@ -50,13 +50,13 @@
 //
 #define ATTACK_COMMAND = 1;
 #define WANDER_COMMAND = 2;
-#define MOVE_COMMAND		3;
+#define MOVE_COMMAND   = 3;
 
 //
 // use TAB to toggle between modes
 //
-#define THIRD_PERSON_MODE	1;
-#define FIRST_PERSON_MODE	2;
+#define THIRD_PERSON_MODE = 1;
+#define FIRST_PERSON_MODE = 2;
 
 //
 // crosshairs
@@ -112,22 +112,17 @@
 #define GENERATE_TURN		9;
 #define RECHECK_STATE		10;
 
-#define TEMP_STATE			99;
-#define GO_MOVE_COMMAND		999;
-#define GO_ATTACK_COMMAND	998;
-#define GO_WANDER_COMMAND	997;
-#define EXPLODE_STATE		995;
+#define TEMP_STATE			= 99;
+#define GO_MOVE_COMMAND		= 999;
+#define GO_ATTACK_COMMAND	= 998;
+#define GO_WANDER_COMMAND	= 997;
+#define EXPLODE_STATE		= 995;
 
-#define ALIVE_STATE			1;
-#define DEAD_STATE			0;	
-#define	READY_STATE			2;
+#define ALIVE_STATE			= 1;
+#define DEAD_STATE			= 0;	
+#define	READY_STATE			= 2;
 
-
-#define GET_NEST_WIDTH		(1.5f*nest.objects[0]->size[0])
-#define GET_NEST_HWID		(GET_NEST_WIDTH/2.0f)
-#define NEST_FOOD_OBJECT	nest.objects[0]->food
-
-#define INVALID_BOT			-1;
+#define INVALID_BOT			= -1;
 
 void Super_LoadBots(void);
 void Super_KillBots(void);
@@ -139,10 +134,8 @@ void Super_KillFires(void);
 void Reset_FireAnts(void);
 void Player_Control(bool *keys);
 
-
 int GetStartState(int cmd);
 int GetLastState(int cmd);
-
 
 void CreateAnts(int food);
 

@@ -40,8 +40,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "plist.h"
-
 static int isempty(PtrList *list)
 {
 
@@ -50,7 +48,7 @@ static int isempty(PtrList *list)
 	else
 		return 0;
 
-} /* end of the fcuntion */
+}
 
 //
 // CreatePtrNode
@@ -65,7 +63,7 @@ PtrNode *CreatePtrNode(void *data)
 
 	return h;
 
-} // end of the function
+}
 
 //
 // DestroyPtrNode
@@ -175,7 +173,7 @@ void InsertFront(PtrList *list, void *data)
 
 	list->items++;
 
-} // end of the function
+}
 
 //
 // Remove Front
@@ -231,7 +229,7 @@ void PrintPtrList(PtrList *list)
 		current_ptr = current_ptr->next;
 	} // end of while
 
-} // end of the function
+}
 
 //
 // PrintList
@@ -312,4 +310,4 @@ void PtrLinkTest(void)
 	free(y);
 	free(z);
 
-} // end of the function
+}

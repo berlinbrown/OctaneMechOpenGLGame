@@ -431,16 +431,9 @@ static void compile_plane(void)
 //
 void RenderGrid(void)
 {
-
-#if ENABLE_LIGHTS
 	glDisable(GL_LIGHTING);
-#endif
-
 	driver_objects[GRID_OBJECT]->render();
-
-#if ENABLE_LIGHTS
 	glEnable(GL_LIGHTING);
-#endif
 
 } // end of the function
 
@@ -453,10 +446,7 @@ void RenderBounds(float x, float y, float width)
 	float h;
 	h = width / 2.0f;
 
-#if ENABLE_LIGHTS
 	glDisable(GL_LIGHTING);
-#endif
-
 	BEGIN_BOT;
 
 	glTranslatef(x, 0, y);
@@ -473,9 +463,7 @@ void RenderBounds(float x, float y, float width)
 
 	END_BOT;
 
-#if ENABLE_LIGHTS
 	glEnable(GL_LIGHTING);
-#endif
 
 } // end of the function
 

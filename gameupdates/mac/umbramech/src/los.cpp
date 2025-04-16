@@ -271,12 +271,10 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
 
 	} // end of the if-else
 
-#if DRAW_LINE_SIGHT
 	// DrawLineOfSight(bot->x, bot->y, tmp_x, tmp_y);
 	DrawLineOfSight(tmp_x2, tmp_y2, tmp_x3, tmp_y3);
 	DrawLineOfSight(bot->x, bot->y, tmp_x2, tmp_y2);
 	DrawLineOfSight(bot->x, bot->y, tmp_x3, tmp_y3);
-#endif
 
 	// check if point lies inside
 	if (inside == 3)
