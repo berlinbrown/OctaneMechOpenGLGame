@@ -44,6 +44,7 @@
 Node::Node(int value) : data(value), next(nullptr) {
     
 }
+
 Node::~Node() = default;  // not required but shown explicitly
 
 // List constructor
