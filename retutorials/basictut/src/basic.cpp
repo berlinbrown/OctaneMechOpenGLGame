@@ -8,6 +8,7 @@
 
 // Basic main program
 int main() {
+    
     std::cout << "Hello from C++ on macOS with clang!" << std::endl;
 
     // Instantiate an object
@@ -27,35 +28,35 @@ int main() {
     std::cout << "After deletion:\n";
     list.printList();
 
+    std::cout << "**** Continue to PLIST test **** \n";
+    std::cout << "**** //// **** \n\n";
+
     // Usage plist
-    PtrList list;
+    PtrList plist;
 
     auto a = new int(10);
     auto b = new int(20);
     auto c = new int(30);
 
-    list.insertFront(a);
-    list.insertFront(b);
-    list.insertFront(c);
+    plist.insertFront(a);
+    plist.insertFront(b);
+    plist.insertFront(c);
 
     std::cout << "Int list:\n";
-    list.printListAsInt();
+    plist.printListAsInt();
 
-    list.deleteNode(b);
+    plist.deleteNode(b);
     std::cout << "After deleting 20:\n";
-    list.printListAsInt();
+    plist.printListAsInt();
 
-    auto removed = static_cast<int*>(list.removeFront());
+    auto removed = static_cast<int*>(plist.removeFront());
     std::cout << "Removed front: " << *removed << "\n";
     delete removed; // don't forget to free the int
 
     std::cout << "Remaining:\n";
-    list.printListAsInt();
+    plist.printListAsInt();
 
-    // Clean up
-    delete a;
-    delete b;
-    delete c;
+    std::cout << "Doing last clean up \n";
 
     return 0;
 }
