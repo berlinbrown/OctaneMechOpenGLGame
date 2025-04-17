@@ -139,7 +139,7 @@ void ActivatePheromone(float x, float y, float dir)
 	CURRENT_BOT.objects[i]->delete_flag = false;
 
 
-} // end of the function 
+}  
 
 //
 // Generate Nests
@@ -169,7 +169,7 @@ static void Generate_Pheromones(void)
 	} // end of the for
 	
 
-} // end of the function
+} 
 
 //
 // Shutdown Nests
@@ -189,7 +189,7 @@ static void Shutdown_Pheromones(void)
 	RELEASE_OBJECT(CURRENT_BOT.objects);
 
 
-} // end of the function
+} 
 
 
 //
@@ -207,7 +207,7 @@ static void Draw_Pheromones(void)
 
 	} // end of the for 
 
-} // end of the function 
+}  
 
 
 //
@@ -223,7 +223,7 @@ static void ProcessPheromone(CURRENT_PTR b)
 	} // end of the if 
 
 
-} // end of the function
+} 
 
 
 //
@@ -268,7 +268,7 @@ static CURRENT_PTR CreatePheromone(int bot_id)
 
 	return bot;
 
-} // end of the function
+} 
 
 //
 // DestroyBot
@@ -316,7 +316,7 @@ static void RenderPheromone(CURRENT_PTR boid)
 
 	glEnable(GL_LIGHTING);
 
-} // end of the function 
+}  
 
 
 //---------------------------------------------------------
@@ -339,7 +339,7 @@ static void draw_pheromone(void)
 
 		glEnd();
 
-} // end of the function
+} 
 
 
 //
@@ -370,7 +370,7 @@ static void render_pheromone(void)
 
 		//glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -391,5 +391,5 @@ static void compile_pheromone(void)
 
 	glEndList();
 
-} // end of the function
+} 
 

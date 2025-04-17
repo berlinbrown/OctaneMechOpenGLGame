@@ -61,7 +61,7 @@ bool TestFuncA(int val, TreeNode *current)
 	printf(" *%d/%d* ", val, current->data);
 
 	return (val < current->data);
-} // end of the function
+} 
 
 #define TestFuncB(val, data) ((val < data) ? 1 : 0)
 
@@ -95,7 +95,7 @@ void InsertTree(TreeNode **node_ptr, TreeNode *current)
 
 	} // end of the if - else
 
-} // end of the function
+} 
 
 //
 // Test Similar functionality
@@ -128,7 +128,7 @@ void InsertTest(TreeNode **node_ptr, TreeNode *current)
 
 	} // end of the if - else
 
-} // end of the function
+} 
 
 //
 // SearchNode
@@ -171,7 +171,7 @@ bool SearchTree(TreeNode **node_ptr, TreeNode *current)
 
 	return true;
 
-} // end of the function
+} 
 
 //
 // SearchNode
@@ -216,7 +216,7 @@ int SearchTest(TreeNode **node_ptr, TreeNode *current)
 
 	return current->data;
 
-} // end of the function
+} 
 
 //
 // PreOrder
@@ -231,7 +231,7 @@ void PreOrder(TreeNode *ptr)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 int removed = 0;
 //
@@ -270,7 +270,7 @@ void DeleteTree(Tree *tree)
 	} // end of the while
 
 	free(tree);
-} // end of the function
+} 
 
 //
 // CreateTree
@@ -285,7 +285,7 @@ Tree *CreateTree(void)
 	tree->root = NULL;
 
 	return tree;
-} // end of the function
+} 
 
 //
 // CreateTreeNode
@@ -356,7 +356,7 @@ void TreeFuncTest(void)
 
 	DeleteTree(tree);
 
-} // end of the function
+} 
 
 //
 // TreeTest
@@ -406,4 +406,4 @@ void TreeTest(void)
 	DeleteTree(tree);
 	free(values);
 
-} // end of the function
+} 

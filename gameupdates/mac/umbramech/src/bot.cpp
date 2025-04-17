@@ -71,7 +71,7 @@ void Super_LoadBots(void)
 {
 	bot_cluster = (DriverBotPtr *)malloc(MAX_BOTS *
 										 sizeof(DriverBotPtr));
-} // end of the function
+} 
 
 //
 // Super_KillBots(
@@ -80,7 +80,7 @@ void Super_KillBots(void)
 {
 	RELEASE_OBJECT(bot_cluster);
 
-} // end of the function
+} 
 
 //
 // Create So many ants
@@ -211,7 +211,7 @@ float FindAngle(float dir, float x1, float y1, float x2, float y2)
 	} // end if
 
 	return 0;
-} // end of the function
+} 
 
 //
 // Method to draw food on the ant
@@ -236,7 +236,7 @@ void RenderFood(DriverBotPtr bot)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // GetAntFood
@@ -274,7 +274,7 @@ void GetAntFood(DriverBotPtr bot)
 	// detract from nests pile
 	nest.objects[0]->food -= food;
 
-} // end of the function
+} 
 
 //
 // Once the ant can carry food he should be able
@@ -310,7 +310,7 @@ void EatFood(DriverBotPtr bot, float food_rate)
 	else
 		bot->foodstore = 0;
 
-} // end of the function
+} 
 
 //
 // Metabolize
@@ -332,7 +332,7 @@ void Metabolize(DriverBotPtr bot, float food_rate)
 		SubtractAnts(1);
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // I really like the idea of a simple state machine for
@@ -372,7 +372,7 @@ void ChangeDirection(DriverBotPtr bot)
 
 	bot->state = TURN_STATE;
 
-} // end of the function
+} 
 
 //
 // Turn
@@ -408,7 +408,7 @@ void TurnBot(DriverBotPtr bot)
 
 	return;
 
-} // end of the function
+} 
 
 //
 // MoveBot
@@ -531,7 +531,7 @@ void MoveBot(DriverBotPtr bot)
 
 	return;
 
-} // end of the function
+} 
 
 //
 // ProcessBotEvent
@@ -568,7 +568,7 @@ void ProcessBotEvent(DriverBotPtr bot)
 		break;
 	}; // end switch
 
-} // end of the function
+} 
 
 //
 // LoadBotParms
@@ -625,7 +625,7 @@ void LoadBotParms(DriverBotPtr bot_ptr)
 	bot_ptr->crosshair_state = DEAD_STATE;
 	bot_ptr->crosshair_scale = 1.0f;
 
-} // end of the function
+} 
 
 //
 // CreateBot
@@ -643,7 +643,7 @@ DriverBotPtr CreateBot(int bot_id)
 
 	return bot_ptr;
 
-} // end of the function
+} 
 
 //
 // ResetBot
@@ -687,7 +687,7 @@ void ResetBot(DriverBotPtr bot_ptr)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // DestroyBot
@@ -731,7 +731,7 @@ void RenderBot(DriverBotPtr boid)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // GenerateBots
@@ -749,7 +749,7 @@ void GenerateBots(void)
 	// create a stack for adding pheromone trails
 	trail_stack = CREATE_STACK;
 
-} // end of the function
+} 
 
 //
 // InitFood
@@ -765,7 +765,7 @@ void InitFood(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // ShutdownBots
@@ -782,7 +782,7 @@ void ShutdownBots(void)
 	// destroy the pheromone trail stack
 	DESTROY_STACK(trail_stack);
 
-} // end of the function
+} 
 
 //
 // Draw Bots
@@ -799,4 +799,4 @@ void DrawBots(void)
 
 	}
 
-} // end of the function
+} 

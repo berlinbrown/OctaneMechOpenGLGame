@@ -85,7 +85,7 @@ Map *CreateMap(int id_no)
 
 	return map;
 
-} // end of the function
+} 
 
 //
 // Load Map
@@ -98,7 +98,7 @@ void LoadMap(Map *map, float x_min, float x_max,
 	map->y_max = y_max;
 	map->y_min = y_min;
 
-} // end of the function
+} 
 
 //
 // DeleteMap
@@ -111,7 +111,7 @@ void DeleteMap(Map *map)
 	RELEASE_OBJECT(map->list);
 	RELEASE_OBJECT(map);
 
-} // end of the function
+} 
 
 //
 // DestroyMaps
@@ -129,7 +129,7 @@ void DestroyMaps(void)
 	// this might need to go above the for
 	DestroyPtrList(map_list);
 
-} // end of the function
+} 
 
 //
 // PrintList
@@ -157,7 +157,7 @@ void PrintMapList(PtrList *list)
 		current_ptr = current_ptr->next;
 	} // end of while
 
-} // end of the function
+} 
 
 //
 // Build The map list
@@ -206,4 +206,4 @@ void BuildMap(void)
 
 	DESTROY_MAPS;
 
-} // end of the function
+} 

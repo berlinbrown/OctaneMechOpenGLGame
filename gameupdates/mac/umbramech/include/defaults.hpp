@@ -37,6 +37,8 @@
 // bot.h
 //
 
+#pragma once
+
 #define D_LINE_OF_SIGHT		14.0f
 #define D_ATTACK_RADIUS		4.0f;
 #define D_BULLET_DAMAGE		280.0f	// 200=750 pretty good

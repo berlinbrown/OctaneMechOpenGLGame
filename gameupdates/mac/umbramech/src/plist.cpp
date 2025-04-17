@@ -88,7 +88,7 @@ PtrList *CreatePtrList()
 
 	return result;
 
-} // end of the function
+} 
 
 //
 // DestroyPtrList
@@ -110,7 +110,7 @@ void DestroyPtrList(PtrList *list)
 
 	free(list);
 
-} // end of the function
+} 
 
 //
 // Delete Ptr
@@ -148,7 +148,7 @@ void DeletePtrNode(PtrList *list, void *val)
 
 	} // end of the while
 
-} // end of the function
+} 
 
 //
 // Insert Front
@@ -205,7 +205,7 @@ static void *RemoveFront(PtrList *list)
 
 	return NULL; // we should never get here
 
-} // end of the function
+} 
 
 //
 // PrintTest
@@ -253,7 +253,7 @@ void PrintPtrListf(PtrList *list)
 		current_ptr = current_ptr->next;
 	} // end of while
 
-} // end of the function
+} 
 
 //
 // PtrListTest

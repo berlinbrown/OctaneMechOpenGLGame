@@ -86,7 +86,7 @@ void DriverBots::moveFireAnt()
 
 	return;
 
-} // end of the function
+} 
 
 //
 // FindBot
@@ -113,7 +113,7 @@ static int FindBot(DriverBotPtr bot)
 
 	return INVALID_BOT;
 
-} // end of the function
+} 
 
 //
 // SearchEvent
@@ -146,7 +146,7 @@ bool DriverBots::SearchEvent(DriverBotPtr bot)
 
 	return true;
 
-} // end of the function
+} 
 
 //
 // FindCameraPos
@@ -191,7 +191,7 @@ void DriverBots::FindCameraPos(DriverBotPtr bot)
 	this->cam_x = tmp_x;
 	this->cam_y = tmp_y;
 
-} // end of the function
+} 
 
 //
 // Process FireEvent
@@ -246,7 +246,7 @@ void DriverBots::wanderCommand(DriverBotPtr bot)
 		break;
 	}; // end switch
 
-} // end of the function
+} 
 
 //
 // GenerateMove
@@ -311,7 +311,7 @@ void DriverBots::GenerateMove(DriverBotPtr bot, int next_state)
 
 	this->state = next_state;
 
-} // end of the function
+} 
 
 //
 // Generate Box Move
@@ -380,7 +380,7 @@ void DriverBots::GenerateBoxMove(DriverBotPtr bot, int next_state)
 
 	this->state = next_state;
 
-} // end of the function
+} 
 
 //
 // Assault, no move just attack
@@ -413,7 +413,7 @@ void DriverBots::assaultMove(DriverBotPtr bot, int next_state)
 
 	this->state = next_state;
 
-} // end of the function
+} 
 
 //
 // Generate_Turn
@@ -434,7 +434,7 @@ void DriverBots::generateTurn(DriverBotPtr bot)
 
 	this->state = SET_MOUNT_STATE;
 
-} // end of the function
+} 
 
 //
 // Reach Target
@@ -579,7 +579,7 @@ void DriverBots::moveCommand(DriverBotPtr bot)
 		break;
 	}; // end switch
 
-} // end of the function
+} 
 
 //
 // Rescan_Enemy
@@ -599,7 +599,7 @@ void Rescan_Enemy(DriverBotPtr bot)
 		this->state = GO_WANDER_COMMAND;
 
 		return;
-	} // end of the function
+	} 
 
 	this->enemy_id = res; // save for later
 
@@ -612,7 +612,7 @@ void Rescan_Enemy(DriverBotPtr bot)
 
 	this->state = SET_MOUNT_STATE;
 
-} // end of the function
+} 
 
 //
 // Attack Command

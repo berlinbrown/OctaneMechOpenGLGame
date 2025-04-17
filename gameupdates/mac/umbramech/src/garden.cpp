@@ -166,7 +166,7 @@ void CheckRespawn(void)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // A brute force method for checking whether
@@ -218,7 +218,7 @@ int BruteCheckFood(DriverBotPtr bot)
 
 	return 0;
 
-} // end of the function
+} 
 
 //
 // Collect Food
@@ -228,7 +228,7 @@ void CollectFood(DriverBotPtr bot, float food_rate)
 {
 	// food ant is carrying
 	bot->foodstore += food_rate;
-} // end of the function
+} 
 
 //
 // Drop Food
@@ -287,7 +287,7 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
 	// eat the food
 	CollectFood(bot, food_amt);
 
-} // end of the function
+} 
 
 //
 // Generate Nests
@@ -333,7 +333,7 @@ static void Generate_Gardens(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Shutdown Nests
@@ -352,7 +352,7 @@ static void Shutdown_Gardens(void)
 	// free(CURRENT_BOT.objects);
 	RELEASE_OBJECT(CURRENT_BOT.objects);
 
-} // end of the function
+} 
 
 //
 // Draw Nests
@@ -369,7 +369,7 @@ static void Draw_Gardens(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Process Events
@@ -381,7 +381,7 @@ static void ProcessGarden(CURRENT_PTR b)
 	if (b->rotation[1] >= 360)
 		b->rotation[1] -= 360;
 
-} // end of the function
+} 
 
 //
 // - place the garden somewhere in a predefined
@@ -413,7 +413,7 @@ void PlaceGardenArea(CURRENT_PTR bot, float x, float y, float width)
 	res = (float)(rand() % rand_num) / 1000.0f;
 	bot->position[2] = y_min + res;
 
-} // end of the function
+} 
 
 //
 // RandomPlacement
@@ -445,7 +445,7 @@ void RandomPlacement(CURRENT_PTR bot)
 	bot->position[0] += tmp_x;
 	bot->position[2] += tmp_y;
 
-} // end of the function
+} 
 
 //
 // LoadGardParms
@@ -475,7 +475,7 @@ void LoadGardParms(CURRENT_PTR bot)
 
 	bot->food = INITIAL_GARD_FOOD;
 
-} // end of the function
+} 
 
 //
 // Create bot
@@ -492,7 +492,7 @@ static CURRENT_PTR CreateGarden(int bot_id)
 
 	return bot;
 
-} // end of the function
+} 
 
 //
 // Reset Garden
@@ -531,7 +531,7 @@ void ResetGarden(CURRENT_PTR bot)
 		RandomPlacement(bot);
 	}
 
-} // end of the function
+} 
 
 //
 // DestroyBot
@@ -577,4 +577,4 @@ static void RenderGarden(CURRENT_PTR boid)
 
 	END_BOT;
 
-} // end of the function
+} 

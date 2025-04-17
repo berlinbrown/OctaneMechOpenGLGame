@@ -72,7 +72,7 @@ int GetStartState(int cmd)
 	};
 
 	return MOVE_STATE;
-} // end of the function
+} 
 
 //
 // GenerateCommand
@@ -104,4 +104,4 @@ void Generate_Command(DriverBotPtr bot, int cmd)
 	bot->last_command = bot->command;
 	bot->command = cmd;
 
-} // end of the function
+} 

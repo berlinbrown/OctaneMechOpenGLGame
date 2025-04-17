@@ -111,7 +111,7 @@ static void draw_wirebox(void)
 	glVertex3f(-size, size, -size);
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -140,7 +140,7 @@ static void render_wirebox(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -161,4 +161,4 @@ static void compile_wirebox(void)
 
 	glEndList();
 
-} // end of the function
+} 

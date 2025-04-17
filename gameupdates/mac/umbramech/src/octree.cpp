@@ -71,7 +71,7 @@ Octree *CreateOctree(void)
 
 	return ptr;
 
-} // end of the function
+} 
 
 void DeleteOctree(Octree **tree_ptr)
 {
@@ -94,7 +94,7 @@ void DeleteOctree(Octree **tree_ptr)
 
 	free(tree_ptr);
 
-} // end of the function
+} 
 
 //
 // GenerateOctree
@@ -153,7 +153,7 @@ Octree **GenerateOctree(void)
 
 	return tree_ptr;
 
-} // end of the function
+} 
 
 //
 // InsertOctree
@@ -184,7 +184,7 @@ void InsertOctree(Octree **tree_ptr, StaticBotPtr bot)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // SearchListBot
@@ -225,7 +225,7 @@ StaticBotPtr SearchListBot(PtrList *list, DriverBotPtr bot)
 
 	return NULL;
 
-} // end of the function
+} 
 
 //
 // SearchOctree
@@ -263,7 +263,7 @@ StaticBotPtr SearchOctree(Octree **tree_ptr, DriverBotPtr bot)
 
 	return NULL;
 
-} // end of the function
+} 
 
 //
 // DeleteOctree
@@ -296,7 +296,7 @@ void DeleteOctreeNode(Octree **tree_ptr, StaticBotPtr bot)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Wrapper Functions
@@ -306,7 +306,7 @@ void DeleteOctreeNode(Octree **tree_ptr, StaticBotPtr bot)
 void pheromoneBuild(void)
 {
 	pheromone_tree = GenerateOctree();
-} // end of the function
+} 
 
 //
 // octreeDestroy
@@ -315,7 +315,7 @@ void pheromoneBuild(void)
 void pheromoneDestroy(void)
 {
 	DeleteOctree(pheromone_tree);
-} // end of the function
+} 
 
 //
 // pheromoneInsert(StaticBotPtr bot)
@@ -323,7 +323,7 @@ void pheromoneDestroy(void)
 void pheromoneInsert(StaticBotPtr bot)
 {
 	InsertOctree(pheromone_tree, bot);
-} // end of the function
+} 
 
 //
 // pheromoneSearch
@@ -334,7 +334,7 @@ StaticBotPtr pheromoneSearch(DriverBotPtr bot)
 	ptr = SearchOctree(pheromone_tree, bot);
 
 	return ptr;
-} // end of the function
+} 
 
 //
 // pheromoneDelete
@@ -345,4 +345,4 @@ void pheromoneDelete(StaticBotPtr bot)
 
 	DeleteOctreeNode(pheromone_tree, bot);
 
-} // end of the function
+} 

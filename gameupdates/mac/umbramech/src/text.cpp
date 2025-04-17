@@ -66,7 +66,7 @@ extern unsigned char fontData[];
 void Reset_FontID(void)
 {
 	fontID = 0;
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // A text box constructor
@@ -120,7 +120,7 @@ TextBoxPtr InitTextBox(int inL, int inR, int inT, int inB)
 			GL_UNSIGNED_BYTE,
 			(void *)fontData);
 
-	} // end of the function
+	} 
 
 	// Set Color
 	SET_COLOR(text->color, 255, 255, 255, 255);
@@ -138,7 +138,7 @@ TextBoxPtr InitTextBox(int inL, int inR, int inT, int inB)
 void DestroyTextBox(TextBoxPtr text)
 {
 	RELEASE_OBJECT(text);
-} // end of the function
+} 
 
 void SetTextMode(TextBoxPtr text, unsigned int modeIn)
 {
@@ -187,7 +187,7 @@ void TextBegin(TextBoxPtr text)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-} // end of the function
+} 
 
 //
 // SetColor
@@ -199,7 +199,7 @@ void SetTextColor(TextBoxPtr text, unsigned char r,
 	text->color.g = g;
 	text->color.b = b;
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Remove Screen Matrix
@@ -217,7 +217,7 @@ void TextEnd(void)
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Draw a string at a given coordinate
@@ -229,7 +229,7 @@ void DrawString(TextBoxPtr text, int x, int y, char *str)
 	DrawStr(text, x, y, 0, 0, str);
 	TextEnd();
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Draw the Text given to TextBoxPrintf()
@@ -249,7 +249,7 @@ void DrawText(TextBoxPtr text)
 
 	TextEnd();
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Draw a string at a given position in screen space
@@ -312,7 +312,7 @@ void DrawStr(TextBoxPtr text,
 
 	glEnd();
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Draw Bounding Box
@@ -329,7 +329,7 @@ void DrawBoundingBox(TextBoxPtr text)
 	glVertex3s(text->boxL, text->boxB, 0);
 	glEnd();
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // This function will concatinate a formated string the a TextBox
@@ -407,7 +407,7 @@ void FormatStrCat(TextBoxPtr text, char *str)
 	// Now there is space. So, concatinate.
 	strcat(text->buffer, buff);
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Paginate the text Box
@@ -440,7 +440,7 @@ void Paginate(TextBoxPtr text)
 
 	text->drawBufferPtr = cP;
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // Printf
@@ -458,7 +458,7 @@ void Printf(TextBoxPtr text, char *fmt, ...)
 
 	va_end(vlist);
 
-} // end of the function
+} 
 
 //---------------------------------------------------------------------------
 // The Texture Font data

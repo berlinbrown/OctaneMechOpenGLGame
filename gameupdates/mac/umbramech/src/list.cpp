@@ -46,7 +46,7 @@ static int isempty(List *list)
     else
         return 0;
 
-} // end of the function
+} 
 
 //
 // CreateNode
@@ -61,7 +61,7 @@ Node *CreateNode(int data)
 
     return h;
 
-} // end of the function
+} 
 
 //
 // DestroyNode
@@ -85,7 +85,7 @@ List *CreateList()
 
     return result;
 
-} // end of the function
+} 
 
 void DeleteNode(List *list, int val)
 {
@@ -119,7 +119,7 @@ void DeleteNode(List *list, int val)
 
     } // end of the while
 
-} // end of the function
+} 
 
 //
 // DestroyList
@@ -141,7 +141,7 @@ void DestroyList(List *list)
 
     free(list);
 
-} // end of the function
+} 
 
 //
 // Insert Front
@@ -164,7 +164,7 @@ static void InsertFront(List *list, int data)
 
     } // end if
 
-} // end of the function
+} 
 
 //
 // PrintTest
@@ -184,7 +184,7 @@ void PrintList(List *list)
         current_ptr = current_ptr->next;
     } // end of while
 
-} // end of the function
+} 
 
 //
 // ListTest
@@ -210,4 +210,4 @@ void LinkTest(void)
 
     DestroyList(list);
 
-} // end of the function
+} 

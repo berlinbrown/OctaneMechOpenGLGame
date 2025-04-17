@@ -190,7 +190,7 @@ static void Finalize_Selection(void)
 
   } // end of th if - else
 
-} // end of the function
+} 
 
 //
 // Char_Keys(
@@ -461,7 +461,7 @@ void Display_NetSel(char str[26][80])
 
   } // end of if-else
 
-} // end of the function
+} 
 
 //
 // Inc_Selection
@@ -490,7 +490,7 @@ static void Inc_Selection(void)
     current_sel = START_SEL;
   } // end of the if
 
-} // end of the function
+} 
 
 //
 // Dec_Selection
@@ -562,4 +562,4 @@ void Cmd_Keys(KeySym key)
 
   } // end of the if
 
-} // end of the function
+} 

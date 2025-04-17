@@ -133,7 +133,7 @@ static void Insert_DistStack(CollisionPtr ptr)
 	// Note: we are not checking for the max, sorry
 	dist_stack_ctr++;
 
-} // end of the function
+} 
 
 //
 // Find_DistStack
@@ -173,7 +173,7 @@ static CollisionPtr Find_DistStack(float x, float y)
 			dist_stack[min_id]->dist = res;
 		} // end of the if
 
-	} // end of the function
+	} 
 
 	return dist_stack[min_id];
 
@@ -206,7 +206,7 @@ CollisionList *CreateCollisionList(void)
 
 	return result;
 
-} // end of the function
+} 
 
 //
 // DestroyColList
@@ -231,7 +231,7 @@ void DestroyColList(CollisionList *list)
 
 	RELEASE_OBJECT(list);
 
-} // end of the function
+} 
 
 //
 // Insert Front
@@ -257,7 +257,7 @@ void InsertColFront(CollisionList *list, CollisionObj *col_obj)
 
 	list->objects++;
 
-} // end of the function
+} 
 
 //
 // void InsertCol
@@ -270,7 +270,7 @@ void SetupInsert(CollisionObj **ptr)
 
 	InsertColFront(collision_list, *ptr);
 
-} // end of the function
+} 
 
 //
 // Note: use this with the moving collision
@@ -287,7 +287,7 @@ void Setup_Moving(CollisionObj **ptr)
 
 	InsertColFront(BOT_LIST, *ptr);
 
-} // end of the function
+} 
 
 //
 // Insert_MovingObj
@@ -304,7 +304,7 @@ void Insert_MovingObj(DriverBotPtr bot)
 
 	ptr->bot_ptr = bot;
 
-} // end of the function
+} 
 
 //
 // Next Library function
@@ -413,7 +413,7 @@ bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
 
 	return false;
 
-} // end of the function
+} 
 
 //
 // CheckCollisionMoving
@@ -446,7 +446,7 @@ CollisionPtr CheckCollisionMoving(StaticBotPtr test_obj)
 
 	return NULL;
 
-} // end of the function
+} 
 
 //
 // Insert a Line segment
@@ -474,7 +474,7 @@ void InsertColSegment(float x_1, float y_1, float x_2, float y_2)
 	// calculate distance from 0,0
 	ptr->movement_type = PLANE_COL_TYPE; // does not move
 
-} // end of the function
+} 
 
 //
 // Test for intersection of the line
@@ -549,7 +549,7 @@ int CheckClockDir(float pt1[2], float pt2[2], float pt3[2])
 
 	return -99;
 
-} // end of the function
+} 
 
 //
 // CheckLineHit
@@ -601,7 +601,7 @@ bool CheckLineHit(CollisionPtr ptr,
 
 	return false;
 
-} // end of the function
+} 
 
 //
 // CheckHitBot
@@ -670,7 +670,7 @@ bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
 
 	return false;
 
-} // end of the function
+} 
 
 //
 // CheckHitLines
@@ -735,7 +735,7 @@ bool CheckHitLines(CollisionPtr ptr, void *test_obj, int type)
 
 	return false;
 
-} // end of the function
+} 
 
 //
 // CheckCollisionList
@@ -794,7 +794,7 @@ CollisionPtr CheckCollisionList(void *test_obj, int type)
 
 	return current_ptr;
 
-} // end of the function
+} 
 
 //
 //**
@@ -829,7 +829,7 @@ bool CheckCollisionBot(DriverBotPtr test_obj)
 
 	return false;
 
-} // end of the function
+} 
 
 //
 // Remove Front
@@ -857,7 +857,7 @@ void RemoveFront(CollisionList *list)
 
 	} // end of the if-else
 
-} // end of the function
+} 
 
 //
 // PrintList
@@ -885,7 +885,7 @@ void PrintCollisionList(CollisionList *list)
 
 	} // end of while
 
-} // end of the function
+} 
 
 //
 // CreateCollisionObj
@@ -905,7 +905,7 @@ CollisionPtr CreateCollisionObj(void)
 
 	return ptr;
 
-} // end of the function
+} 
 
 //
 // DeleteCollisionObj
@@ -913,7 +913,7 @@ CollisionPtr CreateCollisionObj(void)
 void DeleteCollisionObj(CollisionObj *ptr)
 {
 	RELEASE_OBJECT(ptr);
-} // end of the function
+} 
 
 //
 // WRAPPER FUNCTIONS
@@ -935,7 +935,7 @@ void Delete_Col_List(void)
 
 	DestroyColList(moving_list);
 
-} // end of the function
+} 
 
 //
 // Print_Col_List
@@ -943,4 +943,4 @@ void Delete_Col_List(void)
 void Print_Col_List(void)
 {
 	PrintCollisionList(collision_list);
-} // end of the function
+} 

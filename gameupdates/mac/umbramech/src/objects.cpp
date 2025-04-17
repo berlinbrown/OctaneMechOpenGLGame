@@ -298,7 +298,7 @@ void draw_hexplane(float x_1, float x_2, float y_1, float size)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //=========================================================
 //
@@ -344,7 +344,7 @@ static void draw_hex(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //=========================================================
 //=========================================================
@@ -372,7 +372,7 @@ static void draw_plane(void)
 	glVertex3f(-size, bottom, size); // Vertex Coord (Top Left)
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -401,7 +401,7 @@ static void render_plane(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -422,7 +422,7 @@ static void compile_plane(void)
 
 	glEndList();
 
-} // end of the function
+} 
 
 //---------------------------------------------------------
 
@@ -435,7 +435,7 @@ void RenderGrid(void)
 	driver_objects[GRID_OBJECT]->render();
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //
 // For Simple Bounding box tests
@@ -465,7 +465,7 @@ void RenderBounds(float x, float y, float width)
 
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //
 // RenderWalls
@@ -475,7 +475,7 @@ void RenderWalls(void)
 	glDisable(GL_TEXTURE_2D);
 	driver_objects[WORLD_OBJECT]->render();
 
-} // end of the function
+} 
 
 //
 // RenderObjects
@@ -489,7 +489,7 @@ void RenderObjects(void)
 		driver_objects[index]->render();
 	} // end of the functino
 
-} // end of the function
+} 
 
 //
 // Init Objects
@@ -533,7 +533,7 @@ static void CompileObjects(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //=========================================================
 // delete objects
@@ -544,4 +544,4 @@ void DeleteObjects(void)
 	// get rid of list
 	glDeleteLists(mainobjectid, MAX_OBJECTS);
 
-} // end of the function
+} 

@@ -349,7 +349,7 @@ static void draw_norm_cube(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -378,7 +378,7 @@ static void render_norm_cube(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -399,4 +399,4 @@ static void compile_norm_cube(void)
 
 	glEndList();
 
-} // end of the function
+} 

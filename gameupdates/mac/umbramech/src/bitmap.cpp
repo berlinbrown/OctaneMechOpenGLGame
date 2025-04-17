@@ -93,7 +93,7 @@ typedef struct
 void Reset_DeadText(void)
 {
 	m_size_z = 0.01f;
-} // end of the function
+} 
 
 //
 // SetFunkyTexture
@@ -105,7 +105,7 @@ void SetFunkyTexture(void)
 	LoadTexture("data/tile.bmp");
 	funky_texture = textureindex - 1;
 
-} // end of the function
+} 
 
 //
 // GetFunkyTexture
@@ -113,7 +113,7 @@ void SetFunkyTexture(void)
 int GetFunkyTexture(void)
 {
 	return funky_texture;
-} // end of the function
+} 
 
 //
 // NewTexure
@@ -126,7 +126,7 @@ void NextTexture(void)
 		textureindex = MAX_TEXTURES;
 	}
 
-} // end of the function
+} 
 
 //=========================================================
 // loadbmp
@@ -136,7 +136,7 @@ void NextTexture(void)
 void *LoadBitmap(char *filename)
 {
 	return NULL;
-} // end of the function
+} 
 
 //
 // GetTexture
@@ -145,7 +145,7 @@ unsigned int GetTexture(int index)
 {
 	return texture[index];
 
-} // end of the function
+} 
 
 //
 //
@@ -276,7 +276,7 @@ void LoadTexture(char *filename)
 
 	NextTexture();
 
-} // end of the function
+} 
 
 //
 // LoadTitleBitmap
@@ -318,7 +318,7 @@ void Load_Titles(void)
 		free(texture_image);
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // Title_Begin
@@ -357,7 +357,7 @@ static void Title_Begin(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-} // end of the function
+} 
 
 //
 // TitleEnd
@@ -373,7 +373,7 @@ static void Title_End(void)
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //
 // Render_Name
@@ -412,7 +412,7 @@ void Render_BText(int val, float x, float y, float Yoffset)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //**
 // Render _ Trick
@@ -487,7 +487,7 @@ void Render_BTrick(int val, float perc, float x, float y, float Yoffset)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // Draw_Shadow
@@ -511,7 +511,7 @@ void Draw_Shadow(void)
 
 	glEnable(GL_TEXTURE_2D);
 
-} // end of the function
+} 
 
 //
 // Draw_Cursor
@@ -622,7 +622,7 @@ void Draw_Cursor(int y)
 
 	glEnable(GL_TEXTURE_2D);
 
-} // end of the function
+} 
 
 //
 // Draw_GameOver
@@ -651,7 +651,7 @@ void Draw_GameOver(void)
 
 	Title_End();
 
-} // end of the function
+} 
 
 //
 // Draw_Title
@@ -753,7 +753,7 @@ void Draw_Title(void)
 		break;
 	};
 
-} // end of the function
+} 
 
 //
 // Toggle_MenuItems
@@ -908,4 +908,4 @@ bool Set_MenuMode(void)
 
 	return false;
 
-} // end of the function
+} 

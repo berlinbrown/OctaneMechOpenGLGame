@@ -132,7 +132,7 @@ void Convert_SetID(int val)
 {
 	net_bot_ids[net_bot_index++] = val;
 
-} // end of the function
+} 
 
 int Convert_GetID(int msg_id)
 {
@@ -149,7 +149,7 @@ int Convert_GetID(int msg_id)
 
 	return 0; // cheating!
 
-} // end of the function
+} 
 
 //
 // Note: if this code doesnt work
@@ -213,7 +213,7 @@ void BotPlacement(DriverBotPtr bot, float x, float y,
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // PositionBot
@@ -231,7 +231,7 @@ void PositionBot(DriverBotPtr bot)
 				 rand_bot_pos[rand_no][2],
 				 rand_bot_pos[rand_no][3]);
 
-} // end of the function
+} 
 
 //
 // Supers
@@ -240,7 +240,7 @@ void Super_FireAnts(void)
 {
 	fire_cluster = (DriverBotPtr *)malloc(MAX_FIRE_ANTS *
 										  sizeof(DriverBotPtr));
-} // end of the function
+} 
 
 //
 // Super_KillFires
@@ -249,7 +249,7 @@ void Super_KillFires(void)
 {
 	// ifree(fire_cluster);
 	RELEASE_OBJECT(fire_cluster);
-} // end of the function
+} 
 
 //
 // Render_ShootLine
@@ -272,7 +272,7 @@ void Render_ShootLine(float x_1, float y_1,
 
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //
 // simple objects library
@@ -362,7 +362,7 @@ void Player_Control(bool *keys)
 		// keys[keyCodes[VK_SPACE]] = false;
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // Handle_Player
@@ -544,7 +544,7 @@ void Handle_Player(DriverBotPtr bot)
 		break;
 	};
 
-} // end of the function
+} 
 
 //
 // - handle the net player
@@ -727,7 +727,7 @@ void Net_Player(DriverBotPtr bot)
 		break;
 	};
 
-} // end of the function
+} 
 
 //
 // Reset_CrossHairs
@@ -746,7 +746,7 @@ void Reset_CrossHairs(DriverBotPtr bot)
 
 	} // end of if - else
 
-} // end of the function
+} 
 
 //
 // We need to use the Bot driver structure in order
@@ -772,7 +772,7 @@ static bool DeductHit(DriverBotPtr bot, float hit)
 	// set an explostion at this point
 
 	return false;
-} // end of the function
+} 
 
 //
 // Check Collisions
@@ -882,7 +882,7 @@ void CheckCollisions(StaticBotPtr boid)
 
 	} // end of if
 
-} // end of the function
+} 
 
 //
 // MoveBullets
@@ -946,7 +946,7 @@ void MoveBullets(StaticBotPtr boid)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // ResetBullets
@@ -967,7 +967,7 @@ void ResetBullets(DriverBotPtr bot)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // FireBullets for the player
@@ -1050,7 +1050,7 @@ void Player_Shoot(DriverBotPtr bot)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // FireBullets
@@ -1141,7 +1141,7 @@ void FireBullets(DriverBotPtr bot, int next_state)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // Render_LineStrip
@@ -1215,7 +1215,7 @@ void DrawBullets(StaticBotPtr boid)
 
 	END_BOT;
 
-} // end of the function
+} 
 
 //
 // RenderBullets, DrawBullets, MoveBullets, LoadBullets
@@ -1245,7 +1245,7 @@ void RenderBullets(DriverBotPtr bot)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // ChangeDirection
@@ -1264,7 +1264,7 @@ static void ChangeFireDir(DriverBotPtr bot)
 
 	bot->state = SET_TURN_STATE;
 
-} // end of the function
+} 
 
 //
 // Turn
@@ -1356,7 +1356,7 @@ static void TurnAndMove(DriverBotPtr bot,
 
 	return;
 
-} // end of the function
+} 
 
 //
 // Turn
@@ -1407,7 +1407,7 @@ static void TurnAntState(DriverBotPtr bot,
 
 	return;
 
-} // end of the function
+} 
 
 //
 // SetTurnDirection
@@ -1453,7 +1453,7 @@ static void SetTurnDirection(DriverBotPtr bot, int state)
 
 	bot->state = state;
 
-} // end of the function
+} 
 
 //
 // MoveFire0
@@ -1577,7 +1577,7 @@ void Render_Tri1(float size, float offset)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // Render_Tri1
@@ -1607,7 +1607,7 @@ void Render_Tri2(float size, float offset)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // Render_Tri3
@@ -1637,7 +1637,7 @@ void Render_Tri3(float size, float offset)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // Render_Tri
@@ -1649,7 +1649,7 @@ void Render_Tri(float size, float offset)
 	Render_Tri2(size, offset);
 	Render_Tri3(size, offset);
 
-} // end of the function
+} 
 
 // RenderFireAnt
 //
@@ -1750,7 +1750,7 @@ static void RenderFireAnt(DriverBotPtr boid)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // LoadFireAnts_A
@@ -1819,7 +1819,7 @@ static void LoadFireAnts_A(DriverBotPtr bot)
 	//
 	Generate_Command(bot, WANDER_COMMAND);
 
-} // end of the function
+} 
 
 //
 // Load FireAnts
@@ -1836,7 +1836,7 @@ static void LoadFireAnts(DriverBotPtr bot)
 
 	LoadFireAnts_A(bot);
 
-} // end of the function
+} 
 
 // GenerateBots
 //
@@ -1858,7 +1858,7 @@ void GenerateFireAnts(void)
 
 	GetCameraBot(fire_cluster[0]);
 
-} // end of the function
+} 
 
 //
 // Reset_Fire_Ant
@@ -1878,7 +1878,7 @@ void Reset_Fire_Ant(DriverBotPtr bot, int id)
 
 	LoadFireAnts_A(bot);
 
-} // end of the function
+} 
 
 //
 // Reset_FireAnts
@@ -1896,7 +1896,7 @@ void Reset_FireAnts(void)
 
 	GetCameraBot(fire_cluster[0]);
 
-} // end of the function
+} 
 
 //
 // - Run_NetworkBots
@@ -1946,7 +1946,7 @@ void Run_NetworkBots(void)
 	// reset the message count
 	Reset_MessageCount();
 
-} // end of the function
+} 
 
 //
 // Reset_NetworkBots
@@ -2042,7 +2042,7 @@ void Prepare_DemoMode(void)
 
 	GetCameraBot(fire_cluster[1]);
 
-} // end of the function
+} 
 
 //
 // ShutdownBots
@@ -2060,7 +2060,7 @@ void ShutdownFireAnts(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // AnimNetworkBots
@@ -2148,7 +2148,7 @@ void AnimNetworkBots(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Draw Bots
@@ -2230,7 +2230,7 @@ void AnimFireAnts(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // DrawFireAnts
@@ -2261,7 +2261,7 @@ void DrawFireAnts(void)
 			RenderFireAnt(fire_cluster[index]);
 			RenderBullets(fire_cluster[index]);
 
-		} // end of the function
+		} 
 
 	} // end of the if
 	else
@@ -2273,11 +2273,11 @@ void DrawFireAnts(void)
 			RenderFireAnt(fire_cluster[index]);
 			RenderBullets(fire_cluster[index]);
 
-		} // end of the function
+		} 
 
 	} // end of if
 
-} // end of the function
+} 
 
 // INTERFACE END ==========================================
 
@@ -2711,7 +2711,7 @@ static void draw_fireant(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -2740,7 +2740,7 @@ static void render_fireant(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -2761,4 +2761,4 @@ static void compile_fireant(void)
 
 	glEndList();
 
-} // end of the function
+} 

@@ -109,7 +109,7 @@ void Vector_Minus(Vector a, Vector b, Vector res)
 	res[1] = a[1] - b[1];
 	res[2] = a[2] - b[2];
 
-} // end of the function 
+}  
 
 //
 // Vector_Add
@@ -120,7 +120,7 @@ void Vector_Add(Vector a, Vector b, Vector res)
 	res[1] = a[1] + b[1];
 	res[2] = a[2] + b[2];
 
-} // end of the function 
+}  
 
 
 //
@@ -130,7 +130,7 @@ float Vector_Length(Vector a)
 {
 	return (float)sqrt(a[0]*a[0] + a[1]*a[1] + a[2]*a[2]);
 
-} // end of the function 
+}  
 
 //
 // DotProduct
@@ -138,7 +138,7 @@ float Vector_Length(Vector a)
 float DotProduct(Vector a, Vector b) 
 {
   return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-} // end of the function 
+}  
 
 //
 // Vector_Normalize
@@ -158,7 +158,7 @@ void Vector_Normalize(Vector a, Vector res)
     res[1] = a[1] * len;
     res[2] = a[2] * len;
   
-} // end of the function 
+}  
 
 
 //
@@ -170,7 +170,7 @@ void Vector_Multiply(Vector a, Vector res, float b)
 	res[1] = a[1] * b;
 	res[2] = a[2] * b;
 
-} // end of the functiona
+} a
 
 //
 // A spring dampening function
@@ -223,7 +223,7 @@ void SpringDamp(
 	//result[1] = currPos[1];
 	//result[2] = currPos[2];
 
-} // end of the function 
+}  
 
 
 //
@@ -321,7 +321,7 @@ void LoadCameras(void)
 	SetupCamera();
 
 
-} // end of the function
+} 
 
 //
 // Toggle Camera
@@ -336,7 +336,7 @@ void ToggleCamera(void)
 	if (current_camera >= MAX_CAMERAS)
 		current_camera = 0;
 
-} // end of the function 
+}  
 
 //=========================================================
 // positioncamera
@@ -384,7 +384,7 @@ void TranslateCamera(float x, float y, float z)
 	CAMERA->position[1] += y;
 	CAMERA->position[2] += z;
 
-} // end of the function
+} 
 
 
 //=========================================================
@@ -479,7 +479,7 @@ void PosCamera(float x, float y, float z)
 	CAMERA->position[0] = x;
 	CAMERA->position[1] = -y;
 	CAMERA->position[2] = z;
-} // end of the function
+} 
 
 //=========================================================
 // put camera
@@ -492,7 +492,7 @@ void Pos_Camera(float x, float y, float z)
 	CAMERA->position[0] = x;
 	CAMERA->position[1] = y;
 	CAMERA->position[2] = z;
-} // end of the function
+} 
 
 //=========================================================
 // set the rotation angles of the cameras
@@ -611,7 +611,7 @@ void SyncCamera(void)
 {
 	// sync the camera with the timing 
 	
-} // end of the function
+} 
 
 //
 // MoveRight
@@ -716,7 +716,7 @@ void Paused_Camera(void)
 	if (mCameraAng > 360.0f)
 		mCameraAng -= 360.0f;
 
-} // end of the function
+} 
 
 
 
@@ -748,7 +748,7 @@ static void FirstPersonMode(bool *keys)
 		// player control, strange place I know
 		Player_Control(keys);
 
-} // end of the function 
+}  
 
 
 static void ThirdPersonMode(bool *keys)
@@ -778,7 +778,7 @@ static void ThirdPersonMode(bool *keys)
 		// player control, strange place I know
 		Player_Control(keys);
 
-} // end of the function 
+}  
 
 //
 // ToggleViewMode
@@ -811,7 +811,7 @@ void ToggleViewMode(void)
 
 	} // end of the if -else
 		
-} // end of the function
+} 
 
 //
 // Handle Camera Keys
@@ -837,4 +837,4 @@ void HandleCameraKeys(bool *keys)
 
 	} // end of the if else
 
-} // end of the function 
+}  

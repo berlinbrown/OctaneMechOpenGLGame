@@ -80,7 +80,7 @@ void DrawLineOfSight(float x1, float y1, float x2, float y2)
 
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 //
 // The algo just checks the y=mx+b of the line
@@ -287,4 +287,4 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
 		return false;
 	} // end of if-else
 
-} // end of the function
+} 

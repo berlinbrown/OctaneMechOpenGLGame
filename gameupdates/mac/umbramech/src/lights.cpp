@@ -69,7 +69,7 @@ void setmaterial(float amb[], float diff[], float spec[],
 	glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
 	glMaterialfv(GL_FRONT, GL_SHININESS, shine);
 	glMaterialfv(GL_FRONT, GL_EMISSION, emiss);
-} // end of the function
+} 
 
 //
 // Material
@@ -79,7 +79,7 @@ void InitMaterial(void)
 	// Change the main properities for all objects
 	setmaterial(no_mat, mat_diffuse, mat_specular, low_shininess, no_mat);
 
-} // end of the function
+} 
 
 //
 // CreateBot
@@ -106,7 +106,7 @@ struct tagDriverLights *CreateLight(int id)
 
 	return light;
 
-} // end of the function
+} 
 
 //
 // DestroyLight
@@ -131,7 +131,7 @@ void RenderWirebox(DriverLightsPtr b)
 	driver_objects[WIREBOX_OBJECT]->render();
 
 	END_BOT;
-} // end of the function
+} 
 
 //
 // SetLight
@@ -165,7 +165,7 @@ void set_Light(DriverLightsPtr bulb)
 		glDisable(bulb->light_id);
 	} // end of if-else
 
-} // end of the function
+} 
 
 //
 // GenerateBots
@@ -189,7 +189,7 @@ void GenerateLights(void)
 	light_ptrs[1]->position[1] = LIGHT_HEIGHT_1;
 	light_ptrs[1]->position[2] = 12.0f;
 
-} // end of the function
+} 
 
 //
 // ShutdownBots
@@ -203,7 +203,7 @@ void ShutdownLights(void)
 		DestroyLight(light_ptrs[index]);
 	} // end of the for
 
-} // end of the function
+} 
 //
 // Set
 //
@@ -218,4 +218,4 @@ void SetLights(void)
 
 	} // end of the for
 
-} // end of the function
+} 

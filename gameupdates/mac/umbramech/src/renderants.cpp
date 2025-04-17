@@ -270,7 +270,7 @@ static void draw_ant(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -299,7 +299,7 @@ static void render_ant(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -320,4 +320,4 @@ static void compile_ant(void)
 
 	glEndList();
 
-} // end of the function
+} 

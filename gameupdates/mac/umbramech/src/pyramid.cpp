@@ -113,7 +113,7 @@ static void SetupWall(CollisionObj **ptr)
 
 	InsertColFront(wall_list, *ptr);
 
-} // end of the function
+} 
 
 //
 // InsertWall
@@ -172,7 +172,7 @@ void InsertWall(float x, float y,
 	// left wall
 	InsertColSegment(x_min, y_min, x_min, y_max);
 
-} // end of the function
+} 
 
 //
 // Create Walls
@@ -224,7 +224,7 @@ void Draw_Walls(CollisionList *list)
 
 	} // end of while
 
-} // end of the function
+} 
 
 //
 // Create wall list
@@ -232,7 +232,7 @@ void Draw_Walls(CollisionList *list)
 void Create_Wall_List(void)
 {
 	wall_list = CreateCollisionList();
-} // end of the function
+} 
 
 //
 // Delelet Col List
@@ -240,7 +240,7 @@ void Create_Wall_List(void)
 void Delete_Wall_List(void)
 {
 	DestroyColList(wall_list);
-} // end of the function
+} 
 
 //
 // Print_Col_List
@@ -249,7 +249,7 @@ void Print_Wall_List(void)
 {
 	PrintCollisionList(wall_list);
 
-} // end of the function
+} 
 
 //
 // Draw_Wall_List
@@ -539,7 +539,7 @@ static void draw_pyramid(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //
 // init
@@ -568,7 +568,7 @@ static void render_pyramid(void)
 
 	// glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -589,4 +589,4 @@ static void compile_pyramid(void)
 
 	glEndList();
 
-} // end of the function
+} 

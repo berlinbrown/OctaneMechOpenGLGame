@@ -65,7 +65,7 @@ ParticleList *CreateParticleList(void)
 
 	return result;
 
-} // end of the function
+} 
 
 //
 // Destroy List
@@ -74,7 +74,7 @@ void DestroyParticleList(ParticleList *list)
 {
 	RELEASE_OBJECT(list);
 
-} // end of the function
+} 
 
 //
 // New_Speed
@@ -101,7 +101,7 @@ static void New_Speed(float d[3], float speed)
 	d[1] = y;
 	d[2] = z;
 
-} // end of the function
+} 
 
 //
 // Set Explosion
@@ -136,7 +136,7 @@ void Set_Explosion(ParticleList *list, float x, float y)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Draw_Particles
@@ -172,7 +172,7 @@ void Draw_Particles(ParticleList *list)
 
 	} // end of the if
 
-} // end of the function
+} 
 
 //
 // Wrapper Functions
@@ -188,7 +188,7 @@ void Build_ParticleSet(void)
 
 	particle_index = 0;
 
-} // end of the function
+} 
 
 //
 // Destroy_Particles(void)
@@ -202,7 +202,7 @@ void Destroy_ParticleSet(void)
 		DestroyParticleList(particle_set[i]);
 	} // end of the of r
 
-} // end of the function
+} 
 
 //
 // SetExplosion
@@ -215,7 +215,7 @@ void SetExplosion(float x, float y)
 	if (particle_index >= MAX_PARTICLE_SET)
 		particle_index = 0;
 
-} // end of the function
+} 
 
 //
 // AnimateExplisions
@@ -265,7 +265,7 @@ void Anim_Particles(ParticleList *list)
 
 	} // end of big if
 
-} // end of the function
+} 
 
 //
 // AnimateExplosions
@@ -283,7 +283,7 @@ void AnimateExplosions(void)
 
 	} // end of the functino
 
-} // end of the function
+} 
 
 //
 // Now draw the entire set
@@ -301,4 +301,4 @@ void DrawExplosions(void)
 
 	} // end of the functino
 
-} // end of the function
+} 

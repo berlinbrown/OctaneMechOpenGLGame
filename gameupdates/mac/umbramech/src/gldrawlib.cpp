@@ -71,7 +71,7 @@ void ReduceToUnit(float vector[3])
 	vector[0] /= length;
 	vector[1] /= length;
 	vector[2] /= length;
-} // end of the function
+} 
 
 // Points p1, p2, & p3 specified in counter clock-wise order
 void Calc_Normal(float v[3][3], float out[3])
@@ -99,7 +99,7 @@ void Calc_Normal(float v[3][3], float out[3])
 	// Normalize the vector (shorten length to one)
 	ReduceToUnit(out);
 
-} // end of the function
+} 
 
 //
 // Normalize
@@ -123,7 +123,7 @@ void Normalize(float p[3])
 		p[2] = 0;
 	}
 
-} // end of the function
+} 
 
 //
 // calcnormal
@@ -147,7 +147,7 @@ void CalcNormal(float p[3], float p1[3], float p2[3], float n[3])
 
 	Normalize(n);
 
-} // end of the function
+} 
 
 //
 // get clock

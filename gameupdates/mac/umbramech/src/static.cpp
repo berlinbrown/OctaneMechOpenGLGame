@@ -131,7 +131,7 @@ static void GenerateNests(void)
 	// based on number of ants
 	nest.objects[0]->food = INITIAL_NEST_FOOD;
 
-} // end of the function
+} 
 
 //
 // Shutdown Nests
@@ -146,7 +146,7 @@ static void ShutdownNests(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Draw Nests
@@ -163,7 +163,7 @@ static void DrawNests(void)
 
 	} // end of the for
 
-} // end of the function
+} 
 
 //
 // Process Events
@@ -175,7 +175,7 @@ static void ProcessNest(CURRENT_PTR b)
 	if (b->rotation[1] >= 360)
 		b->rotation[1] -= 360;
 
-} // end of the function
+} 
 
 //
 // Create bot
@@ -208,7 +208,7 @@ static CURRENT_PTR CreateSentinel(int bot_id)
 
 	return bot;
 
-} // end of the function
+} 
 
 //
 // DestroyBot
@@ -253,4 +253,4 @@ static void RenderSentinel(CURRENT_PTR boid)
 
 	END_BOT;
 
-} // end of the function
+} 

@@ -321,7 +321,7 @@ static void drawcube(void)
 
 	glEnd();
 
-} // end of the function
+} 
 
 //=========================================================
 // Now the function to actually draw it
@@ -340,7 +340,7 @@ static void rendercube(void)
 		glPopMatrix();
 	} // end of the if
 
-} // end of the function
+} 
 
 //=========================================================
 // compile cube
@@ -362,4 +362,4 @@ static void compilecube(void)
 
 	glEndList();
 
-} // end of the function
+} 

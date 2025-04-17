@@ -117,7 +117,7 @@ static void draw_stars(void)
 
 	glEnable(GL_LIGHTING);
 
-} // end of the function
+} 
 
 
 //
@@ -148,7 +148,7 @@ static void render_stars(void)
 
 		glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -169,5 +169,5 @@ static void compile_stars(void)
 
 	glEndList();
 
-} // end of the function
+} 
 

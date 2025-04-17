@@ -105,7 +105,7 @@ DriverWorldPtr InitWorld(void)
 
 	return world;
 
-} // end of the function
+} 
 
 //
 // DestroyWorld
@@ -115,7 +115,7 @@ void DestroyWorld(DriverWorldPtr world)
 	// free((DriverWorldPtr)world);
 	RELEASE_OBJECT(world);
 
-} // end of the function
+} 
 
 //
 // wrapper functions(kind of hidden isnt it)
@@ -131,7 +131,7 @@ void ShutdownWorld(void)
 static void draw_walls(void)
 {
 
-} // end of the function
+} 
 
 //
 // init
@@ -147,7 +147,7 @@ static void init_walls(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the function
+} 
 
 //=========================================================
 // Now the function to actually draw it
@@ -160,7 +160,7 @@ static void render_walls(void)
 
 	glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -181,4 +181,4 @@ static void compile_walls(void)
 
 	glEndList();
 
-} // end of the function
+} 

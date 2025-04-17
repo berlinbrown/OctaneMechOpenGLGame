@@ -155,7 +155,7 @@ static void drawbackxz(float gridsize, float sections)
 		glEnd();
 	} // end of the functino
 
-} // end of the function
+} 
 
 //=========================================================
 // drawbackground
@@ -166,7 +166,7 @@ static void draw_grid(void)
 	drawbackxy(GRID_SIZE, 1.0f);
 	drawbackyz(GRID_SIZE, 1.0f);
 
-} // end of the function
+} 
 
 //
 // init
@@ -197,7 +197,7 @@ static void render_grid(void)
 
 	glPopMatrix();
 
-} // end of the function
+} 
 
 //=========================================================
 // compile
@@ -218,4 +218,4 @@ static void compile_grid(void)
 
 	glEndList();
 
-} // end of the function
+} 
