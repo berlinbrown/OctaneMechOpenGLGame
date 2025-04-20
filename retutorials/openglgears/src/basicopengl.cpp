@@ -22,7 +22,6 @@ float fps = 0.0f;
 int frameCount = 0;
 TimePoint lastTime = Clock::now();
 
-
 void updateFPS() {
     frameCount++;
     auto now = Clock::now();
@@ -231,8 +230,7 @@ static void draw() {
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
     drawFPS(fps);
     glutSwapBuffers();
-  }
-
+}
 
 /**
  * Deprecated - basic triangle
@@ -261,8 +259,8 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     glutCreateWindow("Gears");
+    
     glClearColor(0.0, 0.0, 0.0, 0.0);
-  
     glEnable(GL_DEPTH_TEST);
   
     // Add lighting
