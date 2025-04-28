@@ -313,6 +313,7 @@ int main(int argc, char** argv) {
 
   // Continue with camera setup
 
+  
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glFrustum(-5.0, 5.0, -5.0, 5.0, 10.0, 60.0);
