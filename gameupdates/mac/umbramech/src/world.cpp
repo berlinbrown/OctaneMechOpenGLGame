@@ -3,8 +3,8 @@
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  * * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
  * * Redistributions in binary form must reproduce the above copyright notice,
@@ -12,11 +12,11 @@
  * and/or other materials provided with the distribution.
  * * Neither the name of the Botnode.com (Berlin Brown) nor
  * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * products derived from this software without specific prior written
+ * permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -38,12 +38,11 @@
 // in which the bots live
 //
 
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT walls
@@ -71,114 +70,96 @@ DriverWorldPtr world_ptr;
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-	{
-		init_walls,	   // init, must be called first
-		compile_walls, // compile
-		draw_walls,	   // draw
-		render_walls,  // render to scene
-		0			   // loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_walls,     // init, must be called first
+    compile_walls,  // compile
+    draw_walls,     // draw
+    render_walls,   // render to scene
+    0               // loaded by INIT
 };
 
 //
 // InitWorld
 //
-DriverWorldPtr InitWorld(void)
-{
-	DriverWorldPtr world;
+DriverWorldPtr InitWorld(void) {
+  DriverWorldPtr world;
 
-	world = (DriverWorldPtr)malloc(sizeof(DriverWorld));
+  world = (DriverWorldPtr)malloc(sizeof(DriverWorld));
 
-	ZeroMemory(world, sizeof(DriverWorld));
+  ZeroMemory(world, sizeof(DriverWorld));
 
-	world->x_max = GRID_SIZE + 1.0f;
-	world->x_min = -GRID_SIZE - 1.0f;
-	world->y_min = -GRID_SIZE - 1.0f;
-	world->y_max = GRID_SIZE + 1.0f;
+  world->x_max = GRID_SIZE + 1.0f;
+  world->x_min = -GRID_SIZE - 1.0f;
+  world->y_min = -GRID_SIZE - 1.0f;
+  world->y_max = GRID_SIZE + 1.0f;
 
-	world->height = WORLD_HEIGHT;
+  world->height = WORLD_HEIGHT;
 
-	// what do you think, yellow?
-	world->color[0] = 0.5f;
-	world->color[1] = 0.5f;
-	world->color[2] = 0.5f;
+  // what do you think, yellow?
+  world->color[0] = 0.5f;
+  world->color[1] = 0.5f;
+  world->color[2] = 0.5f;
 
-	return world;
-
-} 
+  return world;
+}
 
 //
 // DestroyWorld
 //
-void DestroyWorld(DriverWorldPtr world)
-{
-	// free((DriverWorldPtr)world);
-	RELEASE_OBJECT(world);
-
-} 
+void DestroyWorld(DriverWorldPtr world) {
+  // free((DriverWorldPtr)world);
+  RELEASE_OBJECT(world);
+}
 
 //
 // wrapper functions(kind of hidden isnt it)
 void CreateWorld(void) { world_ptr = InitWorld(); }
 
-void ShutdownWorld(void)
-{
-
-} // end of if
+void ShutdownWorld(void) {}  // end of if
 
 //=========================================================
 //=========================================================
-static void draw_walls(void)
-{
-
-} 
+static void draw_walls(void) {}
 
 //
 // init
 // - load anything special about the
 // one important function
 //
-static void init_walls(int list_id)
-{
+static void init_walls(int list_id) {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
-
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;
-
-} 
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
+}
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
-static void render_walls(void)
-{
-	glPushMatrix();
+static void render_walls(void) {
+  glPushMatrix();
 
-	glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-	glPopMatrix();
-
-} 
+  glPopMatrix();
+}
 
 //=========================================================
 // compile
 //=========================================================
-static void compile_walls(void)
-{
-	int id;
-	// setup a spot for display list for background
-	// object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+static void compile_walls(void) {
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-	// call drawing function
-	// but this may method make it a little better
-	CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
-
-} 
+  glEndList();
+}
