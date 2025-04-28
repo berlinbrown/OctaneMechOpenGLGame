@@ -34,8 +34,6 @@ void updateFPS() {
     }
 }
 
-
-
 void drawFPS(float fps) {
     // Prepare text
     std::ostringstream ss;
@@ -76,6 +74,7 @@ void drawFPS(float fps) {
 
 static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width,
     GLint teeth, GLfloat tooth_depth) {
+      
     // Implementation of the gear drawing function
     // (original gears.c implementation would be placed here)
 
@@ -254,7 +253,7 @@ static void idle() {
 int main(int argc, char** argv) {
     std::cout << "Hello from C++ on macOS with clang!" << std::endl;
 
-    // Build up the gears
+    // Build up the gears, initialize with color, double buffer
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
@@ -271,6 +270,7 @@ int main(int argc, char** argv) {
     static GLfloat blue[4] = {0.2, 0.2, 1.0, 1.0};
     GLint i;
   
+    // Setup lighting
     glLightfv(GL_LIGHT0, GL_POSITION, pos);
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
@@ -305,6 +305,7 @@ int main(int argc, char** argv) {
   
     glEnable(GL_NORMALIZE);
   
+    // Setup camera initial position
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glFrustum(-5.0, 5.0, -5.0, 5.0, 10.0, 60.0);

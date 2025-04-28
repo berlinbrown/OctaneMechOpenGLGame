@@ -1,14 +1,23 @@
 /// basic cpp
 /// Basic open gl program with FPS and camera and object usage
-#include <iostream>
-#include <OpenGL/gl.h>
 #include <GLUT/glut.h>  // For window/context creation
-#include <cmath>
+#include <OpenGL/gl.h>
 
 #include <chrono>
-#include <string>
-#include <sstream>
+#include <cmath>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
+
+// Camera position
+float camX = 0.0f;
+float camY = 0.0f;
+float camZ = 5.0f; // Start 5 units away looking at the origin
+
+// Camera rotation
+float camYaw = 0.0f; // Y-axis rotation
+float camPitch = 0.0f; // X-axis rotation
 
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::time_point<Clock>;
@@ -17,370 +26,306 @@ float fps = 0.0f;
 int frameCount = 0;
 TimePoint lastTime = Clock::now();
 
-void updateFPS() {
-    frameCount++;
-    auto now = Clock::now();
-    std::chrono::duration<double> elapsed = now - lastTime;
+static void updateFPS() {
+  frameCount++;
+  auto now = Clock::now();
+  std::chrono::duration<double> elapsed = now - lastTime;
 
-    if (elapsed.count() >= 1.0) {
-        fps = static_cast<float>(frameCount) / elapsed.count();
-        frameCount = 0;
-        lastTime = now;
-    }
+  if (elapsed.count() >= 1.0) {
+    fps = static_cast<float>(frameCount) / elapsed.count();
+    frameCount = 0;
+    lastTime = now;
+  }
 }
+
 
 void renderFPS(float fps) {
-    // Prepare text
-    std::ostringstream ss;
-    ss << std::fixed << std::setprecision(2) << "FPS: " << fps;
-    std::string text = ss.str();
+  // Prepare text
+  std::ostringstream ss;
+  ss << std::fixed << std::setprecision(2) << "FPS: " << fps;
+  std::string text = ss.str();
 
-    // Save current matrices
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, 800, 0, 600); // window size in pixels
+  // Save current matrices
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  gluOrtho2D(0, 800, 0, 600);  // window size in pixels
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 
-    // Optional: Disable lighting and depth test for HUD
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
+  // Optional: Disable lighting and depth test for HUD
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_LIGHTING);
 
-    glColor3f(1.0f, 1.0f, 1.0f); // white text
-    glRasterPos2i(10, 570); // near top-left (y is from bottom in OpenGL)
+  glColor3f(1.0f, 1.0f, 1.0f);  // white text
+  glRasterPos2i(10, 570);       // near top-left (y is from bottom in OpenGL)
 
-    for (char c : text) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
-    }
+  for (char c : text) {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+  }
 
-    // Restore
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
+  // Restore
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LIGHTING);
 
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
 }
 
-static void renderCube(void)
+// Camera helper
+void updateCamera()
 {
-	float v[3][3] = {0};
-	float size = 1.0f;
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
-	// change the size here
-	// Note: starts from ground
+    // Calculate forward direction
+    float lx = sin(camYaw);
+    float lz = -cos(camYaw);
 
-	glBegin(GL_TRIANGLES);
+    gluLookAt(
+        camX, camY, camZ,
+        camX + lx, camY, camZ + lz, // Look at point in front
+        0.0f, 1.0f, 0.0f            // Up vector
+    );
+}
 
-	// left bottom front
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+// Key handler
+void keyboard(unsigned char key, int x, int y)
+{
+    float moveSpeed = 0.2f;
+    float turnSpeed = 0.05f;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
+    switch (key)
+    {
+    case 'w': // Move forward
+		std::cout << " Moving forward " << std::endl;
+        camX += sin(camYaw) * moveSpeed;
+        camZ -= cos(camYaw) * moveSpeed;
+        break;
+    case 's': // Move backward
+        camX -= sin(camYaw) * moveSpeed;
+        camZ += cos(camYaw) * moveSpeed;
+        break;
+    case 'a': // Rotate left
+        camYaw -= turnSpeed;
+        break;
+    case 'd': // Rotate right
+        camYaw += turnSpeed;
+        break;
+    case 27: // Escape key
+        exit(0);
+        break;
+    }
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+    glutPostRedisplay(); // Request re-render
+}
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
 
-	// Finish the front
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = size;
+void Normalize(float p[3]) {
+  float length = sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
+  if (length != 0.0f) {
+    p[0] /= length;
+    p[1] /= length;
+    p[2] /= length;
+  }
+}
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = size;
+void CalcNormal(float p[3], float p1[3], float p2[3], float n[3]) {
+  float pa[3] = {p1[0] - p[0], p1[1] - p[1], p1[2] - p[2]};
+  float pb[3] = {p2[0] - p[0], p2[1] - p[1], p2[2] - p[2]};
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = size;
+  n[0] = pa[1] * pb[2] - pa[2] * pb[1];
+  n[1] = pa[2] * pb[0] - pa[0] * pb[2];
+  n[2] = pa[0] * pb[1] - pa[1] * pb[0];
 
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  Normalize(n);
+}
 
-	// Draw the back triangle
-	//-----------------------------
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+static void renderCube(void) {
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  float v[3][3];
+  float n[3];
+  float size = 1.0f;
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = -size;
+  glBegin(GL_TRIANGLES);
 
-	glColor3f(1.0f, 1.0f, 0.0f);
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  // Define all the cube faces
+  // Front face
+  float front[4][3] = {{-size, -size, size},
+                       {size, -size, size},
+                       {size, size, size},
+                       {-size, size, size}};
 
-	// Finish the back
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = -size;
+  // Back face
+  float back[4][3] = {{-size, -size, -size},
+                      {size, -size, -size},
+                      {size, size, -size},
+                      {-size, size, -size}};
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  // Draw front
+  CalcNormal(front[0], front[1], front[2], n);
+  glNormal3fv(n);
+  glVertex3fv(front[0]);
+  glVertex3fv(front[1]);
+  glVertex3fv(front[2]);
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
+  CalcNormal(front[0], front[2], front[3], n);
+  glNormal3fv(n);
+  glVertex3fv(front[0]);
+  glVertex3fv(front[2]);
+  glVertex3fv(front[3]);
 
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  // Draw back
+  CalcNormal(back[2], back[1], back[0], n);
+  glNormal3fv(n);
+  glVertex3fv(back[2]);
+  glVertex3fv(back[1]);
+  glVertex3fv(back[0]);
 
-    //  Draw the right side
-	//  Triangle
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  CalcNormal(back[3], back[2], back[0], n);
+  glNormal3fv(n);
+  glVertex3fv(back[3]);
+  glVertex3fv(back[2]);
+  glVertex3fv(back[0]);
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  // Draw left
+  CalcNormal(back[0], front[0], front[3], n);
+  glNormal3fv(n);
+  glVertex3fv(back[0]);
+  glVertex3fv(front[0]);
+  glVertex3fv(front[3]);
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+  CalcNormal(back[0], front[3], back[3], n);
+  glNormal3fv(n);
+  glVertex3fv(back[0]);
+  glVertex3fv(front[3]);
+  glVertex3fv(back[3]);
 
-	glColor3f(0.0f, 0.5f, 1.0f);
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  // Draw right
+  CalcNormal(front[1], back[1], back[2], n);
+  glNormal3fv(n);
+  glVertex3fv(front[1]);
+  glVertex3fv(back[1]);
+  glVertex3fv(back[2]);
 
-	// FINISh the right side of the box
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+  CalcNormal(front[1], back[2], front[2], n);
+  glNormal3fv(n);
+  glVertex3fv(front[1]);
+  glVertex3fv(back[2]);
+  glVertex3fv(front[2]);
 
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  // Draw top
+  CalcNormal(front[3], front[2], back[2], n);
+  glNormal3fv(n);
+  glVertex3fv(front[3]);
+  glVertex3fv(front[2]);
+  glVertex3fv(back[2]);
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+  CalcNormal(front[3], back[2], back[3], n);
+  glNormal3fv(n);
+  glVertex3fv(front[3]);
+  glVertex3fv(back[2]);
+  glVertex3fv(back[3]);
 
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  // Draw bottom
+  CalcNormal(back[0], back[1], front[1], n);
+  glNormal3fv(n);
+  glVertex3fv(back[0]);
+  glVertex3fv(back[1]);
+  glVertex3fv(front[1]);
 
-	// FINISh the left side of the box
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+  CalcNormal(back[0], front[1], front[0], n);
+  glNormal3fv(n);
+  glVertex3fv(back[0]);
+  glVertex3fv(front[1]);
+  glVertex3fv(front[0]);
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = -size;
-
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = size;
-
-	glColor3f(1.0f, 0.5f, 1.0f);
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
-
-	// Draw the left side
-	// Triangle
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
-
-	v[1][0] = -size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
-
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = size;
-
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
-
-	// Draw the top and bottom
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = size;
-
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = -size;
-
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = -size;
-
-	glColor3f(0.6f, 0.6f, 0.6f);
-	// Calc normal and dra
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
-
-	// Draw one of the bottom triangles
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
-
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
-
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
-
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
-
-	// Lets finish the bottom with the second triangle
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
-
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
-
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
-
-	glColor3f(0.03f, 0.3f, 0.3f);
-	// Calc normal and dra
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
-
-	// Go back and finish the top
-	v[0][0] = -size;
-	v[0][1] = size;
-	v[0][2] = size;
-
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = size;
-
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = -size;
-
-	// Calc normal and dra
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
-
-	glEnd();
-
-} 
+  glEnd();
+}
 
 /**
  * Main display routine, render scene
  */
 void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
 
-    // Render triangle
-    static GLfloat red[4] = {0.8, 0.1, 0.0, 1.0};
-    static GLfloat green[4] = {0.0, 0.8, 0.2, 1.0};
-    static GLfloat blue[4] = {0.2, 0.2, 1.0, 1.0};
+  // Set material properties
+  GLfloat mat_diffuse[] = {0.0f, 0.0f, 1.0f, 1.0f}; // Pure blue diffuse color
+  GLfloat mat_specular[] = {0.2f, 0.2f, 1.0f, 1.0f}; // White highlights
+  GLfloat mat_shininess[] = {70.0f}; // High shininess
 
-    glPushMatrix();
-    glBegin(GL_TRIANGLES);    
-        glColor3f(1, 0, 0); 
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
-        glVertex2f(-0.5f, -0.5f);
-        
-        glColor3f(0, 1, 0); 
-        glVertex2f(0.5f, -0.5f);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 
-        glColor3f(0, 0, 1); 
-        glVertex2f(0.0f, 0.5f);
-    glEnd();
-    glFlush();
-    glPopMatrix();
+  //updateCamera(); // Set camera
 
-    // Render cube
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
-    renderCube();
+  renderCube();
 
-    // Flip frame
-    updateFPS();
+  // Flip frame
+  updateFPS();
 
-    static GLfloat white[4] = {0.8, 0.8, 0.8, 1.0};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
-    renderFPS(fps);
-    glutSwapBuffers();
+  static GLfloat white[4] = {0.8, 0.8, 0.8, 1.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
+  renderFPS(fps);
+  glutSwapBuffers();
 }
 
-static void idle() {
-    glutPostRedisplay();
-}
+static void idle() { glutPostRedisplay(); }
 
 int main(int argc, char** argv) {
-    std::cout << "Hello from C++ on macOS with clang!" << std::endl;
+  std::cout << "Hello from C++ on macOS with clang!" << std::endl;
 
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutCreateWindow("Basic OpenGL on macOS");
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  glutCreateWindow("Basic OpenGL on macOS");
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glEnable(GL_DEPTH_TEST);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glEnable(GL_DEPTH_TEST);
 
-    // Setup scnee
-    static GLfloat pos[4] = { 5.0, 5.0, 10.0, 0.0 };
-    GLint i;
-    
-    glLightfv(GL_LIGHT0, GL_POSITION, pos);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
+  // Setup scnee
+  static GLfloat pos[4] = {5.0, 5.0, 20.0, 0.0};
+  GLint i;
 
-    // Continue with camera setup
-      
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-5.0, 5.0, -5.0, 5.0, 10.0, 60.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0, 3.0, -10.0);
+  GLfloat light_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
+  GLfloat light_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
+  GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    // Continue display loop
-    glutDisplayFunc(display);
-    glutIdleFunc(idle);
-    glutMainLoop();    
-    return 0;
+  // Setup lighting parameters
+  glLightfv(GL_LIGHT0, GL_POSITION, pos);
+
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_COLOR_MATERIAL);
+  glShadeModel(GL_SMOOTH);
+
+  // Continue with camera setup
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glFrustum(-5.0, 5.0, -5.0, 5.0, 10.0, 60.0);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glTranslatef(2.0, -5.0, -15.0);
+
+  // Continue display loop
+  glutDisplayFunc(display);
+  glutIdleFunc(idle);
+  glutKeyboardFunc(keyboard);
+
+  glutMainLoop();
+
+  return 0;
 }
