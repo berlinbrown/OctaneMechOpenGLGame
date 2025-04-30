@@ -12,9 +12,8 @@
 #include <sstream>
 #include <string>
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Camera state
-static float camX = 0.0f, camY = 0.0f, camZ = 5.0f;
+static float camX = 2.0f, camY = 5.0f, camZ = 15.0f;
 static float camYaw = 0.0f;
 
 // FPS timing
@@ -24,7 +23,6 @@ static float fps = 0.0f;
 static int frameCount = 0;
 static TimePoint lastTime = Clock::now();
 
-// ─────────────────────────────────────────────────────────────────────────────
 static void updateFPS() {
   frameCount++;
   auto now = Clock::now();
@@ -66,7 +64,6 @@ static void renderFPS() {
   glMatrixMode(GL_MODELVIEW);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Normalize a vector
 static void Normalize(float p[3]) {
   float L = std::sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
@@ -159,7 +156,55 @@ static void keyboard(unsigned char key, int, int) {
   glutPostRedisplay();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+static void draw_wirebox(void) {
+  float size = 4.4f;
+
+  glColor3f(1.0f, 1.0f, 1.0f);
+  glBegin(GL_LINE_LOOP);
+
+  // Front Face
+  glVertex3f(-size, 0.0f, size);  // left bottom
+  glVertex3f(size, 0.0f, size);   // right bottom
+  glVertex3f(size, size, size);   // top right
+  glVertex3f(-size, size, size);  // top left
+  // Back Face
+
+  glVertex3f(-size, 0.0f, -size);
+  glVertex3f(-size, size, -size);
+  glVertex3f(size, size, -size);
+  glVertex3f(size, 0.0f, -size);
+
+  // Top Face
+  glVertex3f(-size, size, -size);
+  glVertex3f(-size, size, size);
+  glVertex3f(size, size, size);
+  glVertex3f(size, size, -size);
+
+  // Bottom Face
+  glVertex3f(-size, 0.0f, -size);
+  glVertex3f(size, 0.0f, -size);
+  glVertex3f(size, 0.0f, size);
+  glVertex3f(-size, 0.0f, size);
+
+  // Right face
+  glVertex3f(size, 0.0f, -size);
+  glVertex3f(size, size, -size);
+  glVertex3f(size, size, size);
+  glVertex3f(size, 0.0f, size);
+
+  // Left Face
+  glVertex3f(-size, 0.0f, -size);
+  glVertex3f(-size, 0.0f, size);
+  glVertex3f(-size, size, size);
+  glVertex3f(-size, size, -size);
+  glEnd();
+}
+
+
+
+/**
+ * Main render display routine
+ */
 static void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -176,6 +221,7 @@ static void display() {
 
   // 3) Draw cube
   renderCube();
+  draw_wirebox();
 
   // 4) FPS overlay
   updateFPS();
@@ -196,9 +242,10 @@ static void reshape(int w, int h) {
   glMatrixMode(GL_MODELVIEW);
 }
 
-static void idle() { glutPostRedisplay(); }
+static void idle() { 
+  glutPostRedisplay(); 
+}
 
-// ─────────────────────────────────────────────────────────────────────────────
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
