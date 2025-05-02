@@ -76,7 +76,7 @@ static void init_cube(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the functino
+} // end of the function
 
 //=========================================================
 // draw cube with normals turned on

@@ -147,7 +147,7 @@ void GardenRespawn(void)
 
 	} // end of the for
 
-} // end of the functino
+} // end of the function
 
 //
 // Respawing the garden has to be done here
@@ -541,7 +541,7 @@ static void DestroyGarden(CURRENT_PTR b)
 	// free(b);
 	RELEASE_OBJECT(b);
 
-} // end of the functino
+} // end of the function
 
 //
 // RenderBot

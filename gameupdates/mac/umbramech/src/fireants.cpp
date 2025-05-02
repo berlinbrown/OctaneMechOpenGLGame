@@ -1189,7 +1189,7 @@ void Render_LineStrip(float x_1, float y_1, float x_2, float y_2,
 
 	glEnd();
 
-} // end of the functino
+} // end of the function
 
 //
 // DrawBullets
@@ -2727,7 +2727,7 @@ static void init_fireant(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the functino
+} // end of the function
 
 //=========================================================
 // Now the function to actually draw it

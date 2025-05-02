@@ -96,7 +96,7 @@ static void drawbackxy(float gridsize, float sections)
 		glVertex3f(-gridsize, j, -gridsize);
 		glVertex3f(gridsize, j, -gridsize);
 		glEnd();
-	} // end of the functino
+	} // end of the function
 
 } // end of function
 
@@ -123,7 +123,7 @@ static void drawbackyz(float gridsize, float sections)
 		glVertex3f(gridsize, j, -gridsize);
 		glVertex3f(gridsize, j, gridsize);
 		glEnd();
-	} // end of the functino
+	} // end of the function
 
 } // end of the functin
 
@@ -153,7 +153,7 @@ static void drawbackxz(float gridsize, float sections)
 		glVertex3f(-gridsize, 0.0f, j);
 		glVertex3f(gridsize, 0.0f, j);
 		glEnd();
-	} // end of the functino
+	} // end of the function
 
 } 
 
@@ -180,7 +180,7 @@ static void init_grid(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the functino
+} // end of the function
 
 //=========================================================
 // Now the function to actually draw it

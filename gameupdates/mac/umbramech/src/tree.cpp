@@ -302,7 +302,7 @@ TreeNode *CreateTreeNode(int data)
 
 	return current;
 
-} // end of teh functino
+} // end of teh function
 
 //
 // TreeTest

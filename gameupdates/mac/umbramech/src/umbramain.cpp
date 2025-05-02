@@ -162,7 +162,7 @@ void GetFramesPerSecond(void) {
     frames = 0;
   }  // end of the if
 
-}  // end of the functino
+}  // end of the function
 
 //
 // PrintText --

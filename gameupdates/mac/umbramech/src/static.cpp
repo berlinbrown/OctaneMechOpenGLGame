@@ -217,7 +217,7 @@ static void DestroySentinel(CURRENT_PTR b)
 {
 	free(b);
 
-} // end of the functino
+} // end of the function
 
 //
 // RenderBot

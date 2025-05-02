@@ -1,6 +1,9 @@
 // ShinyBlueCube.cpp
-// A basic GLUT+OpenGL demo: shiny blue cube + FPS + camera controls
+// Render - A basic GLUT+OpenGL demo: shiny blue cube + FPS + camera controls
 // Best model with blue cube and lighting
+//
+// Also includes stars, cube, plane and camera movement
+// May 2 2025
 
 #include <GLUT/glut.h>   // macOS: includes both OpenGL and GLUT
 #include <OpenGL/glu.h>  // for gluLookAt, gluPerspective
@@ -12,6 +15,8 @@
 #include <sstream>
 #include <string>
 
+#define DEG2RAD (3.14159265f / 180.0f)
+
 // Camera state
 static float camX = 2.0f, camY = 5.0f, camZ = 15.0f;
 static float camYaw = 0.0f;
@@ -22,6 +27,9 @@ using TimePoint = std::chrono::time_point<Clock>;
 static float fps = 0.0f;
 static int frameCount = 0;
 static TimePoint lastTime = Clock::now();
+
+GLuint star_list = 0;  // Global or static variable to store the list ID
+
 
 static void updateFPS() {
   frameCount++;
@@ -37,7 +45,7 @@ static void updateFPS() {
 // Draws the FPS counter in screen-space
 static void renderFPS() {
   std::ostringstream ss;
-  ss << std::fixed << std::setprecision(1) << "FPS: " << fps;
+  ss << std::fixed << std::setprecision(1) << "[   ] ---- Berlin(test alpha1) -- FPS: " << fps;
   std::string text = ss.str();
 
   // Set up 2D orthographic projection for HUD
@@ -54,7 +62,9 @@ static void renderFPS() {
 
   glColor3f(1, 1, 1);
   glRasterPos2i(10, 580);
-  for (char c : text) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+  for (char c : text) { 
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+  }
 
   glEnable(GL_LIGHTING);
   glEnable(GL_DEPTH_TEST);
@@ -115,6 +125,68 @@ static void renderCube() {
   }
   glEnd();
 }
+
+void draw_hexplane(float x, float z, float y, float size) {
+  // Enable lighting and set material properties
+  GLfloat mat_specular[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+  GLfloat mat_shininess[] = { 100.0f };
+  GLfloat mat_diffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
+
+  glBegin(GL_TRIANGLES);
+  for (int i = 0; i < 6; ++i) {
+      float angle1 = i * 60.0f * DEG2RAD;
+      float angle2 = (i + 1) * 60.0f * DEG2RAD;
+
+      float x1 = x + size * cosf(angle1);
+      float z1 = z + size * sinf(angle1);
+
+      float x2 = x + size * cosf(angle2);
+      float z2 = z + size * sinf(angle2);
+
+      // All normals point up since it's a flat plane
+      glNormal3f(0.0f, 1.0f, 0.0f);
+
+      glVertex3f(x,     y, z);   // Center
+      glVertex3f(x1,    y, z1);  // First vertex of triangle
+      glVertex3f(x2,    y, z2);  // Second vertex
+  }
+  glEnd();
+}
+
+static void draw_star_layer(int count, float radius, float point_size) {
+  glPointSize(point_size);
+  glBegin(GL_POINTS);
+  for (int i = 0; i < count; i++) {
+      float x = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+      float y = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+      float z = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+      glVertex3f(x, y, z);
+  }
+  glEnd();
+}
+
+static void draw_stars(void) {
+
+  const int MAX_STARS = 1400;
+  const float STAR_RADIUS = 200.0f;
+
+  const int step = MAX_STARS / 3;
+
+  glDisable(GL_LIGHTING);
+  glDisable(GL_TEXTURE_2D);
+  glColor3f(1.0f, 1.0f, 1.0f);
+
+  draw_star_layer(step, STAR_RADIUS, 0.5f);
+  draw_star_layer(step, STAR_RADIUS, 1.0f);
+  draw_star_layer(step, STAR_RADIUS, 1.5f);
+
+  glEnable(GL_LIGHTING);
+}
+
 
 // Position camera via gluLookAt
 static void updateCamera() {
@@ -200,8 +272,6 @@ static void draw_wirebox(void) {
   glEnd();
 }
 
-
-
 /**
  * Main render display routine
  */
@@ -222,6 +292,12 @@ static void display() {
   // 3) Draw cube
   renderCube();
   draw_wirebox();
+  
+  // Render plane
+  draw_hexplane(0.0f, 0.0f, -4.0f, 8.0f);
+
+  // Render stars
+  glCallList(star_list);  // Render the stars
 
   // 4) FPS overlay
   updateFPS();
@@ -273,6 +349,14 @@ int main(int argc, char** argv) {
   glLightfv(GL_LIGHT0, GL_AMBIENT, Lamb);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, Ldiff);
   glLightfv(GL_LIGHT0, GL_SPECULAR, Lspec);
+
+  // build out stars
+  GLuint list_id = glGenLists(1); // Generate a unique ID
+
+  glNewList(list_id, GL_COMPILE);
+  draw_stars();
+  glEndList();
+  star_list = list_id;
 
   // Callbacks
   glutDisplayFunc(display);

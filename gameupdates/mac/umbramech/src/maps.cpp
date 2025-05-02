@@ -113,7 +113,7 @@ void DestroyMaps(void) {
   for (index = 0; index < max_maps; index++) {
     DeleteMap(map_ptrs[index]);
 
-  }  // end of the functino
+  }  // end of the function
 
   // this might need to go above the for
   DestroyPtrList(map_list);

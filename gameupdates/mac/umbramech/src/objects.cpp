@@ -135,7 +135,7 @@ void RenderPlane(void)
 
 	END_BOT;
 
-} // end of the functino
+} // end of the function
 
 //
 // Actually draw to the scene
@@ -188,7 +188,7 @@ void Bot_Triangle(float x, float y)
 
 	glEnable(GL_LIGHTING);
 
-} // end of the functino
+} // end of the function
 
 //
 // draw_hexplane
@@ -199,12 +199,10 @@ void draw_hexplane(float x_1, float x_2, float y_1, float size)
 	float v[3][3] = {0};
 	float n[3] = {0};
 
-	float tol = (size * 2.0f) * 1.1f;
-
+	float tol = (size * 2.0f) * 1.1f;	
 	float x;
 
 	h_2 = 1.8f * size;
-
 	for (x = x_1; x < x_2; x += tol)
 	{
 
@@ -388,7 +386,7 @@ static void init_plane(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the functino
+} // end of the function
 
 //=========================================================
 // Now the function to actually draw it
@@ -487,7 +485,7 @@ void RenderObjects(void)
 	for (index = 0; index < MAX_OBJECTS; index++)
 	{
 		driver_objects[index]->render();
-	} // end of the functino
+	} // end of the function
 
 } 
 
@@ -517,7 +515,7 @@ void InitObjects(void)
 	// go ahead and compile the objects
 	CompileObjects();
 
-} // end of the functino
+} // end of the function
 
 //
 // CompileObjects

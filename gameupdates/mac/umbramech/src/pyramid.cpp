@@ -257,7 +257,7 @@ void Print_Wall_List(void)
 void Draw_Wall_List(void)
 {
 	Draw_Walls(wall_list);
-} // end of the functino
+} // end of the function
 
 //
 // END WALLOBJECTS
@@ -555,7 +555,7 @@ static void init_pyramid(int list_id)
 	// there is probably a better way to do this
 	CURRENT_OBJECT.call_id = list_id;
 
-} // end of the functino
+} // end of the function
 
 //=========================================================
 // Now the function to actually draw it

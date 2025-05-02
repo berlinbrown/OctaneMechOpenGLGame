@@ -71,7 +71,7 @@ void DestroyNode(Node *node)
 
     RELEASE_OBJECT(node);
 
-} // end of the functino
+} // end of the function
 
 //
 // Create List

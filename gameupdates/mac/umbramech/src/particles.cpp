@@ -281,7 +281,7 @@ void AnimateExplosions(void)
 
 		Anim_Particles(particle_set[i]);
 
-	} // end of the functino
+	} // end of the function
 
 } 
 
@@ -299,6 +299,6 @@ void DrawExplosions(void)
 
 		Draw_Particles(particle_set[i]);
 
-	} // end of the functino
+	} // end of the function
 
 } 

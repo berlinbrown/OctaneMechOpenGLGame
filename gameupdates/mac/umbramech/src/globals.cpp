@@ -559,7 +559,7 @@ void Draw_NetworkScreen(void) {
   // print connections if there are any
   printConnections();
 
-}  // end of the functino
+}  // end of the function
 
 //
 // Draw_HelpScreen
@@ -872,7 +872,7 @@ void AddAnts(int ants) { ant_globals->alive_ants += ants; }
 //
 // GetAnts
 //
-int GetAnts(void) { return ant_globals->alive_ants; }  // end of the functino
+int GetAnts(void) { return ant_globals->alive_ants; }  // end of the function
 
 //
 // AddSeconds
@@ -917,7 +917,7 @@ void GameTick(void) { ant_globals->ticks += 1; }
 //
 // GetGameTick
 //
-DWORD GetGameTick(void) { return ant_globals->ticks; }  // end of the functino
+DWORD GetGameTick(void) { return ant_globals->ticks; }  // end of the function
 
 //
 // PrintGlobals
@@ -990,7 +990,7 @@ void Add_ErrorStr(char *str) {
 
   fclose(f_errorlog);
 
-}  // end of the functino
+}  // end of the function
 
 //
 // Add_ErrorLog

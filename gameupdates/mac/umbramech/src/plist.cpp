@@ -73,7 +73,7 @@ void DestroyPtrNode(PtrNode *node)
 
 	free(node);
 
-} // end of the functino
+} // end of the function
 
 //
 // Create PtrList

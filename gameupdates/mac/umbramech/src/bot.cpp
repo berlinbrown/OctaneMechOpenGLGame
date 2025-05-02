@@ -143,7 +143,7 @@ void CreateAnts(int food)
 
 	} // end of the if
 
-} // end of the functino
+} // end of the function
 
 //
 // Find Angle
@@ -696,7 +696,7 @@ void DestroyBot(DriverBotPtr b)
 {
 	RELEASE_OBJECT(b);
 
-} // end of the functino
+} // end of the function
 
 //
 // RenderBot

@@ -116,7 +116,7 @@ void DestroyLight(DriverLightsPtr b)
 	// free(b);
 	RELEASE_OBJECT(b);
 
-} // end of the functino
+} // end of the function
 
 //
 // RenderWirebox

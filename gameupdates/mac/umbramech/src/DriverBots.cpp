@@ -484,7 +484,7 @@ void DriverBots::Reach_Target(DriverBotPtr bot)
 		this->state = GENERATE_TURN;
 	} // end of the if
 
-} // end of the functino
+} // end of the function
 
 //
 // Move Command
@@ -667,4 +667,4 @@ void DriverBots::attackCommand(DriverBotPtr bot)
 		break;
 	};
 
-} // end of the functino
+} // end of the function

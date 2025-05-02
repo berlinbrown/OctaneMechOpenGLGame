@@ -122,7 +122,7 @@ CollisionList *moving_list;
 static void Reset_DistStack(void)
 {
 	dist_stack_ctr = 0;
-} // end of the functino
+} // end of the function
 
 // Insert_DistStack
 //
@@ -177,7 +177,7 @@ static CollisionPtr Find_DistStack(float x, float y)
 
 	return dist_stack[min_id];
 
-} // end of the functino
+} // end of the function
 
 //
 // IsEmpty

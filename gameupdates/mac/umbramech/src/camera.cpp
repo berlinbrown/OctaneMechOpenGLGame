@@ -56,7 +56,7 @@ static DriverBotPtr camera_bot;
 
 void GetCameraBot(DriverBotPtr bot) {
   camera_bot = bot;
-}  // end of the functino
+}  // end of the function
 
 //
 // GetBotX
@@ -279,7 +279,7 @@ void LoadCameras(void) {
 
     driver_camera[index]->zoom_factor = 3.2f;
 
-  }  // end of the functino
+  }  // end of the function
 
   // perform camera specific operations
   SetupCamera();
@@ -317,7 +317,7 @@ void SetCamera(void) {
   glRotatef(CAMERA->rotation[0], 1.0f, 0.0f, 0.0f);
   glRotatef(CAMERA->rotation[2], 0.0f, 0.0f, 1.0f);
 
-}  // end of the functino
+}  // end of the function
 
 //=========================================================
 // movecamera
@@ -349,7 +349,7 @@ void checkangle(void) {
 
   }  // end of the for
 
-}  // end of the functino
+}  // end of the function
 
 //=========================================================
 // check rotation
@@ -367,7 +367,7 @@ void checkrotation(void) {
 
   }  // end of the for
 
-}  // end of the functino
+}  // end of the function
 
 //---------------------------------------------------------
 // angle camera
@@ -382,7 +382,7 @@ void AngleCamera(float x, float y, float z) {
   CAMERA->rotation[2] += z;
   checkrotation();  // check bounds 0->359
 
-}  // end of the functino
+}  // end of the function
 
 //=========================================================
 // turn camera
@@ -431,7 +431,7 @@ void SetCameraRot(float x, float y, float z) {
   CAMERA->rotation[1] = y;
   CAMERA->rotation[2] = z;
 
-}  // end of the functino
+}  // end of the function
 
 //=========================================================
 // set angles of the camera
@@ -466,7 +466,7 @@ void MoveForward(void) {
     TranslateCamera(0.0f, 0.0f, camera_speed);
   }  // end of if
 
-}  // end of the functino
+}  // end of the function
 
 //
 // Move Backwards
@@ -493,7 +493,7 @@ void MoveBackward(void) {
     TranslateCamera(0.0f, 0.0f, -camera_speed);
   }  // end of if
 
-}  // end of the functino
+}  // end of the function
 
 //
 // MoveLeft
@@ -510,7 +510,7 @@ void MoveLeft(void) {
     TranslateCamera(camera_speed, 0.0f, 0.0f);
   }  // end of if
 
-}  // end of the functino
+}  // end of the function
 
 //
 // SyncCamera
@@ -534,7 +534,7 @@ void MoveRight(void) {
     TranslateCamera(-angle, 0.0f, 0.0f);
   }  // end of if
 
-}  // end of the functino
+}  // end of the function
 
 //
 // Paused_Camera

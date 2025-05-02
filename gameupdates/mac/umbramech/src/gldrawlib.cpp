@@ -235,4 +235,4 @@ void DrawObjects(void)
 	glVertex3f(1.0f, -1.0f, -1.0f);	 // Bottom Right Of The Quad (Right)
 	glEnd();						 // Done Drawing The Quad
 
-} // end of the functino
+} // end of the function
