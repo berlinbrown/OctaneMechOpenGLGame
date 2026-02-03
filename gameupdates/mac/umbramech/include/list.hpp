@@ -36,17 +36,16 @@
 // list.h
 #pragma once
 
-typedef struct tagNode {
-	int data;
+typedef struct tagNode
+{
+  int data;
 
-	struct tagNode *next; 
+  struct tagNode* next;
 } Node;
 
-typedef struct tagList {
-	Node *head;
+typedef struct tagList
+{
+  Node* head;
 } List;
 
-
 void LinkTest(void);
-
-

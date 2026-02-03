@@ -38,26 +38,27 @@
 
 #include <memory>
 
-class Node {
-public:
-    int data;
-    std::unique_ptr<Node> next;
+class Node
+{
+ public:
+  int data;
+  std::unique_ptr<Node> next;
 
-    explicit Node(int value);
-    ~Node(); // optional, usually implicit
+  explicit Node(int value);
+  ~Node();  // optional, usually implicit
 };
 
-class List {
-private:
-    std::unique_ptr<Node> head;
+class List
+{
+ private:
+  std::unique_ptr<Node> head;
 
-public:
-    List();
-    ~List(); // optional, unique_ptr handles cleanup
+ public:
+  List();
+  ~List();  // optional, unique_ptr handles cleanup
 
-    bool isEmpty() const;
-    void insertFront(int data);
-    void deleteNode(int val);
-    void printList() const;
+  bool isEmpty() const;
+  void insertFront(int data);
+  void deleteNode(int val);
+  void printList() const;
 };
-

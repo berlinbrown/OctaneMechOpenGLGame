@@ -36,32 +36,32 @@
 // list.h
 #pragma once
 
-typedef struct tagPtrNode {
-	void *ptr;
+typedef struct tagPtrNode
+{
+  void* ptr;
 
-	struct tagPtrNode *next; 
+  struct tagPtrNode* next;
 } PtrNode;
 
-typedef struct tagPtrList {
-	PtrNode *head;
-	int items;
+typedef struct tagPtrList
+{
+  PtrNode* head;
+  int items;
 } PtrList;
 
-void InsertFront(PtrList *list, void *data);
+void InsertFront(PtrList* list, void* data);
 
 void PtrLinkTest(void);
 
-PtrList *CreatePtrList();
-void DestroyPtrList(PtrList *list);
-int isempty(PtrList *list);
-void DeletePtrNode(PtrList *list, void *val);
-void *RemoveFront(PtrList *list);
-void PrintPtrList(PtrList *list);
+PtrList* CreatePtrList();
+void DestroyPtrList(PtrList* list);
+int isempty(PtrList* list);
+void DeletePtrNode(PtrList* list, void* val);
+void* RemoveFront(PtrList* list);
+void PrintPtrList(PtrList* list);
 
 // STACK MACROS
-#define POP_STACK(list)		RemoveFront(list)
-#define PUSH_STACK(list, data)		InsertFront(list, data)
-#define CREATE_STACK		CreatePtrList()
-#define DESTROY_STACK(list)	DestroyPtrList(list)
-	
-
+#define POP_STACK(list) RemoveFront(list)
+#define PUSH_STACK(list, data) InsertFront(list, data)
+#define CREATE_STACK CreatePtrList()
+#define DESTROY_STACK(list) DestroyPtrList(list)

@@ -36,17 +36,16 @@
 //  - the ant object
 //
 
+#include <GL/gl.h>   // Header File For The OpenGL32 Library
+#include <GL/glu.h>  // Header File For The GLu32 Library
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
-#include "objects.h"
 #include "bot.h"
+#include "objects.h"
 
 #undef CURRENT_OBJECT
-#define CURRENT_OBJECT			stars
+#define CURRENT_OBJECT stars
 
 static void init_stars(int list_id);
 static void compile_stars(void);
@@ -59,117 +58,106 @@ static void draw_stars(void);
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-{
-	init_stars,			// init, must be called first
-	compile_stars,		// compile
-	draw_stars,			// draw 
-	render_stars,			// render to scene
-	0					// loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_stars,     // init, must be called first
+    compile_stars,  // compile
+    draw_stars,     // draw
+    render_stars,   // render to scene
+    0               // loaded by INIT
 };
-
 
 //=========================================================
 //=========================================================
 static void draw_stars(void)
 {
+  int cnt = MAX_STARS;
+  double radius = STAR_RADIUS;
 
-	int cnt	= MAX_STARS;
-	double radius = STAR_RADIUS; 
+  int step = cnt / 3;
+  int i;
 
-	int step = cnt / 3;
-	int i;
+  glDisable(GL_LIGHTING);
+  glDisable(GL_TEXTURE_2D);
 
-	glDisable(GL_LIGHTING);
-	glDisable(GL_TEXTURE_2D);
+  glColor3f(1.0, 1.0, 1.0);
+  glPointSize(0.5);
+  glBegin(GL_POINTS);
+  for (i = 0; i < step; i++)
+  {
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0);
+  }
+  glEnd();
+  glPointSize(1.0);
+  glBegin(GL_POINTS);
+  for (i = 0; i < step; i++)
+  {
+    glVertex3f(radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0);
+  }
+  glEnd();
+  glPointSize(1.5);
+  glBegin(GL_POINTS);
+  for (i = 0; i < step; i++)
+  {
+    glVertex3f(radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0,
+               radius * ((float)(rand() % MAX_RAND) / (MAX_RAND)) - radius / 2.0);
+  }
+  glEnd();
 
+  glEnable(GL_LIGHTING);
 
-	glColor3f(1.0, 1.0, 1.0);
-	glPointSize(0.5);
-	glBegin(GL_POINTS);
-		for (i = 0; i < step; i++) {
-			glColor3f(1.0, 1.0, 1.0);
-			glVertex3f(
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0
-			);
-		}
-	glEnd();
-	glPointSize(1.0);
-	glBegin(GL_POINTS);
-		for (i = 0; i < step; i++) {
-			glVertex3f(
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0
-			);
-		}
-	glEnd();
-	glPointSize(1.5);
-	glBegin(GL_POINTS);
-		for (i = 0; i < step; i++) {
-			glVertex3f(
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0,
-				radius * ((float)(rand() % MAX_RAND)/(MAX_RAND)) - radius / 2.0
-			);
-		}
-	glEnd();
-
-	glEnable(GL_LIGHTING);
-
-} // end of the function
-
+}  // end of the function
 
 //
 // init
 // - load anything special about the
-// one important function 
+// one important function
 //
 static void init_stars(int list_id)
 {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;	
-	
-} // end of the functino
-
+}  // end of the functino
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_stars(void)
 {
-		glPushMatrix();
+  glPushMatrix();
 
-			glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-		glPopMatrix();
+  glPopMatrix();
 
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_stars(void)
 {
-	int id;
-	// setup a spot for display list for background
-	//object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-		// call drawing function
-		// but this may method make it a little better
-		CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
+  glEndList();
 
-} // end of the function
-
+}  // end of the function

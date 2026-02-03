@@ -32,7 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // menu.h
 //
@@ -42,26 +41,24 @@
 #include "bot.h"
 
 // menu mode
-#define MENU_TITLE_MODE			1
-#define MENU_RUN_MODE			2
-#define MENU_HELP_MODE			3
-#define MENU_SETTINGS_MODE              4
+#define MENU_TITLE_MODE 1
+#define MENU_RUN_MODE 2
+#define MENU_HELP_MODE 3
+#define MENU_SETTINGS_MODE 4
 
-#define NEW_GAME_ID			0
-#define EXIT_ID				1
-#define HELP_ID				2
-#define SETTINGS_ID			3
-#define DEMO_ID				4
-
+#define NEW_GAME_ID 0
+#define EXIT_ID 1
+#define HELP_ID 2
+#define SETTINGS_ID 3
+#define DEMO_ID 4
 
 // These are used with _menu_state
-#define MENU_DEAD_MODE			4
-#define FIRST_TIME_TRUE			1
-#define FIRST_TIME_FALSE		2
+#define MENU_DEAD_MODE 4
+#define FIRST_TIME_TRUE 1
+#define FIRST_TIME_FALSE 2
 
 void Toggle_MenuItems(int dir);
 bool Set_MenuMode(void);
 void Reset_DeadText(void);
 
 #endif
-

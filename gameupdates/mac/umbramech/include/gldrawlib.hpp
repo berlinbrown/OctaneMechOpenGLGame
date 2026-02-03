@@ -32,23 +32,21 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // Berlin Brown
 //
 
 #pragma once
 
-#define ENABLE_CONSOLE		0;
-#define USE_SMALL_SCREEN	1;
+#define ENABLE_CONSOLE 0;
+#define USE_SMALL_SCREEN 1;
 
-#define MAX_TEXTURES		20;
+#define MAX_TEXTURES 20;
 
-#define M_PI			3.14159265358f; 		
+#define M_PI 3.14159265358f;
 
-
-#define SCREEN_WIDTH		800;
-#define SCREEN_HEIGHT		600;
+#define SCREEN_WIDTH 800;
+#define SCREEN_HEIGHT 600;
 
 unsigned long getclock(void);
 
@@ -60,16 +58,15 @@ void Load_Titles(void);
 void Draw_Title(void);
 
 void Normalize(float p[3]);
-void CalcNormal(float p[3],float p1[3],float p2[3], float n[3]);
+void CalcNormal(float p[3], float p1[3], float p2[3], float n[3]);
 
 void Calc_Normal(float v[3][3], float out[3]);
 
-void PrintText(const char *fmt, ...);
+void PrintText(const char* fmt, ...);
 
 void SetFunkyTexture(void);
 int GetFunkyTexture(void);
-void LoadTexture(char *filename);
+void LoadTexture(char* filename);
 void NextTexture(void);
 
 void DrawLineOfSight(float x1, float y1, float x2, float y2);
-

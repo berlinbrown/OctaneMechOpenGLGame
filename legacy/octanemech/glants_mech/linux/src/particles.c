@@ -33,283 +33,256 @@
  */
 //
 // particles.cpp
-// 
+//
 // particles or explosion engine
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
-
-#include "bot.h"
 #include "particles.h"
 
-static ParticleList	*particle_set[MAX_PARTICLE_SET];
-static int	particle_index = 0;
+#include <GL/gl.h>   // Header File For The OpenGL32 Library
+#include <GL/glu.h>  // Header File For The GLu32 Library
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-// 
+#include "bot.h"
+
+static ParticleList* particle_set[MAX_PARTICLE_SET];
+static int particle_index = 0;
+
+//
 // Create Particle
 //
-ParticleList *CreateParticleList(void) {
+ParticleList* CreateParticleList(void)
+{
+  ParticleList* result = malloc(sizeof(ParticleList));
 
-    ParticleList *result = malloc(
-				sizeof(ParticleList));
+  result->x = 0;
+  result->y = 0;
 
-	result->x = 0;
-	result->y = 0;
+  result->life = 0;
+  result->state = DEAD_STATE;
 
-	result->life = 0;
-	result->state = DEAD_STATE;
+  return result;
 
-	return result;
-
-} // end of the function 
+}  // end of the function
 
 //
 // Destroy List
 //
-void DestroyParticleList(ParticleList *list) 
-{
-    RELEASE_OBJECT(list);
-
-} // end of the function 
+void DestroyParticleList(ParticleList* list) { RELEASE_OBJECT(list); }  // end of the function
 
 //
 // New_Speed
 //
 static void New_Speed(float d[3], float speed)
 {
+  float x, y, z;
+  float r;
+  float tmp;
 
-	float	x, y, z;
-	float	r;
-	float	tmp;
+  tmp = 2.0f * speed;
 
-	tmp = 2.0f * speed;
+  r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
+  x = r;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
-	x = r;
+  r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
+  y = r;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
-	y = r;
+  r = (tmp * ((float)rand()) / ((float)RAND_MAX)) - speed;
+  z = r;
 
-	r = (tmp * ((float)rand())/((float)RAND_MAX)) - speed;
-	z = r;
+  d[0] = x;
+  d[1] = y;
+  d[2] = z;
 
-	d[0] = x;
-	d[1] = y;
-	d[2] = z;
-
-} // end of the function 
+}  // end of the function
 
 //
 // Set Explosion
 // - just set the position and turn it on
 //
-void Set_Explosion(ParticleList *list, float x, float y)
+void Set_Explosion(ParticleList* list, float x, float y)
 {
-	int i;
+  int i;
 
-	list->life = MAX_PARTICLE_LIFE;
+  list->life = MAX_PARTICLE_LIFE;
 
-	list->state = ALIVE_STATE;
-	list->x = x;
-	list->y = y;
+  list->state = ALIVE_STATE;
+  list->x = x;
+  list->y = y;
 
-	for (i = 0; i < MAX_PARTICLES; i++)
-	{
-		list->particles[i].p_id = i;
+  for (i = 0; i < MAX_PARTICLES; i++)
+  {
+    list->particles[i].p_id = i;
 
-		list->particles[i].p_pos[0] = x;
-		list->particles[i].p_pos[1] = 1.0f;
-		list->particles[i].p_pos[2] = y;
+    list->particles[i].p_pos[0] = x;
+    list->particles[i].p_pos[1] = 1.0f;
+    list->particles[i].p_pos[2] = y;
 
-		list->particles[i].p_color[0] = 1.0f;
-		list->particles[i].p_color[1] = 0.1f;
-		list->particles[i].p_color[2] = 0.1f;
+    list->particles[i].p_color[0] = 1.0f;
+    list->particles[i].p_color[1] = 0.1f;
+    list->particles[i].p_color[2] = 0.1f;
 
-		list->particles[i].p_state = ALIVE_STATE;
+    list->particles[i].p_state = ALIVE_STATE;
 
-		// Set the speed
-		New_Speed(list->particles[i].p_speed, PARTICLE_SPEED);
+    // Set the speed
+    New_Speed(list->particles[i].p_speed, PARTICLE_SPEED);
 
-	} // end of the for 
+  }  // end of the for
 
-	
-} // end of the function 
+}  // end of the function
 
 //
 // Draw_Particles
 //
-void Draw_Particles(ParticleList *list)
+void Draw_Particles(ParticleList* list)
 {
-	int i=0;
+  int i = 0;
 
-	if (list->state == ALIVE_STATE)
-	{
+  if (list->state == ALIVE_STATE)
+  {
+    glDisable(GL_LIGHTING);
 
-		glDisable(GL_LIGHTING);
+    glPushMatrix();
 
-		glPushMatrix();
+    glBegin(GL_POINTS);
 
-			glBegin(GL_POINTS);
+    for (i = 0; i < MAX_PARTICLES; i++)
+    {
+      if (list->particles[i].p_state == DEAD_STATE) continue;
 
-			for(i =0; i < MAX_PARTICLES; i++)
-			{
-				if (list->particles[i].p_state == DEAD_STATE)
-					continue;
+      glColor3fv(list->particles[i].p_color);
+      glVertex3fv(list->particles[i].p_pos);
 
-				glColor3fv(list->particles[i].p_color);
-				glVertex3fv(list->particles[i].p_pos);
+    }  // end of the for
 
-			} // end of the for 
+    glEnd();
 
-			glEnd();
+    glPopMatrix();
 
-		glPopMatrix();
+    glEnable(GL_LIGHTING);
 
-		glEnable(GL_LIGHTING);
+  }  // end of the if
 
-
-	} // end of the if 
-
-} // end of the function 
-
+}  // end of the function
 
 //
 // Wrapper Functions
 //
 void Build_ParticleSet(void)
 {
-	int i;
+  int i;
 
-	for (i = 0; i < MAX_PARTICLE_SET; i++)
-	{
-		particle_set[i] = CreateParticleList();
-	} // end of the for 
+  for (i = 0; i < MAX_PARTICLE_SET; i++)
+  {
+    particle_set[i] = CreateParticleList();
+  }  // end of the for
 
-	particle_index = 0;
+  particle_index = 0;
 
-} // end of the function
+}  // end of the function
 
 //
 // Destroy_Particles(void)
 //
 void Destroy_ParticleSet(void)
 {
-	int i = 0;
+  int i = 0;
 
-	for (i = 0; i < MAX_PARTICLE_SET; i++)
-	{
-		DestroyParticleList(particle_set[i]);
-	} // end of the of r
+  for (i = 0; i < MAX_PARTICLE_SET; i++)
+  {
+    DestroyParticleList(particle_set[i]);
+  }  // end of the of r
 
-} // end of the function 
+}  // end of the function
 
 //
 // SetExplosion
 //
 void SetExplosion(float x, float y)
 {
-	Set_Explosion(particle_set[particle_index], x, y);
+  Set_Explosion(particle_set[particle_index], x, y);
 
-	particle_index++;
-	if (particle_index >= MAX_PARTICLE_SET)
-		particle_index = 0;
+  particle_index++;
+  if (particle_index >= MAX_PARTICLE_SET) particle_index = 0;
 
-} // end of the function 
-
+}  // end of the function
 
 //
 // AnimateExplisions
 //
-void Anim_Particles(ParticleList *list)
+void Anim_Particles(ParticleList* list)
 {
-	int i = 0;
-	int j = 0;
-	float dv = 0;
+  int i = 0;
+  int j = 0;
+  float dv = 0;
 
-	if (list->state == ALIVE_STATE)
-	{
+  if (list->state == ALIVE_STATE)
+  {
+    for (i = 0; i < MAX_PARTICLES; i++)
+    {
+      for (j = 0; j < 3; j++)
+      {
+        list->particles[i].p_pos[j] += list->particles[i].p_speed[j];
 
+        // kill if this one hits the ground
+        if (list->particles[i].p_pos[1] < 0.0f) list->particles[i].p_state = DEAD_STATE;
 
-		for(i =0; i < MAX_PARTICLES; i++)
-		{
-		
-			for (j = 0; j < 3; j++) 
-			{
-				list->particles[i].p_pos[j] += 
-						list->particles[i].p_speed[j];
+        dv = 1.0f / 500.0f;
 
-				// kill if this one hits the ground
-				if (list->particles[i].p_pos[1] < 0.0f)
-					list->particles[i].p_state = DEAD_STATE;
+        list->particles[i].p_color[j] -= dv;
 
-				dv = 1.0f / 500.0f;
-	
-				list->particles[i].p_color[j] -= dv;
+        if (list->particles[i].p_color[j] < 0.0f) list->particles[i].p_color[j] = 0.0f;
 
-				if (list->particles[i].p_color[j] < 0.0f)
-					list->particles[i].p_color[j] = 0.0f;
+      }  // end of the for
 
-			} // end of the for
+    }  // end of the for
 
-		} // end of the for 
+    // subtract life
+    list->life--;
 
+    if (list->life < 0)
+    {
+      list->life = 0;
+      list->state = DEAD_STATE;
 
-		// subtract life
-		list->life--;
+    }  // end of the if
 
-		if (list->life < 0) {
+  }  // end of big if
 
-			list->life = 0;
-			list->state = DEAD_STATE;
-
-		} // end of the if 
-
-	} // end of big if
-
-} // end of the function
+}  // end of the function
 
 //
 // AnimateExplosions
 //
 void AnimateExplosions(void)
 {
-	int i = 0;
+  int i = 0;
 
-	for (i = 0; i < MAX_PARTICLE_SET; i++)
-	{
-		if (particle_set[i]->state == DEAD_STATE)
-			continue;
+  for (i = 0; i < MAX_PARTICLE_SET; i++)
+  {
+    if (particle_set[i]->state == DEAD_STATE) continue;
 
-		Anim_Particles(particle_set[i]);
+    Anim_Particles(particle_set[i]);
 
-	} // end of the functino 
+  }  // end of the functino
 
-} // end of the function
-
+}  // end of the function
 
 //
 // Now draw the entire set
 //
 void DrawExplosions(void)
 {
-	int i = 0;
+  int i = 0;
 
-	for (i = 0; i < MAX_PARTICLE_SET; i++)
-	{
-		if (particle_set[i]->state == DEAD_STATE)
-			continue;
+  for (i = 0; i < MAX_PARTICLE_SET; i++)
+  {
+    if (particle_set[i]->state == DEAD_STATE) continue;
 
-		Draw_Particles(particle_set[i]);
+    Draw_Particles(particle_set[i]);
 
-	} // end of the functino 
+  }  // end of the functino
 
-} // end of the function 
-
-
-
+}  // end of the function

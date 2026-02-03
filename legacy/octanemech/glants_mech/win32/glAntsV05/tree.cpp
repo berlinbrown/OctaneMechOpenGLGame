@@ -44,320 +44,302 @@
 // kind of hybrid bsp/octree
 //
 
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
-
 #include "tree.h"
 
-#define TEST_VALUES		10
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <windows.h>
+
+#define TEST_VALUES 10
 
 static unsigned long tree_searches = 0;
 static unsigned long list_searches = 0;
-static int stack[20]={0};
+static int stack[20] = {0};
 static int ctr = 0;
 
-
-bool TestFuncA(int val, TreeNode *current)
+bool TestFuncA(int val, TreeNode* current)
 {
-	printf(" *%d/%d* ", val, current->data);
+  printf(" *%d/%d* ", val, current->data);
 
-	return (val < current->data);
-} // end of the function 
+  return (val < current->data);
+}  // end of the function
 
 #if 0
 bool TestFuncB(int val, int data)
 {
 	printf("[%d<%d]",val, data); 
 	return (val < data);
-} // end of the function 
+} // end of the function
 #endif
 
-#define TestFuncB(val, data)	((val < data) ? 1 : 0)
+#define TestFuncB(val, data) ((val < data) ? 1 : 0)
 
 //
 // InsertNode
 //
-void InsertTree(TreeNode **node_ptr, TreeNode *current)
+void InsertTree(TreeNode** node_ptr, TreeNode* current)
 {
+  if (*node_ptr == NULL)
+  {
+    *node_ptr = current;
 
-	if (*node_ptr == NULL) {
+  }  // end of the if
+  else
+  {
+    if (current->data < (*node_ptr)->data)
+    {
+      // recursive call to above
+      InsertTree(&((*node_ptr)->left), current);
+    }
+    else
+    {
+      if (current->data > (*node_ptr)->data) InsertTree(&((*node_ptr)->right), current);
 
-		*node_ptr = current;
+    }  // end of if-else
 
-	} // end of the if
-	else {
-		if (current->data < (*node_ptr)->data) {
+  }  // end of the if - else
 
-			// recursive call to above
-			InsertTree(&((*node_ptr)->left), current);
-
-		} else {
-
-			if (current->data > (*node_ptr)->data)
-				InsertTree(&((*node_ptr)->right), current);
-				
-		} // end of if-else
-
-	} // end of the if - else
-
-} // end of the function 
+}  // end of the function
 
 //
 // Test Similar functionality
 //
-void InsertTest(TreeNode **node_ptr, TreeNode *current)
+void InsertTest(TreeNode** node_ptr, TreeNode* current)
 {
+  if (*node_ptr == NULL)
+  {
+    *node_ptr = current;
 
-	if (*node_ptr == NULL) {
+  }  // end of the if
+  else
+  {
+    if (TestFuncB(current->data, current->data))
+    {
+      // recursive call to above
+      InsertTest(&((*node_ptr)->left), current);
+    }
+    else
+    {
+      if (!TestFuncB(current->data, current->data)) InsertTest(&((*node_ptr)->right), current);
 
-		*node_ptr = current;
+    }  // end of if-else
 
-	} // end of the if
-	else {
-		
+  }  // end of the if - else
 
-		if (TestFuncB(current->data, current->data)) {
-
-			// recursive call to above
-			InsertTest(&((*node_ptr)->left), current);
-		} else {
-
-			if (!TestFuncB(current->data, current->data))
-				InsertTest(&((*node_ptr)->right), current);
-				
-		} // end of if-else
-
-	} // end of the if - else
-
-} // end of the function 
+}  // end of the function
 
 //
 // SearchNode
 //
-bool SearchTree(TreeNode **node_ptr, TreeNode *current)
+bool SearchTree(TreeNode** node_ptr, TreeNode* current)
 {
+  tree_searches++;  // keep a tally
 
-	tree_searches++;		// keep a tally
+  if (*node_ptr == NULL)
+  {
+    return false;  // is empty
 
-	if (*node_ptr == NULL) {
+  }  // end of the if
+  else
+  {
+    // printf(" (%d) ", (*node_ptr)->data);
 
-		return false;		// is empty
+    // check if we found the data
+    if (current->data == (*node_ptr)->data) return true;
 
-	} // end of the if
-	else {
+    if (current->data < (*node_ptr)->data)
+    {
+      // recursive call to above
+      SearchTree(&((*node_ptr)->left), current);
+    }
+    else
+    {
+      if (current->data > (*node_ptr)->data) SearchTree(&((*node_ptr)->right), current);
 
-		//printf(" (%d) ", (*node_ptr)->data);
+    }  // end of if-else
 
-		// check if we found the data
-		if (current->data == (*node_ptr)->data)
-			return true;
+  }  // end of the if - else
 
-		if (current->data < (*node_ptr)->data) {
+  return true;
 
-			// recursive call to above
-			SearchTree(&((*node_ptr)->left), current);
-		} else {
-
-			if (current->data > (*node_ptr)->data)
-				SearchTree(&((*node_ptr)->right), current);
-				
-		} // end of if-else
-
-	} // end of the if - else
-
-
-	return true;
-
-} // end of the function 
-
+}  // end of the function
 
 //
 // SearchNode
 //
-int SearchTest(TreeNode **node_ptr, TreeNode *current)
+int SearchTest(TreeNode** node_ptr, TreeNode* current)
 {
+  tree_searches++;  // keep a tally
 
-	tree_searches++;		// keep a tally
+  if (*node_ptr == NULL)
+  {
+    return 0;  // is empty
 
-	if (*node_ptr == NULL) {
+  }  // end of the if
+  else
+  {
+    // check if we found the data
+    if (current->data == (*node_ptr)->data) return current->data;
 
-		return 0;		// is empty
+    if (TestFuncB(current->data, current->data))
+    {
+      // printf(" [%d] ", (*node_ptr)->data);
 
-	} // end of the if
-	else {
+      // recursive call to above
+      SearchTest(&((*node_ptr)->left), current);
+    }
+    else
+    {
+      // printf(" [%d] ", (*node_ptr)->data);
 
-		// check if we found the data
-		if (current->data == (*node_ptr)->data)
-			return current->data;
+      if (!TestFuncB(current->data, current->data)) SearchTest(&((*node_ptr)->right), current);
 
+    }  // end of if-else
 
-		if (TestFuncB(current->data, current->data)) {
+  }  // end of the if - else
 
-				
-		//printf(" [%d] ", (*node_ptr)->data);
+  return current->data;
 
-			// recursive call to above
-			SearchTest(&((*node_ptr)->left), current);
-		} else {
-
-			//printf(" [%d] ", (*node_ptr)->data);
-				
-			if (!TestFuncB(current->data, current->data))
-				SearchTest(&((*node_ptr)->right), current);
-				
-		} // end of if-else
-
-	} // end of the if - else
-
-
-	return current->data;
-
-} // end of the function 
-
-
+}  // end of the function
 
 //
 // PreOrder
 //
-void PreOrder(TreeNode *ptr)
+void PreOrder(TreeNode* ptr)
 {
-	if (ptr != 0)
-	{
-		printf(" +%d+ ", ptr->data);
-		PreOrder(ptr->left);
-		PreOrder(ptr->right);
+  if (ptr != 0)
+  {
+    printf(" +%d+ ", ptr->data);
+    PreOrder(ptr->left);
+    PreOrder(ptr->right);
 
-	} // end of the if 
+  }  // end of the if
 
-} // end of the function 
+}  // end of the function
 
-int removed =0;
+int removed = 0;
 //
 // DeleteTree
 // - danger written all over this one
 // when the nodes in the tree are malloc-ed
 //
-void DeleteTree(Tree *tree)
+void DeleteTree(Tree* tree)
 {
-  TreeNode *node;
-  TreeNode *next;			// 
+  TreeNode* node;
+  TreeNode* next;  //
 
-  node = tree->root;	// start at beginning
+  node = tree->root;  // start at beginning
 
-  while (node != NULL) {
+  while (node != NULL)
+  {
+    if (node->left == NULL)
+    {
+      next = node->right;
 
-		if (node->left == NULL)
-		{
-			next = node->right;
+      removed++;
 
-			removed++;
+      free(node);
+    }
+    else
+    {
+      next = node->left;
+      node->left = next->right;
+      next->right = node;
+    }  // end of the if
 
-			free (node);
+    node = next;
 
-		} else {
+  }  // end of the while
 
-			next = node->left;
-			node->left = next->right;
-			next->right = node;
-		} // end of the if
-
-		node = next;
-
-	} // end of the while 
-
-
-	free(tree);
-} // end of the function
+  free(tree);
+}  // end of the function
 
 //
 // CreateTree
 //
-Tree *CreateTree(void)
+Tree* CreateTree(void)
 {
-		
-	Tree *tree;
+  Tree* tree;
 
-	tree = (Tree *)malloc(sizeof(Tree));
+  tree = (Tree*)malloc(sizeof(Tree));
 
-	tree->root = NULL;
+  tree->root = NULL;
 
-	return tree;
-} // end of the function
+  return tree;
+}  // end of the function
 
 //
 // CreateTreeNode
 //
-TreeNode *CreateTreeNode(int data)
+TreeNode* CreateTreeNode(int data)
 {
-	TreeNode *current;
+  TreeNode* current;
 
-	current = (TreeNode *)malloc(sizeof(TreeNode));
-	current->left = NULL; current->right = NULL;
+  current = (TreeNode*)malloc(sizeof(TreeNode));
+  current->left = NULL;
+  current->right = NULL;
 
-	current->data = data;
+  current->data = data;
 
-	return current;
+  return current;
 
-} // end of teh functino 
+}  // end of teh functino
 
 //
 // TreeTest
 //
 void TreeFuncTest(void)
 {
-	Tree *tree;
-	TreeNode *current;
-	TreeNode *search;
-	int i;
-	int values[10];
-	int targets;
-	int ret;
+  Tree* tree;
+  TreeNode* current;
+  TreeNode* search;
+  int i;
+  int values[10];
+  int targets;
+  int ret;
 
-	values[0] = 47;
-	values[1] = 25;
-	values[2] = 77;
-	values[3] = 11;
-	values[4] = 43;
-	values[5] = 65;
-	values[6] = 93;
-	values[7] = 7;
-	values[8] = 17; 
-	values[9] = 31;
-	values[10] = 44;
-	values[11] = 68;
+  values[0] = 47;
+  values[1] = 25;
+  values[2] = 77;
+  values[3] = 11;
+  values[4] = 43;
+  values[5] = 65;
+  values[6] = 93;
+  values[7] = 7;
+  values[8] = 17;
+  values[9] = 31;
+  values[10] = 44;
+  values[11] = 68;
 
-	targets = 7;
+  targets = 7;
 
-	tree = CreateTree();
+  tree = CreateTree();
 
-	for (i = 0; i < 12; i++)
-	{
-		current = CreateTreeNode(values[i]);
+  for (i = 0; i < 12; i++)
+  {
+    current = CreateTreeNode(values[i]);
 
-		InsertTest(&tree->root, current);
+    InsertTest(&tree->root, current);
 
-	} // end of the for
+  }  // end of the for
 
-	search = CreateTreeNode(targets);
-		
-	if (ret = SearchTest(&tree->root, search))
-		printf("\nNode found in: %d -- %d\n", tree_searches, ret);
-	else
-		printf("\nCould not find node in: %d %d\n", tree_searches, ret);
-	
-	free(search);
+  search = CreateTreeNode(targets);
 
-	printf("\n\n");
-	PreOrder(tree->root);
+  if (ret = SearchTest(&tree->root, search))
+    printf("\nNode found in: %d -- %d\n", tree_searches, ret);
+  else
+    printf("\nCould not find node in: %d %d\n", tree_searches, ret);
 
-	DeleteTree(tree);
-		
-} // end of the function 
+  free(search);
 
+  printf("\n\n");
+  PreOrder(tree->root);
 
+  DeleteTree(tree);
+
+}  // end of the function
 
 //
 // TreeTest
@@ -367,48 +349,43 @@ void TreeFuncTest(void)
 //
 void TreeTest(void)
 {
-	Tree *tree;
-	TreeNode *current;
-	TreeNode *search;
-	int i;
-	int *values = NULL;
-	int target;
+  Tree* tree;
+  TreeNode* current;
+  TreeNode* search;
+  int i;
+  int* values = NULL;
+  int target;
 
-	values = (int *)malloc(TEST_VALUES * sizeof(int));
+  values = (int*)malloc(TEST_VALUES * sizeof(int));
 
-	// load the values with random values
-	// pick the middle one as the target
-	for (i = 0; i < TEST_VALUES; i++)
-		values[i] = rand()%TEST_VALUES;
+  // load the values with random values
+  // pick the middle one as the target
+  for (i = 0; i < TEST_VALUES; i++) values[i] = rand() % TEST_VALUES;
 
+  target = values[(int)(TEST_VALUES / 2)];
 
-	target = values[(int)(TEST_VALUES/2)];
+  tree = CreateTree();
 
+  for (i = 0; i < TEST_VALUES; i++)
+  {
+    current = CreateTreeNode(values[i]);
 
-	tree = CreateTree();
+    InsertTree(&tree->root, current);
 
-	for (i = 0; i < TEST_VALUES; i++)
-	{
-		current = CreateTreeNode(values[i]);
+  }  // end of the for
 
-		InsertTree(&tree->root, current);
+  search = CreateTreeNode(target);
 
-	} // end of the for
+  if (SearchTree(&tree->root, search))
+    printf("Node found in: %d\n", tree_searches);
+  else
+    printf("Could not find node in: %d\n", tree_searches);
 
-	search = CreateTreeNode(target);
-		
-	if (SearchTree(&tree->root, search))
-		printf("Node found in: %d\n", tree_searches);
-	else
-		printf("Could not find node in: %d\n", tree_searches);
-	
-	free(search);
+  free(search);
 
-	//PreOrder(tree->root);
+  // PreOrder(tree->root);
 
-	DeleteTree(tree);
-	free(values);
+  DeleteTree(tree);
+  free(values);
 
-
-		
-} // end of the function 
+}  // end of the function

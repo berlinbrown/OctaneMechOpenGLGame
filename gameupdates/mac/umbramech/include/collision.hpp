@@ -38,91 +38,88 @@
 
 #pragma once
 
-#define MOVING_COL_TYPE			3
-#define PLANE_COL_TYPE			1	// i.e a wall
-#define RAY_COL_TYPE			2	// i.e a bullet shot
+#define MOVING_COL_TYPE 3
+#define PLANE_COL_TYPE 1  // i.e a wall
+#define RAY_COL_TYPE 2    // i.e a bullet shot
 
+#define INWARD_TYPE 1   // wall type
+#define OUTWARD_TYPE 2  // box or something
 
-#define INWARD_TYPE				1		// wall type
-#define OUTWARD_TYPE			2		// box or something
+#define LINE_NO_INTERSECTION 1
+#define LINE_INTERSECTION 2
 
-#define LINE_NO_INTERSECTION	1
-#define LINE_INTERSECTION		2
-
-// 
+//
 // max number of line segments for testing
 //
-#define MAX_DIST_STACK	250
+#define MAX_DIST_STACK 250
 
 //
 // The bullet has to stop somewhere, so
 // create some insane value for the desination
-#define MAX_BULLET_DEST     2000.0f
-
+#define MAX_BULLET_DEST 2000.0f
 
 //
 // collisionobj
 // - for now only handle
 // objects with a width and position
 //
-typedef struct tagCollisionObj {
-    
-    int id;
-    
-    // used for a line segment
-    //
-    float	pos_0[2];
-    float	pos_1[2];
+typedef struct tagCollisionObj
+{
+  int id;
 
-    //
-    // collision x,y
-    // the predicted positions
-    float	collision_x;
-    float	collision_y;
-    float	dist;		// distance of collision
+  // used for a line segment
+  //
+  float pos_0[2];
+  float pos_1[2];
 
-    //
-    // 
-    int		movement_type;
+  //
+  // collision x,y
+  // the predicted positions
+  float collision_x;
+  float collision_y;
+  float dist;  // distance of collision
 
-    //
-    // drawing plane object
-    float	box_x;
-    float	box_y;
-    float	size[3];
+  //
+  //
+  int movement_type;
 
-    // object can be a driverbot or staticbot
-    StaticBotPtr	static_ptr;
+  //
+  // drawing plane object
+  float box_x;
+  float box_y;
+  float size[3];
 
-    DriverBotPtr	bot_ptr;
+  // object can be a driverbot or staticbot
+  StaticBotPtr static_ptr;
 
-    // we need to stop using static arrays
-    struct tagCollisionObj	*next;
+  DriverBotPtr bot_ptr;
+
+  // we need to stop using static arrays
+  struct tagCollisionObj* next;
 
 } CollisionObj, *CollisionPtr;
-
 
 void Build_DistStack(void);
 
 //
 // CollisionList
 //
-typedef struct tagCollisionList {
-    CollisionObj *front;
-    int			objects;
+typedef struct tagCollisionList
+{
+  CollisionObj* front;
+  int objects;
 } CollisionList;
-
 
 //
 // Library functions
 //
 CollisionPtr CreateCollisionObj(void);
-void DeleteCollisionObj(CollisionObj *ptr);
+void DeleteCollisionObj(CollisionObj* ptr);
 
-CollisionList *CreateCollisionList(void);
-void DestroyColList(CollisionList *list);
-void PrintCollisionList(CollisionList *list);
-void InsertColFront(CollisionList *list, CollisionObj *col_obj);
+CollisionList* CreateCollisionList(void);
+void DestroyColList(CollisionList* list);
+void PrintCollisionList(CollisionList* list);
+void InsertColFront(CollisionList* list, CollisionObj* col_obj);
 
 //
 // NOTE: in order to use this collision object
@@ -138,11 +135,10 @@ void Delete_Col_List(void);
 void Print_Col_List(void);
 
 // used to perform the check
-CollisionPtr CheckCollisionList(void *test_obj, int type);
+CollisionPtr CheckCollisionList(void* test_obj, int type);
 
 // another member function for collision test
 bool CheckCollisionBot(DriverBotPtr test_obj);
-
 
 //
 // For moving objects here is the library

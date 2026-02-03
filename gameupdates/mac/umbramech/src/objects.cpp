@@ -38,20 +38,19 @@
 // objects.cpp
 //
 
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
 
 #define SQRT_75 0.8660254038f
 
-GLUquadricObj *quadric; // main Quadric Object
+GLUquadricObj* quadric;  // main Quadric Object
 
 // may not start at 8, see InitObjects
-static int mainobjectid = 8; // random number(8)
+static int mainobjectid = 8;  // random number(8)
 
 static void CompileObjects(void);
 
@@ -68,19 +67,9 @@ static GLfloat imat_emission[] = {0.15f, 0.1f, 0.1f, 0.0f};
 //
 // Array of driver objects
 //
-DriverObjects *driver_objects[MAX_OBJECTS] =
-	{
-		&colorcube, // cube object
-		&grid,
-		&ant,
-		&walls,
-		&wirebox,
-		&norm_cube,
-		&pheromone,
-		&plane,
-		&fireant,
-		&pyramid,
-		&stars,
+DriverObjects* driver_objects[MAX_OBJECTS] = {
+    &colorcube,  // cube object
+    &grid,      &ant, &walls, &wirebox, &norm_cube, &pheromone, &plane, &fireant, &pyramid, &stars,
 };
 
 //
@@ -106,13 +95,12 @@ static void draw_hex(void);
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-	{
-		init_plane,	   // init, must be called first
-		compile_plane, // compile
-		draw_hex,	   // draw
-		render_plane,  // render to scene
-		0			   // loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_plane,     // init, must be called first
+    compile_plane,  // compile
+    draw_hex,       // draw
+    render_plane,   // render to scene
+    0               // loaded by INIT
 };
 
 //
@@ -120,183 +108,178 @@ DriverObjects CURRENT_OBJECT =
 //
 void RenderPlane(void)
 {
+  glEnable(GL_LIGHTING);
+  glDisable(GL_TEXTURE_2D);
 
-	glEnable(GL_LIGHTING);
-	glDisable(GL_TEXTURE_2D);
+  // set the material for this object
+  setmaterial(grey_ambient, grey_diffuse, grey_specular, ilow_shininess, imat_emission);
 
-	// set the material for this object
-	setmaterial(grey_ambient, grey_diffuse,
-				grey_specular, ilow_shininess, imat_emission);
+  BEGIN_BOT;
 
-	BEGIN_BOT;
+  // draw the object to screen
+  driver_objects[PLANE_OBJECT]->render();
 
-	// draw the object to screen
-	driver_objects[PLANE_OBJECT]->render();
+  END_BOT;
 
-	END_BOT;
-
-} // end of the function
+}  // end of the function
 
 //
 // Actually draw to the scene
 //
 void Bot_Triangle(float x, float y)
 {
-	float v[3][3] = {0};
-	float n[3] = {0};
-	float size = 1.2f;
-	float height = 2.9f;
+  float v[3][3] = {0};
+  float n[3] = {0};
+  float size = 1.2f;
+  float height = 2.9f;
 
-	z_t += 0.8f;
-	if (z_t > 360.0f)
-		z_t -= 360.0f;
+  z_t += 0.8f;
+  if (z_t > 360.0f) z_t -= 360.0f;
 
-	glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHTING);
 
-	BEGIN_BOT;
+  BEGIN_BOT;
 
-	// change the size here
-	// Note: starts from ground
+  // change the size here
+  // Note: starts from ground
 
-	glTranslatef(x, 3.2f, y);
+  glTranslatef(x, 3.2f, y);
 
-	glRotatef(z_t, 0.0f, 1.0f, 0.0f);
+  glRotatef(z_t, 0.0f, 1.0f, 0.0f);
 
-	MED_YELLOW;
-	glBegin(GL_TRIANGLES);
+  MED_YELLOW;
+  glBegin(GL_TRIANGLES);
 
-	// Get the top
-	v[0][0] = -size;
-	v[0][1] = height;
-	v[0][2] = 0.0f;
+  // Get the top
+  v[0][0] = -size;
+  v[0][1] = height;
+  v[0][2] = 0.0f;
 
-	v[1][0] = size;
-	v[1][1] = height;
-	v[1][2] = 0.0f;
+  v[1][0] = size;
+  v[1][1] = height;
+  v[1][2] = 0.0f;
 
-	v[2][0] = 0.0;
-	v[2][1] = 0.0f;
-	v[2][2] = 0.0f;
+  v[2][0] = 0.0;
+  v[2][1] = 0.0f;
+  v[2][2] = 0.0f;
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	glEnd();
+  glEnd();
 
-	END_BOT;
+  END_BOT;
 
-	glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHTING);
 
-} // end of the function
+}  // end of the function
 
 //
 // draw_hexplane
 //
 void draw_hexplane(float x_1, float x_2, float y_1, float size)
 {
-	float h_2;
-	float v[3][3] = {0};
-	float n[3] = {0};
+  float h_2;
+  float v[3][3] = {0};
+  float n[3] = {0};
 
-	float tol = (size * 2.0f) * 1.1f;	
-	float x;
+  float tol = (size * 2.0f) * 1.1f;
+  float x;
 
-	h_2 = 1.8f * size;
-	for (x = x_1; x < x_2; x += tol)
-	{
+  h_2 = 1.8f * size;
+  for (x = x_1; x < x_2; x += tol)
+  {
+    // left bottom front
+    v[0][0] = -size + x;
+    v[0][1] = 0.0f;
+    v[0][2] = size + y_1;
 
-		// left bottom front
-		v[0][0] = -size + x;
-		v[0][1] = 0.0f;
-		v[0][2] = size + y_1;
+    v[1][0] = -size + x;
+    v[1][1] = 0.0f;
+    v[1][2] = -size + y_1;
 
-		v[1][0] = -size + x;
-		v[1][1] = 0.0f;
-		v[1][2] = -size + y_1;
+    v[2][0] = size + x;
+    v[2][1] = 0.0f;
+    v[2][2] = -size + y_1;
 
-		v[2][0] = size + x;
-		v[2][1] = 0.0f;
-		v[2][2] = -size + y_1;
+    CLR_0;
+    // Calc normal and draw
+    N_1;
+    GET_NORMAL;
 
-		CLR_0;
-		// Calc normal and draw
-		N_1;
-		GET_NORMAL;
+    glVertex3fv(v[0]);
+    glVertex3fv(v[1]);
+    glVertex3fv(v[2]);  // triangle left bottom front
 
-		glVertex3fv(v[0]);
-		glVertex3fv(v[1]);
-		glVertex3fv(v[2]); // triangle left bottom front
+    // right tri
+    v[0][0] = size + x;
+    v[0][1] = 0.0f;
+    v[0][2] = -size + y_1;
 
-		// right tri
-		v[0][0] = size + x;
-		v[0][1] = 0.0f;
-		v[0][2] = -size + y_1;
+    v[1][0] = size + x;
+    v[1][1] = 0.0f;
+    v[1][2] = size + y_1;
 
-		v[1][0] = size + x;
-		v[1][1] = 0.0f;
-		v[1][2] = size + y_1;
+    v[2][0] = -size + x;
+    v[2][1] = 0.0f;
+    v[2][2] = size + y_1;
 
-		v[2][0] = -size + x;
-		v[2][1] = 0.0f;
-		v[2][2] = size + y_1;
+    CLR_0;
+    // Calc normal and draw
+    N_1;
+    GET_NORMAL;
 
-		CLR_0;
-		// Calc normal and draw
-		N_1;
-		GET_NORMAL;
+    glVertex3fv(v[0]);
+    glVertex3fv(v[1]);
+    glVertex3fv(v[2]);  // triangle left bottom front
 
-		glVertex3fv(v[0]);
-		glVertex3fv(v[1]);
-		glVertex3fv(v[2]); // triangle left bottom front
+    // top triangle
+    v[0][0] = size + x;
+    v[0][1] = 0.0f;
+    v[0][2] = -size + y_1;
 
-		// top triangle
-		v[0][0] = size + x;
-		v[0][1] = 0.0f;
-		v[0][2] = -size + y_1;
+    v[1][0] = -size + x;
+    v[1][1] = 0.0f;
+    v[1][2] = -size + y_1;
 
-		v[1][0] = -size + x;
-		v[1][1] = 0.0f;
-		v[1][2] = -size + y_1;
+    v[2][0] = 0.0f + x;
+    v[2][1] = 0.0f;
+    v[2][2] = -h_2 + y_1;
 
-		v[2][0] = 0.0f + x;
-		v[2][1] = 0.0f;
-		v[2][2] = -h_2 + y_1;
+    CLR_0;
+    // Calc normal and draw
+    N_1;
+    GET_NORMAL;
 
-		CLR_0;
-		// Calc normal and draw
-		N_1;
-		GET_NORMAL;
+    glVertex3fv(v[0]);
+    glVertex3fv(v[1]);
+    glVertex3fv(v[2]);  // triangle left bottom front
 
-		glVertex3fv(v[0]);
-		glVertex3fv(v[1]);
-		glVertex3fv(v[2]); // triangle left bottom front
+    // top triangle
+    v[0][0] = size + x;
+    v[0][1] = 0.0f;
+    v[0][2] = size + y_1;
 
-		// top triangle
-		v[0][0] = size + x;
-		v[0][1] = 0.0f;
-		v[0][2] = size + y_1;
+    v[1][0] = -size + x;
+    v[1][1] = 0.0f;
+    v[1][2] = size + y_1;
 
-		v[1][0] = -size + x;
-		v[1][1] = 0.0f;
-		v[1][2] = size + y_1;
+    v[2][0] = 0.0f + x;
+    v[2][1] = 0.0f;
+    v[2][2] = h_2 + y_1;
 
-		v[2][0] = 0.0f + x;
-		v[2][1] = 0.0f;
-		v[2][2] = h_2 + y_1;
+    CLR_0;
+    // Calc normal and draw
+    N_0;
+    GET_NORMAL;
 
-		CLR_0;
-		// Calc normal and draw
-		N_0;
-		GET_NORMAL;
+    glVertex3fv(v[0]);
+    glVertex3fv(v[1]);
+    glVertex3fv(v[2]);  // triangle left bottom front
 
-		glVertex3fv(v[0]);
-		glVertex3fv(v[1]);
-		glVertex3fv(v[2]); // triangle left bottom front
-
-	} // end of the for
-
-} 
+  }  // end of the for
+}
 
 //=========================================================
 //
@@ -306,71 +289,67 @@ void draw_hexplane(float x_1, float x_2, float y_1, float size)
 //=========================================================
 static void draw_hex(void)
 {
-	float size = HEX_SIZE;
-	float height = HEX_HEIGHT;
+  float size = HEX_SIZE;
+  float height = HEX_HEIGHT;
 
-	float x_1 = WORLD_X_MIN;
-	float x_2 = WORLD_X_MAX;
+  float x_1 = WORLD_X_MIN;
+  float x_2 = WORLD_X_MAX;
 
-	float y_1 = WORLD_Y_MIN;
-	float y_2 = WORLD_Y_MAX;
+  float y_1 = WORLD_Y_MIN;
+  float y_2 = WORLD_Y_MAX;
 
-	float offset = 0.0f;
-	bool s_flag = false;
+  float offset = 0.0f;
+  bool s_flag = false;
 
-	float i = 0.0f;
+  float i = 0.0f;
 
-	glBegin(GL_TRIANGLES);
+  glBegin(GL_TRIANGLES);
 
-	for (i = y_1; i < y_2; i += height)
-	{
+  for (i = y_1; i < y_2; i += height)
+  {
+    draw_hexplane(x_1 - offset, x_2, i, size);
 
-		draw_hexplane(x_1 - offset, x_2, i, size);
+    if (s_flag == true)
+    {
+      offset = size;
+      s_flag = false;
+    }
+    else
+    {
+      offset = 0.0f;
+      s_flag = true;
+    }  // end of the if
 
-		if (s_flag == true)
-		{
-			offset = size;
-			s_flag = false;
-		}
-		else
-		{
-			offset = 0.0f;
-			s_flag = true;
-		} // end of the if
+  }  // end of the for
 
-	} // end of the for
-
-	glEnd();
-
-} 
+  glEnd();
+}
 
 //=========================================================
 //=========================================================
 static void draw_plane(void)
 {
+  float size = 3000.0f;
+  float bottom = -0.1f;
+  float texsize = 20.0f;
 
-	float size = 3000.0f;
-	float bottom = -0.1f;
-	float texsize = 20.0f;
+  // Bind name texture
+  glBindTexture(GL_TEXTURE_2D, GetFunkyTexture());
 
-	// Bind name texture
-	glBindTexture(GL_TEXTURE_2D, GetFunkyTexture());
+  glBegin(GL_QUADS);
+  glTexCoord2f(-texsize, -texsize);  // Texture Coord (Bottom Left)
+  glVertex3f(-size, bottom, -size);  // Vertex Coord (Bottom Left)
 
-	glBegin(GL_QUADS);
-	glTexCoord2f(-texsize, -texsize); // Texture Coord (Bottom Left)
-	glVertex3f(-size, bottom, -size); // Vertex Coord (Bottom Left)
+  glTexCoord2f(texsize, -texsize);  // Texture Coord (Bottom Right)
+  glVertex3f(size, bottom, -size);  // Vertex Coord (Bottom Right)
 
-	glTexCoord2f(texsize, -texsize); // Texture Coord (Bottom Right)
-	glVertex3f(size, bottom, -size); // Vertex Coord (Bottom Right)
+  glTexCoord2f(texsize, texsize);  // Texture Coord (Top Right)
+  glVertex3f(size, bottom, size);  // Vertex Coord (Top Right)
 
-	glTexCoord2f(texsize, texsize); // Texture Coord (Top Right)
-	glVertex3f(size, bottom, size); // Vertex Coord (Top Right)
-
-	glTexCoord2f(-texsize, texsize); // Texture Coord (Top Left)
-	glVertex3f(-size, bottom, size); // Vertex Coord (Top Left)
-	glEnd();
-
-} 
+  glTexCoord2f(-texsize, texsize);  // Texture Coord (Top Left)
+  glVertex3f(-size, bottom, size);  // Vertex Coord (Top Left)
+  glEnd();
+}
 
 //
 // init
@@ -379,48 +358,45 @@ static void draw_plane(void)
 //
 static void init_plane(int list_id)
 {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;
-
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_plane(void)
 {
-	// glPushMatrix();
+  // glPushMatrix();
 
-	glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-	// glPopMatrix();
-
-} 
+  // glPopMatrix();
+}
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_plane(void)
 {
-	int id;
-	// setup a spot for display list for background
-	// object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-	// call drawing function
-	// but this may method make it a little better
-	CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
-
-} 
+  glEndList();
+}
 
 //---------------------------------------------------------
 
@@ -429,65 +405,60 @@ static void compile_plane(void)
 //
 void RenderGrid(void)
 {
-	glDisable(GL_LIGHTING);
-	driver_objects[GRID_OBJECT]->render();
-	glEnable(GL_LIGHTING);
-
-} 
+  glDisable(GL_LIGHTING);
+  driver_objects[GRID_OBJECT]->render();
+  glEnable(GL_LIGHTING);
+}
 
 //
 // For Simple Bounding box tests
 //	2D
 void RenderBounds(float x, float y, float width)
 {
+  float h;
+  h = width / 2.0f;
 
-	float h;
-	h = width / 2.0f;
+  glDisable(GL_LIGHTING);
+  BEGIN_BOT;
 
-	glDisable(GL_LIGHTING);
-	BEGIN_BOT;
+  glTranslatef(x, 0, y);
 
-	glTranslatef(x, 0, y);
+  glBegin(GL_LINE_LOOP);
 
-	glBegin(GL_LINE_LOOP);
+  // Front Face
+  glVertex3f(-h, 0.0f, h);   // left bottom
+  glVertex3f(h, 0.0f, h);    // right bottom
+  glVertex3f(h, 0.0f, -h);   // top right
+  glVertex3f(-h, 0.0f, -h);  // top left
 
-	// Front Face
-	glVertex3f(-h, 0.0f, h);  // left bottom
-	glVertex3f(h, 0.0f, h);	  // right bottom
-	glVertex3f(h, 0.0f, -h);  // top right
-	glVertex3f(-h, 0.0f, -h); // top left
+  glEnd();
 
-	glEnd();
+  END_BOT;
 
-	END_BOT;
-
-	glEnable(GL_LIGHTING);
-
-} 
+  glEnable(GL_LIGHTING);
+}
 
 //
 // RenderWalls
 //
 void RenderWalls(void)
 {
-	glDisable(GL_TEXTURE_2D);
-	driver_objects[WORLD_OBJECT]->render();
-
-} 
+  glDisable(GL_TEXTURE_2D);
+  driver_objects[WORLD_OBJECT]->render();
+}
 
 //
 // RenderObjects
 //
 void RenderObjects(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_OBJECTS; index++)
-	{
-		driver_objects[index]->render();
-	} // end of the function
-
-} 
+  for (index = 0; index < MAX_OBJECTS; index++)
+  {
+    driver_objects[index]->render();
+  }  // end of the function
+}
 
 //
 // Init Objects
@@ -495,43 +466,40 @@ void RenderObjects(void)
 //
 void InitObjects(void)
 {
-	int index;
-	int j = 0;
+  int index;
+  int j = 0;
 
-	// setup the display lists
-	mainobjectid = glGenLists(MAX_OBJECTS);
+  // setup the display lists
+  mainobjectid = glGenLists(MAX_OBJECTS);
 
-	for (index = mainobjectid; index < (mainobjectid + MAX_OBJECTS);
-		 index++)
-	{
-		driver_objects[j]->init(index);
+  for (index = mainobjectid; index < (mainobjectid + MAX_OBJECTS); index++)
+  {
+    driver_objects[j]->init(index);
 
-		j++;
-		if (j >= MAX_OBJECTS)
-			break;
+    j++;
+    if (j >= MAX_OBJECTS) break;
 
-	} // end of the for
+  }  // end of the for
 
-	// go ahead and compile the objects
-	CompileObjects();
+  // go ahead and compile the objects
+  CompileObjects();
 
-} // end of the function
+}  // end of the function
 
 //
 // CompileObjects
 //
 static void CompileObjects(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_OBJECTS; index++)
-	{
-		// get the functions from the object driver
-		driver_objects[index]->compile();
+  for (index = 0; index < MAX_OBJECTS; index++)
+  {
+    // get the functions from the object driver
+    driver_objects[index]->compile();
 
-	} // end of the for
-
-} 
+  }  // end of the for
+}
 
 //=========================================================
 // delete objects
@@ -539,7 +507,6 @@ static void CompileObjects(void)
 //---------------------------------------------------------
 void DeleteObjects(void)
 {
-	// get rid of list
-	glDeleteLists(mainobjectid, MAX_OBJECTS);
-
-} 
+  // get rid of list
+  glDeleteLists(mainobjectid, MAX_OBJECTS);
+}

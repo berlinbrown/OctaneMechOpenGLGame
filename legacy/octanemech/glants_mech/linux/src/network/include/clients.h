@@ -38,30 +38,28 @@
 #ifndef _CLIENTS_H_
 #define _CLIENTS_H_
 
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
-typedef struct tagClient {
-  
-  int list_id;              // the list id
-  int object_id;            // the client connect id, should match msg
-  
-  int sock;                 // may not be needed
+typedef struct tagClient
+{
+  int list_id;    // the list id
+  int object_id;  // the client connect id, should match msg
+
+  int sock;  // may not be needed
 
   // use memset to fill
   struct sockaddr_in client_addr;
-  
 
   // client data --
-  char ip_address[32];      // may not be needed
+  char ip_address[32];  // may not be needed
   char user_name[32];
   char os_str[10];
   int vers;
-  
 
-  struct tagClient *next;
+  struct tagClient* next;
 
 } Client, *ClientPtr;
 
@@ -69,18 +67,17 @@ typedef struct tagClient {
 // Client List
 // This will also hold server data
 //
-typedef struct tagClientList {
-  
+typedef struct tagClientList
+{
   // list --
-  Client *front;
+  Client* front;
   int objects;
 } ClientList;
 
-Client *CreateClientObj(void);
+Client* CreateClientObj(void);
 void Create_Client_List(void);
 void Delete_Client_List(void);
-void Client_AddQueue(int sock, struct sockaddr_in *c_addr,
-		     int object_id, char *msg);
+void Client_AddQueue(int sock, struct sockaddr_in* c_addr, int object_id, char* msg);
 int Set_ClientID(void);
 void Print_Connections(void);
 void printConnections(void);

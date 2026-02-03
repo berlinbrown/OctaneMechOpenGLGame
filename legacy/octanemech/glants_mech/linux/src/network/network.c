@@ -36,7 +36,7 @@
 // Berlin Brown
 // bigbinc@hotmail.com
 //
-// - client code 
+// - client code
 //
 // network.c
 // - c network routines
@@ -45,51 +45,47 @@
 //
 // Note: run /etc/services for empty ports
 //
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <pthread.h> // posix threads
+#include "network.h"
 
-#include <unistd.h>
+#include <arpa/inet.h>
 #include <errno.h>
-#include <time.h>
-#include <sys/time.h>
-#include <string.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <pthread.h>  // posix threads
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
-#include "include/msg.h"
-#include "include/connect.h"
-#include "network.h"
-#include "../globals.h"
 #include "../bot.h"
 #include "../fireants.h"
+#include "../globals.h"
+#include "include/connect.h"
+#include "include/msg.h"
 
-
-#define SNIFFER_OFF                     0
-#define SNIFFER_ON                      1
-
+#define SNIFFER_OFF 0
+#define SNIFFER_ON 1
 
 extern char network_str_[22][80];
 
-// 
+//
 // main client object
 static ComObj client_obj;
 
 static pthread_t thread_id[2];
 
-struct timeval  now;            
-struct timespec timeout;        
+struct timeval now;
+struct timespec timeout;
 
 static unsigned long _msg_bytes = 0;
-
 
 //
 // sniffer variables
 pthread_mutex_t snifferMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t snifferCond = PTHREAD_COND_INITIALIZER; 
+pthread_cond_t snifferCond = PTHREAD_COND_INITIALIZER;
 pthread_attr_t attr;
 
 static int sniffer_flag = SNIFFER_OFF;
@@ -98,10 +94,7 @@ static int sniffer_state = SNIFFER_OFF;
 //
 // Reset_MessageCount
 //
-void Reset_MessageBytes(void)
-{
-  _msg_bytes = 0;  
-} // end of thef unction 
+void Reset_MessageBytes(void) { _msg_bytes = 0; }  // end of thef unction
 
 //
 // GetMessageCount
@@ -109,28 +102,27 @@ void Reset_MessageBytes(void)
 int GetMessageCount(void)
 {
   int z;
-  
+
   z = (_msg_bytes / sizeof(Msg));
 
   return z;
 
-} // end of func
+}  // end of func
 
 //
 // Set_NetAddr
-// 
-void Set_RemoteAddr(ComObj *ptr, struct sockaddr_in *c_addr)
+//
+void Set_RemoteAddr(ComObj* ptr, struct sockaddr_in* c_addr)
 {
-
   memcpy(&ptr->remote_addr, c_addr, sizeof(struct sockaddr_in));
 
-} // end of the if 
+}  // end of the if
 
 //
 // Create_Mutex()
 void Create_Mutex(void)
 {
-  pthread_mutex_init(&snifferMutex,NULL);
+  pthread_mutex_init(&snifferMutex, NULL);
 
   // also create condition
   pthread_cond_init(&snifferCond, NULL);
@@ -138,25 +130,22 @@ void Create_Mutex(void)
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-} // end of the function 
+}  // end of the function
 
 //
 // Destroy Mutex
 void Destroy_Mutex(void)
 {
-  
   pthread_mutex_destroy(&snifferMutex);
   pthread_cond_destroy(&snifferCond);
 
-} // end of the function
-
+}  // end of the function
 
 //
 // WaitThread
 //
 void WaitThread(void)
 {
-
   int status;
   int i;
   int res;
@@ -164,107 +153,98 @@ void WaitThread(void)
   pthread_attr_destroy(&attr);
 
   for (i = 0; i < 2; i++)
-    {
-      // blocked call
-      res = pthread_join(thread_id[i],(void **)&status);  // Parent waits for 
-      
-      pthread_cancel(thread_id[1]);
-      printf("join complete, killing thread 2\n");
-      break;
+  {
+    // blocked call
+    res = pthread_join(thread_id[i], (void**)&status);  // Parent waits for
 
-    } // end of the for 
+    pthread_cancel(thread_id[1]);
+    printf("join complete, killing thread 2\n");
+    break;
 
-} // end of the function 
+  }  // end of the for
 
+}  // end of the function
 
 //
 // Lock_Sniffer()
 //
-static void Lock_Sniffer(void)
-{
-  sniffer_flag = SNIFFER_ON;
-} // end of func
+static void Lock_Sniffer(void) { sniffer_flag = SNIFFER_ON; }  // end of func
 
 //
 // unlock
-static void Unlock_Sniffer(void)
-{
-  sniffer_flag = SNIFFER_OFF;
-} // end of func
+static void Unlock_Sniffer(void) { sniffer_flag = SNIFFER_OFF; }  // end of func
 
 //
 // another thread function
 //
-void *SnifferThread(void *args)
+void* SnifferThread(void* args)
 {
   int res;
   res = 0;
 
-  // main while loop 
-  while(1) {
-
-    if (sniffer_state == SNIFFER_OFF) {
-
+  // main while loop
+  while (1)
+  {
+    if (sniffer_state == SNIFFER_OFF)
+    {
       if (sniffer_flag == SNIFFER_ON)
-	{
-	  // flag is set restart the timer
-	  sniffer_state = SNIFFER_ON;
+      {
+        // flag is set restart the timer
+        sniffer_state = SNIFFER_ON;
 
-	  // reset collection flag --
-	  sniffer_flag = SNIFFER_OFF;
+        // reset collection flag --
+        sniffer_flag = SNIFFER_OFF;
 
-	  // collect a new timeout
-	    gettimeofday(&now, NULL);
-	    timeout.tv_sec = now.tv_sec + ALARM_TIMEOUT;
-	    timeout.tv_nsec = now.tv_usec * 1000;
-	
-	} // end of the if 
-  
-    } else {
+        // collect a new timeout
+        gettimeofday(&now, NULL);
+        timeout.tv_sec = now.tv_sec + ALARM_TIMEOUT;
+        timeout.tv_nsec = now.tv_usec * 1000;
 
+      }  // end of the if
+    }
+    else
+    {
       // sniffer state is going
 
       pthread_mutex_lock(&snifferMutex);
-      while(1) {
-	
-	// note, this is another blocked call in addition to recvfrom
-	
-	// res returns zero is based on condition
-	res = pthread_cond_timedwait(&snifferCond, &snifferMutex, &timeout);
-	if (res == ETIMEDOUT) {
+      while (1)
+      {
+        // note, this is another blocked call in addition to recvfrom
 
-	  // kill the other thread
-	  sniffer_state = SNIFFER_OFF;
-	  pthread_cancel(thread_id[0]);
-	  printf("Timer was released, killing thread\n");
+        // res returns zero is based on condition
+        res = pthread_cond_timedwait(&snifferCond, &snifferMutex, &timeout);
+        if (res == ETIMEDOUT)
+        {
+          // kill the other thread
+          sniffer_state = SNIFFER_OFF;
+          pthread_cancel(thread_id[0]);
+          printf("Timer was released, killing thread\n");
 
-	  client_obj.connect_flag = _NOT_CONNECTED_;
-	  close(client_obj.sock);
-	  Set_NetworkMsg("Connection Timed Out");	  
+          client_obj.connect_flag = _NOT_CONNECTED_;
+          close(client_obj.sock);
+          Set_NetworkMsg("Connection Timed Out");
 
-	  // unlock the watchdog
-	  Unlock_Sniffer();
-	  
-	  break;
-	} // end of the if 
-	
-      
-      } // end of while
+          // unlock the watchdog
+          Unlock_Sniffer();
+
+          break;
+        }  // end of the if
+
+      }  // end of while
       pthread_mutex_unlock(&snifferMutex);
-      
+
     }  // end of if - else
 
     // continue with sniffer agent
 
-  } // endof while --
+  }  // endof while --
 
-} // end of the function 
-
+}  // end of the function
 
 //
 // waitmsg
 //
-void *WaitMsg(void *args)
+void* WaitMsg(void* args)
 {
   int bytes_recv;
   int sock;
@@ -273,121 +253,113 @@ void *WaitMsg(void *args)
 
   int no_bots;
 
-  void *buf = NULL;
+  void* buf = NULL;
   MsgPtr msg = NULL;
-  
+
   // get the socket data
-  sock = ((ComObjPtr)args)->sock;  
+  sock = ((ComObjPtr)args)->sock;
   bytes_recv = 0;
 
-      // main thread loop, get messages
-      for (;;)
-	{
+  // main thread loop, get messages
+  for (;;)
+  {
+    //
+    Clear_FirstMsg();
 
-	  //
-	  Clear_FirstMsg();
-      
-	  buf = GetMsgCluster();
-	  addr_size = sizeof(from_addr);
+    buf = GetMsgCluster();
+    addr_size = sizeof(from_addr);
 
-	  if (CHECK_WATCHDOG)
-	    Lock_Sniffer();
-	  
-	  bytes_recv = recvfrom(sock, buf, MAX_SIZE, 0,
-			    (struct sockaddr *)&from_addr, &addr_size);
-	  
-	  
-	  if (CHECK_WATCHDOG)
-	    Unlock_Sniffer();
+    if (CHECK_WATCHDOG) Lock_Sniffer();
 
-	  // we will keep it simple 
-	  // - if it is a reply message
-	  // process just that one
-	  msg = Get_FirstMsg();
-	  if (msg->msg_type == MSG_REPLY)
-	    {
-	      // copy the message to the display string
-	      Set_NetworkMsg(msg->msg);
+    bytes_recv = recvfrom(sock, buf, MAX_SIZE, 0, (struct sockaddr*)&from_addr, &addr_size);
 
-	      // make sure we are connet
-	      client_obj.connect_flag = _CONNECTED_;
+    if (CHECK_WATCHDOG) Unlock_Sniffer();
 
-	      // no more watchdog, run client
-	      // till the server/client quits
-	      TURNOFF_WATCHDOG;
+    // we will keep it simple
+    // - if it is a reply message
+    // process just that one
+    msg = Get_FirstMsg();
+    if (msg->msg_type == MSG_REPLY)
+    {
+      // copy the message to the display string
+      Set_NetworkMsg(msg->msg);
 
-	      // and more yet,
-	      // close the network screen
-	      // once we have a server intro
-	      // message
-	      // close screen and wait for
-	      // user to press new game
-	      // and display message
-	      
-	      client_obj.activity = _READY_;
-	      
-	      SET_NET_CLIENT;          // turn network interface on
+      // make sure we are connet
+      client_obj.connect_flag = _CONNECTED_;
 
-	      // get your current id
-	      client_obj.object_id = msg->object_id;
+      // no more watchdog, run client
+      // till the server/client quits
+      TURNOFF_WATCHDOG;
 
-	      Set_MsgId(msg->object_id);
+      // and more yet,
+      // close the network screen
+      // once we have a server intro
+      // message
+      // close screen and wait for
+      // user to press new game
+      // and display message
 
-	      // Note that the client
-	      // cannot start the game at 
-	      // this point
-	      // once the server sends a start
-	      // game, the game begins
-	      Mode_TitleScreen();
+      client_obj.activity = _READY_;
 
-	    } // end of the 
-	  else {
-	    
-	    // the first messagse is not a
-	    // reply type, so that means
-	    // it is a game position
-	    _msg_bytes = bytes_recv;
+      SET_NET_CLIENT;  // turn network interface on
 
-	    //
-	    // not perfect, but it will speed things up
-	    no_bots = _msg_bytes / sizeof(Msg);
+      // get your current id
+      client_obj.object_id = msg->object_id;
 
-	    // check first message
-	    switch(msg->msg_type)
-	      {
-	      case MSG_LOAD:
-		
-		// change into running mode
-		// start the network game!
-		Mode_SetRunning();
-		client_obj.activity = _RUNNING_;
+      Set_MsgId(msg->object_id);
 
-		MAX_NETWORK_BOTS = no_bots;
-		Set_MsgIndex(no_bots);
-		
+      // Note that the client
+      // cannot start the game at
+      // this point
+      // once the server sends a start
+      // game, the game begins
+      Mode_TitleScreen();
 
-		break;
+    }  // end of the
+    else
+    {
+      // the first messagse is not a
+      // reply type, so that means
+      // it is a game position
+      _msg_bytes = bytes_recv;
 
-	      default: break;
+      //
+      // not perfect, but it will speed things up
+      no_bots = _msg_bytes / sizeof(Msg);
 
-	      }; // end of switch
+      // check first message
+      switch (msg->msg_type)
+      {
+        case MSG_LOAD:
 
-	   
-	    // after the blocking call recvfrom
-	    // process the message que
+          // change into running mode
+          // start the network game!
+          Mode_SetRunning();
+          client_obj.activity = _RUNNING_;
 
-	    // this msgindex is flaky....!
-	    Set_MsgIndex(no_bots);
-	    Run_NetworkBots();
+          MAX_NETWORK_BOTS = no_bots;
+          Set_MsgIndex(no_bots);
 
-	    
-	  } // end of if 
+          break;
 
-	} // end of the for 
-		    
+        default:
+          break;
+
+      };  // end of switch
+
+      // after the blocking call recvfrom
+      // process the message que
+
+      // this msgindex is flaky....!
+      Set_MsgIndex(no_bots);
+      Run_NetworkBots();
+
+    }  // end of if
+
+  }  // end of the for
 
   return NULL;
-} // end of the function 
+}  // end of the function
 
 //
 // Get_LocalAddress
@@ -399,13 +371,13 @@ void Get_LocalAddress(void)
 {
   int res;
   int i;
-  char *buf = NULL;
+  char* buf = NULL;
   int text_start = 0;
   int sock;
   unsigned short port;
   struct sockaddr_in serv_addr;
   struct sockaddr_in remote_addr;
-  	
+
   port = CONNECT_PORT;
 
 #if defined(UDP_PROTOCOL)
@@ -416,11 +388,10 @@ void Get_LocalAddress(void)
 #endif
 
   if (sock < 0)
-    {
-      printf("socket() failed\n");
-      exit(1);
-    } // end of the if 
-
+  {
+    printf("socket() failed\n");
+    exit(1);
+  }  // end of the if
 
   memset(&serv_addr, 0, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
@@ -428,53 +399,53 @@ void Get_LocalAddress(void)
   serv_addr.sin_port = htons(port);
 
   // bind to the address
-  res = bind(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+  res = bind(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
   if (res < 0)
-    {
-      printf("bind failed\n");
-      exit(1);
-    } // end of if 
+  {
+    printf("bind failed\n");
+    exit(1);
+  }  // end of if
 
 #if 1
   remote_addr.sin_port = htons(port);
   remote_addr.sin_family = AF_INET;
-  
+
   // get local address
   //
   res = sizeof(remote_addr);
-  if (connect(sock, (struct sockaddr *)&remote_addr, res) <0)
-	{
-		printf("connect() failed\n");
-	} 
+  if (connect(sock, (struct sockaddr*)&remote_addr, res) < 0)
+  {
+    printf("connect() failed\n");
+  }
 #endif
 
   //
   res = sizeof(serv_addr);
-  if (getsockname(sock, (struct sockaddr *)&serv_addr, &res) < 0)
+  if (getsockname(sock, (struct sockaddr*)&serv_addr, &res) < 0)
   {
-	  printf("getsockname() failed\n");
-  } // end of the if   
+    printf("getsockname() failed\n");
+  }  // end of the if
 
   // copy the address
   // only for the server
   buf = inet_ntoa(serv_addr.sin_addr);
   res = strlen(buf);
-  text_start = 14; 
+  text_start = 14;
 
-  for (i = 0; i < res; i++) {
+  for (i = 0; i < res; i++)
+  {
+    network_str_[SERVER_NET_MENU + 1][text_start + i] = *buf++;
 
-    network_str_[SERVER_NET_MENU+1][text_start+i] = *buf++;
-    
-  } // end of the for 
+  }  // end of the for
 
   // null-terminate
-  network_str_[SERVER_NET_MENU+1][text_start+i] = '\0';
-					 		     
+  network_str_[SERVER_NET_MENU + 1][text_start + i] = '\0';
+
   // now close the connection
   close(sock);
 
-} // end of the function 
+}  // end of the function
 
 //
 // Build_LoginMsg
@@ -491,32 +462,31 @@ void Build_LoginMsg(MsgPtr ptr)
 
   ptr->msg_type = MSG_LOGIN;
 
-  text_start = 15; 
+  text_start = 15;
   res = 32;
 
-  for (i = 0; i < res; i++) {
-
+  for (i = 0; i < res; i++)
+  {
     // this may work, but so will final_str
     // which is safer!
-    c = network_str_[CLIENT_NET_MENU+0][text_start+i];
+    c = network_str_[CLIENT_NET_MENU + 0][text_start + i];
     buf[i] = c;
-    
-    if ((c == '\0') || ( c == '\n'))
-      {
-	break;
-      } // end of if 
-    
-  } // end of the for 
-  
+
+    if ((c == '\0') || (c == '\n'))
+    {
+      break;
+    }  // end of if
+
+  }  // end of the for
+
   // null-terminate
   buf[i] = '\0';
-  
+
   // build the message
   sprintf(buffer, "%s?%d?%s", buf, __VERSION__, __OS__);
   strcpy(ptr->msg, buffer);
 
-
-} // end of the function 
+}  // end of the function
 
 //
 // Build_MoveMsg
@@ -525,7 +495,7 @@ void Build_LoginMsg(MsgPtr ptr)
 void Build_MoveMsg(float x, float y, float heading, int type)
 {
   int res;
-  void *buf = NULL;
+  void* buf = NULL;
   int id;
   int serv_id;
   Msg msg;
@@ -538,34 +508,32 @@ void Build_MoveMsg(float x, float y, float heading, int type)
   msg.object_id = id;
   msg.msg_type = type;
 
-  buf = (void *)&msg;
+  buf = (void*)&msg;
   res = sizeof(Msg);
-  
-    if (CHECK_NET_CLIENT) {
 
-      res = sendto(client_obj.sock, (MsgPtr)&msg, res,  0,
-               (struct sockaddr *)&client_obj.remote_addr, sizeof(client_obj.remote_addr));
-    
-    } else if (CHECK_NET_SERVER) {
+  if (CHECK_NET_CLIENT)
+  {
+    res = sendto(client_obj.sock, (MsgPtr)&msg, res, 0, (struct sockaddr*)&client_obj.remote_addr,
+                 sizeof(client_obj.remote_addr));
+  }
+  else if (CHECK_NET_SERVER)
+  {
+    // this is server code, so the id will be based on the server obj
+    // skip the sendto and just add to the message queue
+    // to be sent out
+    serv_id = Get_ServObjID();
+    Msg_AddQueue(MSG_MOVE, type, serv_id, x, y, heading);
 
-      // this is server code, so the id will be based on the server obj
-      // skip the sendto and just add to the message queue
-      // to be sent out
-      serv_id = Get_ServObjID();
-      Msg_AddQueue(MSG_MOVE, type, serv_id, x, y, heading);
-      
-    } // end of if-else
+  }  // end of if-else
 
-} // end of the function 
-
-
+}  // end of the function
 
 //
 // Connect
 //
-void Connect(ComObjPtr com_obj, char *ip, int port)
+void Connect(ComObjPtr com_obj, char* ip, int port)
 {
-  int res; 
+  int res;
   struct sockaddr_in serv_addr;
   Msg msg;
 
@@ -573,12 +541,12 @@ void Connect(ComObjPtr com_obj, char *ip, int port)
   com_obj->port = port;
 
   com_obj->sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
- 
+
   if (com_obj->sock < 0)
-    {
-      fprintf(stderr, "socket() failed\n");
-    } // end of the if 
-  
+  {
+    fprintf(stderr, "socket() failed\n");
+  }  // end of the if
+
   // construct server address
   memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -586,16 +554,16 @@ void Connect(ComObjPtr com_obj, char *ip, int port)
   serv_addr.sin_addr.s_addr = inet_addr(com_obj->ipaddress);
   serv_addr.sin_port = htons(com_obj->port);
 
-  // build the message and send it off, 
+  // build the message and send it off,
   res = sizeof(Msg);
 
   Build_LoginMsg((MsgPtr)&msg);
 
-  res = sendto(com_obj->sock, (MsgPtr)&msg, res,  0,
-               (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+  res =
+      sendto(com_obj->sock, (MsgPtr)&msg, res, 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
   // set remote address --
-  Set_RemoteAddr(com_obj, (struct sockaddr_in *)&serv_addr); 
+  Set_RemoteAddr(com_obj, (struct sockaddr_in*)&serv_addr);
 
   // timeout variables and init functions
   Create_Mutex();
@@ -603,26 +571,26 @@ void Connect(ComObjPtr com_obj, char *ip, int port)
   // for simplicity, turn on connected, this may need refinement
   com_obj->connect_flag = _CONNECTED_;
   com_obj->connect_type = _TYPE_CLIENT_;
-  com_obj->watchdog  = _WATCHDOG_ON_;
+  com_obj->watchdog = _WATCHDOG_ON_;
 
   // create a sniffer agent thread also
-  pthread_create(&thread_id[1], &attr, SnifferThread, NULL); 
+  pthread_create(&thread_id[1], &attr, SnifferThread, NULL);
 
-  // also recv a message 
+  // also recv a message
   // create a thread to wait for messages
-  pthread_create(&thread_id[0], &attr, WaitMsg, (void *)com_obj);
-  
-} // end of the function 
+  pthread_create(&thread_id[0], &attr, WaitMsg, (void*)com_obj);
+
+}  // end of the function
 
 //
 // RunTest
 //
-void Connect_Server(char *buffer)
+void Connect_Server(char* buffer)
 {
   client_obj.activity = _WAITING_;
-  Connect((ComObjPtr)&client_obj, buffer, CONNECT_PORT);  
+  Connect((ComObjPtr)&client_obj, buffer, CONNECT_PORT);
 
-} // end of the function
+}  // end of the function
 
 //
 // Create_Client
@@ -632,26 +600,24 @@ void Create_Client(void)
 {
   client_obj.connect_flag = _NOT_CONNECTED_;
   TURNON_WATCHDOG;
-  
+
   client_obj.activity = _WAITING_;
 
-} // end of thefunction 
+}  // end of thefunction
 
 //
 // Kill_Client
 //
 void Kill_Client(void)
 {
+  if (client_obj.connect_flag == _CONNECTED_)
+  {
+    Destroy_Mutex();
+    close(client_obj.sock);
 
-  if (client_obj.connect_flag == _CONNECTED_) 
-    {
+  }  // end of the if
 
-      Destroy_Mutex();
-      close(client_obj.sock);
-
-    }  // end of the if 
-
-} // end of the function 
+}  // end of the function
 
 //
 //
@@ -660,18 +626,16 @@ void Print_ClientRun(void)
   char buffer[80];
 
   if ((client_obj.activity == _RUNNING_) || (client_obj.activity == _READY_))
-	{
-	  sprintf(buffer, "Messages x%d recvd\n",GetMessageCount()); 
-	  
-	  if (client_obj.activity == _RUNNING_)
-	    Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y1,"Client Running");
-	  else
-	    Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y1,"Client Waiting");
+  {
+    sprintf(buffer, "Messages x%d recvd\n", GetMessageCount());
 
-	  Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y2,buffer);
+    if (client_obj.activity == _RUNNING_)
+      Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y1, "Client Running");
+    else
+      Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y1, "Client Waiting");
 
-	} // end of the if 
+    Draw_TString(_NET_SCREEN_X, _NET_SCREEN_Y2, buffer);
 
-} // end of the function 
+  }  // end of the if
 
-
+}  // end of the function

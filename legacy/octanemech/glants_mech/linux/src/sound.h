@@ -35,46 +35,40 @@
 #ifndef _SOUND_H_
 #define _SOUND_H_
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define FRAG_SPEC 0x00020007
-#define SOUND_TURN_ON         1 
+#define SOUND_TURN_ON 1
 
-#define NUM_SAMPLES          2
-#define SAMPLE_RATE          11000
-#define NUM_CHANNELS         8
+#define NUM_SAMPLES 2
+#define SAMPLE_RATE 11000
+#define NUM_CHANNELS 8
 
 struct Sample
-    {
-    unsigned char *data;	
-    int len;			
-    };
+{
+  unsigned char* data;
+  int len;
+};
 
 typedef struct Sample Sample;
 
-
-int
-Snd_loadRawSample( const char *file, Sample *sample );
-
+int Snd_loadRawSample(const char* file, Sample* sample);
 
 //
-// init sound device, etc..                                                 
-// num_snd  = the number of samples in the sample array *sa                 
-// sa       = the sample array						    
-// freq     = the rate (Hz) to play back the samples                        
-// channels = # of channels to mix                                          
-// sound_device = a char string for the sound device, eg, "/dev/dsp"        
+// init sound device, etc..
+// num_snd  = the number of samples in the sample array *sa
+// sa       = the sample array
+// freq     = the rate (Hz) to play back the samples
+// channels = # of channels to mix
+// sound_device = a char string for the sound device, eg, "/dev/dsp"
 // returns: 0=success, -1=failure.
 //
-int Snd_init( int num_snd, const Sample *sa, int freq, 
-          int channels, const char *sound_device );
+int Snd_init(int num_snd, const Sample* sa, int freq, int channels, const char* sound_device);
 
-int 
-Snd_restore();
+int Snd_restore();
 
-int 
-Snd_effect( int nr, int channel );
+int Snd_effect(int nr, int channel);
 
 void flushSounds(void);
 void outAudio(int sCouner);
@@ -82,5 +76,5 @@ void Load_Audio(void);
 
 void Do_FireSound(void);
 void Play_Music(void);
-	
+
 #endif

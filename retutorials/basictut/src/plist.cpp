@@ -41,24 +41,25 @@
 
 #include <iostream>
 
-class PtrNode {
+class PtrNode
+{
  public:
-  void *ptr;
-  PtrNode *next;
+  void* ptr;
+  PtrNode* next;
 
-  explicit PtrNode(void *p) : ptr(p), next(nullptr) {}
+  explicit PtrNode(void* p) : ptr(p), next(nullptr) {}
 };
 
 // Constructor
-PtrList::PtrList() : head(nullptr), items(0) {
-    
-}
+PtrList::PtrList() : head(nullptr), items(0) {}
 
 // Destructor
-PtrList::~PtrList() {
-  PtrNode *current = head;
-  while (current != nullptr) {
-    PtrNode *next = current->next;
+PtrList::~PtrList()
+{
+  PtrNode* current = head;
+  while (current != nullptr)
+  {
+    PtrNode* next = current->next;
     destroyNode(current);
     current = next;
   }
@@ -66,22 +67,24 @@ PtrList::~PtrList() {
 
 bool PtrList::isEmpty() const { return head == nullptr; }
 
-PtrNode *PtrList::createNode(void *data) { return new PtrNode(data); }
+PtrNode* PtrList::createNode(void* data) { return new PtrNode(data); }
 
-void PtrList::destroyNode(PtrNode *node) { delete node; }
+void PtrList::destroyNode(PtrNode* node) { delete node; }
 
-void PtrList::insertFront(void *data) {
-  PtrNode *new_node = createNode(data);
+void PtrList::insertFront(void* data)
+{
+  PtrNode* new_node = createNode(data);
   new_node->next = head;
   head = new_node;
   ++items;
 }
 
-void *PtrList::removeFront() {
+void* PtrList::removeFront()
+{
   if (isEmpty()) return nullptr;
 
-  PtrNode *temp = head;
-  void *result = temp->ptr;
+  PtrNode* temp = head;
+  void* result = temp->ptr;
 
   head = head->next;
   destroyNode(temp);
@@ -90,12 +93,15 @@ void *PtrList::removeFront() {
   return result;
 }
 
-void PtrList::deleteNode(void *val) {
-  PtrNode *current = head;
-  PtrNode *previous = nullptr;
+void PtrList::deleteNode(void* val)
+{
+  PtrNode* current = head;
+  PtrNode* previous = nullptr;
 
-  while (current != nullptr) {
-    if (current->ptr == val) {
+  while (current != nullptr)
+  {
+    if (current->ptr == val)
+    {
       if (previous)
         previous->next = current->next;
       else
@@ -110,10 +116,12 @@ void PtrList::deleteNode(void *val) {
   }
 }
 
-void PtrList::printListAsInt() const {
-  PtrNode *current = head;
-  while (current) {
-    int *x = static_cast<int *>(current->ptr);
+void PtrList::printListAsInt() const
+{
+  PtrNode* current = head;
+  while (current)
+  {
+    int* x = static_cast<int*>(current->ptr);
     std::cout << "<" << *x << ">\n";
     current = current->next;
   }

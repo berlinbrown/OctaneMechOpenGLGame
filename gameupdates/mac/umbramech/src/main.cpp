@@ -24,14 +24,15 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
 
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
- 
-    return 0;
+int main(int argc, char** argv)
+{
+  glutInit(&argc, argv);
+
+  return 0;
 }

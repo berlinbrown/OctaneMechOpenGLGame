@@ -38,176 +38,152 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int isempty(List *list)
+static int isempty(List* list)
 {
-
-    if (list->head == NULL)
-        return 1; // return 1
-    else
-        return 0;
-
-} 
+  if (list->head == NULL)
+    return 1;  // return 1
+  else
+    return 0;
+}
 
 //
 // CreateNode
 //
-Node *CreateNode(int data)
+Node* CreateNode(int data)
 {
+  Node* h = (Node*)malloc(sizeof(Node));
 
-    Node *h = (Node *)malloc(sizeof(Node));
+  h->data = data;
+  h->next = NULL;
 
-    h->data = data;
-    h->next = NULL;
-
-    return h;
-
-} 
+  return h;
+}
 
 //
 // DestroyNode
 //
-void DestroyNode(Node *node)
-{
-
-    RELEASE_OBJECT(node);
-
-} // end of the function
+void DestroyNode(Node* node) { RELEASE_OBJECT(node); }  // end of the function
 
 //
 // Create List
 //
-List *CreateList()
+List* CreateList()
 {
+  List* result = (List*)malloc(sizeof(List));
 
-    List *result = (List *)malloc(sizeof(List));
+  result->head = NULL;
 
-    result->head = NULL;
+  return result;
+}
 
-    return result;
-
-} 
-
-void DeleteNode(List *list, int val)
+void DeleteNode(List* list, int val)
 {
-    Node *current = list->head;
-    Node *previous = NULL;
+  Node* current = list->head;
+  Node* previous = NULL;
 
-    while (current != NULL)
+  while (current != NULL)
+  {
+    if (current->data != val)
     {
+      previous = current;
+      current = previous->next;
+    }
+    else
+    {
+      if (previous != NULL)
+      {
+        previous->next = current->next;
 
-        if (current->data != val)
-        {
+      }  // end of the if
 
-            previous = current;
-            current = previous->next;
-        }
-        else
-        {
+      // free(current);
+      RELEASE_OBJECT(current);
+      break;
 
-            if (previous != NULL)
-            {
+    }  // end of the if - else
 
-                previous->next = current->next;
-
-            } // end of the if
-
-            // free(current);
-            RELEASE_OBJECT(current);
-            break;
-
-        } // end of the if - else
-
-    } // end of the while
-
-} 
+  }  // end of the while
+}
 
 //
 // DestroyList
 //
-void DestroyList(List *list)
+void DestroyList(List* list)
 {
+  Node *pos, *next;
+  pos = list->head;
 
-    Node *pos, *next;
-    pos = list->head;
+  while (pos != NULL)
+  {
+    next = pos->next;
+    // free(pos);
+    RELEASE_OBJECT(pos);
 
-    while (pos != NULL)
-    {
-        next = pos->next;
-        // free(pos);
-        RELEASE_OBJECT(pos);
+    pos = next;
+  }  // end of the while
 
-        pos = next;
-    } // end of the while
-
-    free(list);
-
-} 
+  free(list);
+}
 
 //
 // Insert Front
-static void InsertFront(List *list, int data)
+static void InsertFront(List* list, int data)
 {
+  Node* new_node = NULL;
 
-    Node *new_node = NULL;
+  new_node = CreateNode(data);
 
-    new_node = CreateNode(data);
+  if (isempty(list))
 
-    if (isempty(list))
+    list->head = new_node;
 
-        list->head = new_node;
+  else
+  {
+    new_node->next = list->head;
+    list->head = new_node;
 
-    else
-    {
-
-        new_node->next = list->head;
-        list->head = new_node;
-
-    } // end if
-
-} 
+  }  // end if
+}
 
 //
 // PrintTest
 //
-void PrintList(List *list)
+void PrintList(List* list)
 {
-    Node *current_ptr;
+  Node* current_ptr;
 
-    if (isempty(list))
-        return;
+  if (isempty(list)) return;
 
-    current_ptr = list->head;
+  current_ptr = list->head;
 
-    while (current_ptr != NULL)
-    {
-        printf("<%d>\n", current_ptr->data);
-        current_ptr = current_ptr->next;
-    } // end of while
-
-} 
+  while (current_ptr != NULL)
+  {
+    printf("<%d>\n", current_ptr->data);
+    current_ptr = current_ptr->next;
+  }  // end of while
+}
 
 //
 // ListTest
 //
 void LinkTest(void)
 {
-    List *list;
+  List* list;
 
-    list = CreateList();
+  list = CreateList();
 
-    InsertFront(list, 4);
-    InsertFront(list, 5);
-    InsertFront(list, 3);
-    InsertFront(list, 2);
+  InsertFront(list, 4);
+  InsertFront(list, 5);
+  InsertFront(list, 3);
+  InsertFront(list, 2);
 
-    PrintList(list);
+  PrintList(list);
 
-    DeleteNode(list, 3);
-    DeleteNode(list, 5);
+  DeleteNode(list, 3);
+  DeleteNode(list, 5);
 
-    printf("\n\nNew List\n");
-    PrintList(list);
+  printf("\n\nNew List\n");
+  PrintList(list);
 
-    DestroyList(list);
-
-} 
+  DestroyList(list);
+}

@@ -51,14 +51,14 @@
 #define CONFIG_FILE_NAME "config.ini"
 #define ERROR_FILE_NAME "error.log"
 
-FILE *f_config = NULL;
-FILE *f_errorlog = NULL;
-FILE *f_newfile = NULL;
+FILE* f_config = NULL;
+FILE* f_errorlog = NULL;
+FILE* f_newfile = NULL;
 
 // false = no error
 bool config_errors[MAX_ERRORS];
 
-AntGlobals *ant_globals;
+AntGlobals* ant_globals;
 
 char error_str[MAX_ERRORS][40] = {"NULL",
                                   "LINE_OF_SIGHT",
@@ -216,7 +216,7 @@ char network_str_[26][80] = {"::Player Name: Player1",      // 0
 #define T_ROW_3 414
 #define T_ROW_4 424
 
-static char *_tmp_str = NULL;
+static char* _tmp_str = NULL;
 static clock_t curr_Time;
 static clock_t next_Time = 0;
 
@@ -243,7 +243,8 @@ TextBoxPtr network_text = NULL;
 // - put the state in title screen mode
 // - usaully used by the network interface
 //
-void Mode_TitleScreen(void) {
+void Mode_TitleScreen(void)
+{
   ant_globals->paused = 1;
   ant_globals->menu_mode = MENU_TITLE_MODE;
 }
@@ -252,7 +253,8 @@ void Mode_TitleScreen(void) {
 // Set into running mode
 // play - game
 //
-void Mode_SetRunning(void) {
+void Mode_SetRunning(void)
+{
   ant_globals->paused = 0;
   ant_globals->menu_mode = MENU_RUN_MODE;
 
@@ -269,7 +271,8 @@ void Mode_SetRunning(void) {
 //
 // Super_MainText
 //
-void Super_MainText(void) {
+void Super_MainText(void)
+{
   main_text = InitTextBox(10, 200, 400, 480);
   SetTextMode(main_text, TEXT_NONE);
   SetTextColor(main_text, 0, 255, 0);
@@ -316,7 +319,8 @@ void Super_MainText(void) {
 
 //
 // Draw_TString
-void Draw_TString(int x, int y, char *str) {
+void Draw_TString(int x, int y, char* str)
+{
   TextBegin(network_text);
   DrawString(network_text, x, y, str);
   TextEnd();
@@ -328,7 +332,8 @@ void Draw_TString(int x, int y, char *str) {
 // - setup the horizontal or vertical positions
 // and draw the text --
 //
-static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
+static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
+{
   int i;
   float horz_pos;
   float vert_pos;
@@ -336,11 +341,13 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
   //
   // set the text changes before the code below
 
-  switch (h_type) {
+  switch (h_type)
+  {
     case HORZ_TYPE_:
 
       // we only have two diferent cases to handle
-      if (start_pos == C_HORZ_MENU) {
+      if (start_pos == C_HORZ_MENU)
+      {
         horz_pos = TEXT_HORZ_START;
         vert_pos = TXT_V_START;
 
@@ -353,8 +360,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_START;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[C_HORZ_MENU + 1]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 1]);
         TextEnd();
 
         // next col --
@@ -362,8 +368,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_START;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[C_HORZ_MENU + 2]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 2]);
         TextEnd();
 
         // next col --
@@ -371,8 +376,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_START;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[C_HORZ_MENU + 3]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 3]);
         TextEnd();
 
         // next col --
@@ -380,8 +384,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_START;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[C_HORZ_MENU + 4]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 4]);
         TextEnd();
 
         // next col --
@@ -389,12 +392,12 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_START;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[C_HORZ_MENU + 5]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 5]);
         TextEnd();
 
       }  // end of the
-      else {
+      else
+      {
         horz_pos = TEXT_HORZ_START;
         vert_pos = TXT_V_STARTYY2;
         TextBegin(network_text);
@@ -406,24 +409,21 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
         vert_pos = TXT_V_STARTYY2;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[S_SERV_HORZ + 1]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 1]);
         TextEnd();
 
         horz_pos = T_COL_2;
         vert_pos = TXT_V_STARTYY2;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[S_SERV_HORZ + 2]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 2]);
         TextEnd();
 
         horz_pos = T_COL_3;
         vert_pos = TXT_V_STARTYY2;
 
         TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos,
-                   network_str_[S_SERV_HORZ + 3]);
+        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 3]);
         TextEnd();
 
       }  // end of the if-else
@@ -437,7 +437,8 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
       else
         vert_pos = TEXT_VERT_STARTY2;
 
-      for (i = start_pos; i <= end_pos; i++) {
+      for (i = start_pos; i <= end_pos; i++)
+      {
         TextBegin(network_text);
         DrawString(network_text, TEXT_HORZ_START, vert_pos, network_str_[i]);
         TextEnd();
@@ -453,16 +454,14 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
 
     case SERVER_SETTINGS:
       TextBegin(network_text);
-      DrawString(network_text, start_pos, end_pos,
-                 network_str_[SERVER_SETTINGS]);
+      DrawString(network_text, start_pos, end_pos, network_str_[SERVER_SETTINGS]);
       TextEnd();
 
       break;
 
     case CLIENT_SETTINGS:
       TextBegin(network_text);
-      DrawString(network_text, start_pos, end_pos,
-                 network_str_[CLIENT_SETTINGS]);
+      DrawString(network_text, start_pos, end_pos, network_str_[CLIENT_SETTINGS]);
       TextEnd();
 
       break;
@@ -472,7 +471,8 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type) {
 //
 // Draw_NetworkScreen
 //
-void Draw_NetworkScreen(void) {
+void Draw_NetworkScreen(void)
+{
   const float box_x_min = 50.0f;
   const float box_x_max = 500.0f;
   const float box_y_min = 50.0f;
@@ -564,7 +564,8 @@ void Draw_NetworkScreen(void) {
 //
 // Draw_HelpScreen
 //
-void Draw_IntroScreen(void) {
+void Draw_IntroScreen(void)
+{
   glDisable(GL_TEXTURE_2D);
 
   // Draw a blue screen
@@ -598,7 +599,8 @@ void Draw_IntroScreen(void) {
   // curr_Time = GetTickCount();
   curr_Time = clock();
 
-  if (curr_Time > next_Time) {
+  if (curr_Time > next_Time)
+  {
     Printf(intro_text, "%c", *_tmp_str);
 
     next_Time = curr_Time + (800 * 1.4);
@@ -617,7 +619,8 @@ void Draw_IntroScreen(void) {
 //
 // Draw_HelpScreen
 //
-void Draw_HelpScreen(void) {
+void Draw_HelpScreen(void)
+{
   glDisable(GL_TEXTURE_2D);
 
   // Draw a blue screen
@@ -655,7 +658,8 @@ void Draw_HelpScreen(void) {
 // Super_Printf
 // - print the debug text screen
 //
-void Super_Printf(char *fmt, ...) {
+void Super_Printf(char* fmt, ...)
+{
   va_list vlist;
   char buff[MAX_STR];
 
@@ -671,7 +675,8 @@ void Super_Printf(char *fmt, ...) {
 //
 // Score
 //
-void Score_Printf(char *fmt, ...) {
+void Score_Printf(char* fmt, ...)
+{
   va_list vlist;
   char buff[MAX_STR];
 
@@ -693,12 +698,14 @@ void Super_BeginPaused(void) { ant_globals->paused = 1; }  // end of the fuction
 //
 // Print_Score
 //
-void Print_Score(void) {
+void Print_Score(void)
+{
   int i = 0;
   char buffer[80];
   int x, y;
 
-  for (i = 0; i < MAX_SCORE_DISPLAY; i++) {
+  for (i = 0; i < MAX_SCORE_DISPLAY; i++)
+  {
     sprintf(buffer, "BUG\n");
 
     sprintf(buffer, "P%d %0.2f %d\n", ant_globals->score_obj[i].name,
@@ -729,7 +736,8 @@ void Print_Score(void) {
   TextEnd();
 
   // Print some paused text
-  if (ant_globals->paused) {
+  if (ant_globals->paused)
+  {
     // find the correct x pos
     x = 12 * 8;
     x /= 2;
@@ -754,7 +762,8 @@ void Print_Score(void) {
 //
 // Draw Text
 //
-void Super_DrawText(void) {
+void Super_DrawText(void)
+{
   DrawText(main_text);
 
   Print_NetRun();
@@ -767,7 +776,8 @@ void Super_DrawText(void) {
 //
 // Destroy_MainText(void)
 //
-void Super_KillText(void) {
+void Super_KillText(void)
+{
   DestroyTextBox(main_text);
   DestroyTextBox(score_text);
   DestroyTextBox(help_text);
@@ -779,16 +789,18 @@ void Super_KillText(void) {
 //
 // Super
 //
-void Super_LoadGlobals(void) {
-  ant_globals = (AntGlobals *)malloc(sizeof(AntGlobals));
+void Super_LoadGlobals(void)
+{
+  ant_globals = (AntGlobals*)malloc(sizeof(AntGlobals));
 
-  ZeroMemory((AntGlobals *)ant_globals, sizeof(AntGlobals));
+  ZeroMemory((AntGlobals*)ant_globals, sizeof(AntGlobals));
 }
 
 //
 // Super
 //
-void Super_KillGlobals(void) {
+void Super_KillGlobals(void)
+{
   // free the other allocated
   // arrays
   // free(ant_globals->score_obj);
@@ -802,7 +814,8 @@ void Super_KillGlobals(void) {
 //
 // Init Globals
 //
-void InitGlobals(void) {
+void InitGlobals(void)
+{
   ant_globals->alive_ants = MAX_FIRE_ANTS;
   ant_globals->seconds = 0;
   ant_globals->time_t = 0;
@@ -817,8 +830,7 @@ void InitGlobals(void) {
 
   SET_NET_OFF;  // turn network interface off
 
-  ant_globals->score_obj =
-      (struct tagScoreObj *)malloc(MAX_FIRE_ANTS * sizeof(struct tagScoreObj));
+  ant_globals->score_obj = (struct tagScoreObj*)malloc(MAX_FIRE_ANTS * sizeof(struct tagScoreObj));
 
   // load with zeros
   ZeroMemory(ant_globals->score_obj, MAX_FIRE_ANTS * sizeof(ScoreObj));
@@ -827,10 +839,14 @@ void InitGlobals(void) {
 //
 // TogglePaused
 //
-void TogglePaused(void) {
-  if (ant_globals->paused) {
+void TogglePaused(void)
+{
+  if (ant_globals->paused)
+  {
     ant_globals->paused = 0;
-  } else {
+  }
+  else
+  {
     ant_globals->paused = 1;
   }  // end of if-else
 
@@ -839,14 +855,16 @@ void TogglePaused(void) {
 //
 // DestroyGlobals
 //
-void DestroyGlobals(void) {
+void DestroyGlobals(void)
+{
   // nada?
 }
 
 //
 // Load_Score
 //
-void Load_Score(float score, float kills, int id, int i) {
+void Load_Score(float score, float kills, int id, int i)
+{
   ant_globals->score_obj[i].score = score;
   ant_globals->score_obj[i].kills = kills;
   ant_globals->score_obj[i].name = id;
@@ -855,8 +873,10 @@ void Load_Score(float score, float kills, int id, int i) {
 //
 // SubtractAnts
 //
-void SubtractAnts(int ants) {
-  if (ant_globals->alive_ants <= 0) {
+void SubtractAnts(int ants)
+{
+  if (ant_globals->alive_ants <= 0)
+  {
     ant_globals->alive_ants = 0;
     return;
   }  // end of if
@@ -904,10 +924,7 @@ void SetNestFood(float d) { ant_globals->nest_food = d; }  // end of function
 //
 // SetNestfood
 //
-void SetPlayerHealth(float d) {
-  ant_globals->player_health = d;
-
-}  // end of function
+void SetPlayerHealth(float d) { ant_globals->player_health = d; }  // end of function
 
 //
 // AddTick
@@ -922,7 +939,8 @@ DWORD GetGameTick(void) { return ant_globals->ticks; }  // end of the function
 //
 // PrintGlobals
 //
-void PrintGlobals(void) {
+void PrintGlobals(void)
+{
   int i = 0;
 
   glRasterPos2i(10, 48 + 14);
@@ -959,7 +977,8 @@ void PrintGlobals(void) {
 //
 // hopefully, run-time errors will not occur
 //
-void Set_ErrorLog(void) {
+void Set_ErrorLog(void)
+{
   int i;
 
   // false means no error
@@ -981,7 +1000,8 @@ void Set_ErrorLog(void) {
 // Add_ErrorLog
 // - add an entry to the error log
 //
-void Add_ErrorStr(char *str) {
+void Add_ErrorStr(char* str)
+{
   f_errorlog = NULL;
 
   f_errorlog = fopen(ERROR_FILE_NAME, "a");
@@ -996,14 +1016,16 @@ void Add_ErrorStr(char *str) {
 // Add_ErrorLog
 // - add an entry to the error log
 //
-void Add_ErrorLog(const int error_id) {
+void Add_ErrorLog(const int error_id)
+{
   f_errorlog = NULL;
 
   f_errorlog = fopen(ERROR_FILE_NAME, "a");
 
   config_errors[error_id] = true;
 
-  switch (error_id) {
+  switch (error_id)
+  {
     case ID_FILE_NOT_FOUND:
       fprintf(f_errorlog, "error: config FILE_NOT_FOUND\n");
       break;
@@ -1149,7 +1171,8 @@ void Add_ErrorLog(const int error_id) {
 // - set one of the variables
 // based on the incoming buffer
 //
-void Set_Variable(int id, char *val, int f_flag) {
+void Set_Variable(int id, char* val, int f_flag)
+{
   float f_val = 0;
   int i_val = 0;
 
@@ -1166,7 +1189,8 @@ void Set_Variable(int id, char *val, int f_flag) {
   else
     i_val = atoi(val);
 
-  switch (id) {
+  switch (id)
+  {
     case ID_LINE_OF_SIGHT:
 
       if (f_flag)
@@ -1405,15 +1429,17 @@ void Set_Variable(int id, char *val, int f_flag) {
 // Get ConfValue
 // Note: this file allocates memory
 //
-void *Get_ConfValue(int id, int *f_flag) {
-  float *f_val = NULL;
-  int *i_val = NULL;
+void* Get_ConfValue(int id, int* f_flag)
+{
+  float* f_val = NULL;
+  int* i_val = NULL;
 
   if (id < 0) return NULL;  // no negatives
 
-  switch (id) {
+  switch (id)
+  {
     case ID_LINE_OF_SIGHT:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_LINE_OF_SIGHT;
 
       V_TRUE;
@@ -1421,7 +1447,7 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_ATTACK_RADIUS:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_ATTACK_RADIUS;
 
       V_TRUE;
@@ -1429,7 +1455,7 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_BULLET_DAMAGE:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_BULLET_DAMAGE;
 
       V_TRUE;
@@ -1437,7 +1463,7 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_MIN_BULLET_SPEED:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_MIN_BULLET_SPEED;
 
       V_TRUE;
@@ -1445,13 +1471,13 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_USE_ANT_ENGINE:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_USE_ANT_ENGINE;
       return i_val;
       break;
 
     case ID_MAX_FIRE_ANTS:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
 
       *i_val = D_MAX_FIRE_ANTS;
 
@@ -1459,21 +1485,21 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_MAX_BOTS:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_BOTS;
 
       return i_val;
       break;
 
     case ID_USE_GARDEN_AREA:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_USE_GARDEN_AREA;
       return i_val;
       break;
 
     case ID_MAX_TRAIL_STACK:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_TRAIL_STACK;
 
       return i_val;
@@ -1482,13 +1508,13 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_DYING_STATE:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_DYING_STATE;
       return i_val;
       break;
 
     case ID_MAX_PHEROMONES:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_PHEROMONES;
 
       return i_val;
@@ -1496,28 +1522,28 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_PHEROMONE_LIFE:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_PHEROMONE_LIFE;
 
       return i_val;
       break;
 
     case ID_PHEROMONE_DROP:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_PHEROMONE_DROP;
 
       return i_val;
       break;
 
     case ID_MAX_BULLETS:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_BULLETS;
 
       return i_val;
       break;
 
     case ID_MAX_FIRE_SPEED:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_FIRE_SPEED;
 
       return i_val;
@@ -1526,7 +1552,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_MAX_GARDENS:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_GARDENS;
 
       return i_val;
@@ -1534,7 +1560,7 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_BOT_SPEED:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_BOT_SPEED;
 
       V_TRUE;
@@ -1543,7 +1569,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_BOT_MAX_SPEED:
 
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_BOT_MAX_SPEED;
 
       V_TRUE;
@@ -1554,7 +1580,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_MIN_TURN_SPEED:
 
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_MIN_TURN_SPEED;
 
       V_TRUE;
@@ -1563,7 +1589,7 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_CHECK_RESPAWN:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_CHECK_RESPAWN;
 
       return i_val;
@@ -1571,7 +1597,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_GARD_RESPAWN_RATE:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_GARD_RESPAWN_RATE;
 
       return i_val;
@@ -1580,7 +1606,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_MIN_STRAIGHT_STEPS:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MIN_STRAIGHT_STEPS;
 
       return i_val;
@@ -1589,14 +1615,14 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_MAX_STRAIGHT_STEPS:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_STRAIGHT_STEPS;
 
       return i_val;
       break;
 
     case ID_MIN_STRAIGHT_STEPS_2:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MIN_STRAIGHT_STEPS_2;
 
       return i_val;
@@ -1605,7 +1631,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_MAX_STRAIGHT_STEPS_2:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_STRAIGHT_STEPS_2;
 
       return i_val;
@@ -1613,7 +1639,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_INITIAL_ANT_FOOD:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_INITIAL_ANT_FOOD;
 
       return i_val;
@@ -1621,14 +1647,14 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_INITIAL_GARD_FOOD:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_INITIAL_GARD_FOOD;
 
       return i_val;
       break;
 
     case ID_FOOD_WIDTH:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_FOOD_WIDTH;
 
       V_TRUE;
@@ -1637,20 +1663,20 @@ void *Get_ConfValue(int id, int *f_flag) {
       break;
 
     case ID_INIT_FOOD_RATE:
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_INIT_FOOD_RATE;
       return i_val;
       break;
 
     case ID_MAX_FOOD_RATE:
 
-      i_val = (int *)malloc(sizeof(int));
+      i_val = (int*)malloc(sizeof(int));
       *i_val = D_MAX_FOOD_RATE;
       return i_val;
       break;
 
     case ID_MOVE_FOOD_RATE:
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
       *f_val = D_MOVE_FOOD_RATE;
 
       V_TRUE;
@@ -1660,7 +1686,7 @@ void *Get_ConfValue(int id, int *f_flag) {
 
     case ID_FOOD_RATE:
 
-      f_val = (float *)malloc(sizeof(float));
+      f_val = (float*)malloc(sizeof(float));
 
       *f_val = D_FOOD_RATE;
 
@@ -1682,10 +1708,12 @@ void *Get_ConfValue(int id, int *f_flag) {
 // - if the config file is messed up
 // set the appropriate variable
 //
-void Reset_Value(int id) {
+void Reset_Value(int id)
+{
   if (id < 0) return;  // no negatives
 
-  switch (id) {
+  switch (id)
+  {
     case ID_LINE_OF_SIGHT:
 
       LINE_OF_SIGHT = D_LINE_OF_SIGHT;
@@ -1855,16 +1883,19 @@ void Reset_Value(int id) {
 //
 // Process_ConfigFile
 //
-int Process_ConfigFile(char *buffer) {
+int Process_ConfigFile(char* buffer)
+{
   int i;
   int res;
 
   // not case sensitive
 
-  for (i = 0; i < MAX_ERRORS; i++) {
+  for (i = 0; i < MAX_ERRORS; i++)
+  {
     res = strcasecmp(buffer, error_str[i]);
 
-    if (res == 0) {
+    if (res == 0)
+    {
       return i;
     }  // end of the if
 
@@ -1881,7 +1912,8 @@ int Process_ConfigFile(char *buffer) {
 // with any errors it will have
 // to create a default variable, sorry
 //
-void Read_ConfigFile(FILE *f) {
+void Read_ConfigFile(FILE* f)
+{
   char c;
 
   char buffer[256];
@@ -1892,13 +1924,16 @@ void Read_ConfigFile(FILE *f) {
 
   int lines_read = 0;
 
-  while (!feof(f)) {
+  while (!feof(f))
+  {
     c = fgetc(f);
 
-    switch (c) {
+    switch (c)
+    {
       case '#':
 
-        while (1) {
+        while (1)
+        {
           c = fgetc(f);
 
           if (c == '\n') break;
@@ -1911,7 +1946,8 @@ void Read_ConfigFile(FILE *f) {
 
         c_index = 0;
 
-        while (1) {
+        while (1)
+        {
           c = fgetc(f);
 
           if (c == ']') break;
@@ -1919,7 +1955,8 @@ void Read_ConfigFile(FILE *f) {
           buffer[c_index] = c;
           c_index++;
 
-          if (c == '\n') {
+          if (c == '\n')
+          {
             lines_read++;
             break;
           }  // end of if
@@ -1939,11 +1976,13 @@ void Read_ConfigFile(FILE *f) {
         c_index = 0;
         float_flag = 0;
 
-        while (1) {
+        while (1)
+        {
           c = fgetc(f);
 
           // we found a float
-          if (c == 'f') {
+          if (c == 'f')
+          {
             float_flag = 1;
             break;
           }  // end of the if
@@ -1980,22 +2019,25 @@ void Read_ConfigFile(FILE *f) {
 //
 // if the file doesnt exist
 //
-void Rewrite_File(void) {
+void Rewrite_File(void)
+{
   int i = 0;
   int f_flag = 0;
 
   // who needs types
-  void *tmp = NULL;
-  float *tmp_f = NULL;
-  int *tmp_i = NULL;
+  void* tmp = NULL;
+  float* tmp_f = NULL;
+  int* tmp_i = NULL;
 
   f_newfile = fopen(CONFIG_FILE_NAME, "w");
 
-  for (i = 0; i < MAX_TXT_MSGS; i++) {
+  for (i = 0; i < MAX_TXT_MSGS; i++)
+  {
     fprintf(f_newfile, "%s", text_msg[i]);
   }  // end of the for
 
-  for (i = 0; i < MAX_ERRORS; i++) {
+  for (i = 0; i < MAX_ERRORS; i++)
+  {
     if (i == 0) continue;
 
     fprintf(f_newfile, "[");
@@ -2006,11 +2048,14 @@ void Rewrite_File(void) {
 
     tmp = Get_ConfValue(i, &f_flag);
 
-    if (f_flag) {
-      tmp_f = (float *)tmp;
+    if (f_flag)
+    {
+      tmp_f = (float*)tmp;
       fprintf(f_newfile, "%0.2ff;\n", *tmp_f);
-    } else {
-      tmp_i = (int *)tmp;
+    }
+    else
+    {
+      tmp_i = (int*)tmp;
       fprintf(f_newfile, "%d;\n", *tmp_i);
     }  // end of if-else
 
@@ -2031,13 +2076,16 @@ void Rewrite_File(void) {
 // we need to make sure we have value
 // stored for that variable
 //
-void Check_Errors(void) {
+void Check_Errors(void)
+{
   int index = 0;
 
-  for (index = 0; index < MAX_ERRORS; index++) {
+  for (index = 0; index < MAX_ERRORS; index++)
+  {
     if (index == ID_FILE_NOT_FOUND) continue;
 
-    if (config_errors[index]) {
+    if (config_errors[index])
+    {
       // write the file --
       Add_ErrorLog(index);
 
@@ -2052,12 +2100,14 @@ void Check_Errors(void) {
 //
 // load
 //
-void Load_ConfigFile(void) {
+void Load_ConfigFile(void)
+{
   Set_ErrorLog();  // set up the error log
 
   f_config = fopen(CONFIG_FILE_NAME, "r");
 
-  if (f_config == NULL) {
+  if (f_config == NULL)
+  {
     Add_ErrorLog(ID_FILE_NOT_FOUND);
 
     // create a new file config.ini

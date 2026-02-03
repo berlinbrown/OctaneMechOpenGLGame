@@ -54,10 +54,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-PtrList *map_list;
+PtrList* map_list;
 
 // we need a place to hold the pointers, that is map_ptrs
-Map *map_ptrs[MAX_MAPS];
+Map* map_ptrs[MAX_MAPS];
 int max_maps;
 
 // Note: max_maps and MAX_MAPS should probably not match
@@ -66,12 +66,13 @@ int max_maps;
 // Create Map
 // - only sets everything to zero
 //
-Map *CreateMap(int id_no) {
-  Map *map;
+Map* CreateMap(int id_no)
+{
+  Map* map;
 
   map = malloc(sizeof(Map));
 
-  ZeroMemory((Map *)map, sizeof(Map));
+  ZeroMemory((Map*)map, sizeof(Map));
 
   map->id = id_no;
   map->list = NULL;
@@ -87,7 +88,8 @@ Map *CreateMap(int id_no) {
 //
 // Load Map
 //
-void LoadMap(Map *map, float x_min, float x_max, float y_min, float y_max) {
+void LoadMap(Map* map, float x_min, float x_max, float y_min, float y_max)
+{
   map->x_max = x_max;
   map->x_min = x_min;
   map->y_max = y_max;
@@ -97,7 +99,8 @@ void LoadMap(Map *map, float x_min, float x_max, float y_min, float y_max) {
 //
 // DeleteMap
 //
-void DeleteMap(Map *map) {
+void DeleteMap(Map* map)
+{
   // free(map->list);
   // free(map);
   RELEASE_OBJECT(map->list);
@@ -107,10 +110,12 @@ void DeleteMap(Map *map) {
 //
 // DestroyMaps
 //
-void DestroyMaps(void) {
+void DestroyMaps(void)
+{
   int index = 0;
 
-  for (index = 0; index < max_maps; index++) {
+  for (index = 0; index < max_maps; index++)
+  {
     DeleteMap(map_ptrs[index]);
 
   }  // end of the function
@@ -122,9 +127,10 @@ void DestroyMaps(void) {
 //
 // PrintList
 //
-void PrintMapList(PtrList *list) {
-  PtrNode *current_ptr;
-  Map *x;
+void PrintMapList(PtrList* list)
+{
+  PtrNode* current_ptr;
+  Map* x;
 
   // if (isempty(list))
   //	return;
@@ -133,9 +139,10 @@ void PrintMapList(PtrList *list) {
 
   current_ptr = list->head;
 
-  while (current_ptr != NULL) {
+  while (current_ptr != NULL)
+  {
     // interesting
-    x = (Map *)current_ptr->ptr;
+    x = (Map*)current_ptr->ptr;
 
     printf("xmin: %0.2f xmax: %0.2f\n", x->x_min, x->x_max);
 
@@ -146,7 +153,8 @@ void PrintMapList(PtrList *list) {
 //
 // Build The map list
 //
-void BuildMap(void) {
+void BuildMap(void)
+{
   float i, j;
   float x_min, x_max;
   float y_min, y_max;
@@ -160,8 +168,10 @@ void BuildMap(void) {
   CREATE_MAPS;
 
   // Build a set a of maps
-  for (i = MAP_MIN; i < MAP_MAX; i += map_height) {
-    for (j = MAP_MIN; j < MAP_MAX; j += map_width) {
+  for (i = MAP_MIN; i < MAP_MAX; i += map_height)
+  {
+    for (j = MAP_MIN; j < MAP_MAX; j += map_width)
+    {
       x_min = j;
       y_min = i;
       x_max = j + map_width;

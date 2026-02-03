@@ -40,8 +40,7 @@
 
 // all of these are in pyramid.cpp for some strange reason
 
-#define WALL_HEIGHT				12.0f
-
+#define WALL_HEIGHT 12.0f
 
 void InsertWall(float x, float y, float width, float height);
 void Draw_Wall_List(void);

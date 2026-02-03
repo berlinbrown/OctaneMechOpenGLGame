@@ -32,51 +32,47 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // bigbinc@hotmail.com
 //
 // clients.c
-// 
+//
 // - this is mainly used with the server code--
 //
 // - dont get confused with client
 // this is a list setup for saving  clients
 //
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+#include "include/clients.h"
 
-#include <unistd.h>
+#include <arpa/inet.h>
 #include <errno.h>
-#include <time.h>
-#include <sys/time.h>
-#include <string.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
-
-#include "network.h"
-#include "../bot.h"                   // release obj
+#include "../bot.h"  // release obj
 #include "../globals.h"
-#include "include/clients.h"
-#include "include/msg.h"
 #include "include/connect.h"
+#include "include/msg.h"
+#include "network.h"
 
-#define T_COL1                    160
-#define T_COL2                    240
-#define T_COL3                    300
-#define T_COL4                    370
-#define T_COL5                    420
-#define T_ROW_Y1                  340
-#define _HORZ_START               60.0f
+#define T_COL1 160
+#define T_COL2 240
+#define T_COL3 300
+#define T_COL4 370
+#define T_COL5 420
+#define T_ROW_Y1 340
+#define _HORZ_START 60.0f
 
 //
 // the main list
-static ClientList *client_list = NULL;
-
+static ClientList* client_list = NULL;
 
 struct timeval SnapEndTime;
 struct timeval SnapStartTime;
@@ -87,7 +83,7 @@ struct timeval SnapStartTime;
 // about the number of connections,
 // we use opengl to draw the text
 // - I will try to keep opengl type stuff close knit
-// 
+//
 // this can be called pretty much anywhere, mainly in a iterative function
 //
 void Print_Connections(void)
@@ -95,36 +91,30 @@ void Print_Connections(void)
   int i = 0;
   const int height = 12;
   const int h_0 = T_ROW_Y1;
-  Client *current_ptr = NULL;
+  Client* current_ptr = NULL;
 
-  if (client_list->front == NULL)
-    return;
+  if (client_list->front == NULL) return;
 
   current_ptr = client_list->front;
-  
 
   // iterate through the list
-  while(current_ptr != NULL)
-    {
-      
-      // draw to network string interface
-      Draw_TString(_HORZ_START, h_0+(i*height), current_ptr->ip_address);
-      Draw_TString(T_COL1, h_0+(i*height), current_ptr->user_name);
-      Draw_TString(T_COL3, h_0+(i*height), current_ptr->os_str);
+  while (current_ptr != NULL)
+  {
+    // draw to network string interface
+    Draw_TString(_HORZ_START, h_0 + (i * height), current_ptr->ip_address);
+    Draw_TString(T_COL1, h_0 + (i * height), current_ptr->user_name);
+    Draw_TString(T_COL3, h_0 + (i * height), current_ptr->os_str);
 
-      i++;
-      current_ptr = current_ptr->next;
-    } // en dof the while 
+    i++;
+    current_ptr = current_ptr->next;
+  }  // en dof the while
 
-} // end of the function
+}  // end of the function
 
 //
 // Set_NetGlobals
 //
-void Set_NetGlobals(void)
-{
-  
-} // end of the function
+void Set_NetGlobals(void) {}  // end of the function
 
 //
 //
@@ -138,56 +128,53 @@ void Set_NetGlobals(void)
 void Build_StartMsg(void)
 {
   int i = 0;
-  DriverBots bot;               // tmp bot
-  Client *current_ptr = NULL;
-  float x=0, y=0;
+  DriverBots bot;  // tmp bot
+  Client* current_ptr = NULL;
+  float x = 0, y = 0;
   float heading;
-  void *msg_ptr = NULL;
+  void* msg_ptr = NULL;
   int res = 0;
   int sock;
   int obj_id = 0;
-    
-    
+
   // create the message list to send to the clients
   Create_Msg_List();
-  if (client_list->front == NULL)
-    return;
+  if (client_list->front == NULL) return;
 
   current_ptr = client_list->front;
-  
+
   i = 0;
   // iterate through the list
-  while(current_ptr != NULL)
-    {
-      
-      PositionBot(&bot);
-      
-      x = bot.x;
-      y = bot.y;
+  while (current_ptr != NULL)
+  {
+    PositionBot(&bot);
 
-      heading = (float)(rand()%360);
+    x = bot.x;
+    y = bot.y;
 
-      // the object id is a little
-      // tricky, we will use the id given by the server
-      // for server bots, we will use obj_id++
-      obj_id = current_ptr->object_id;
-      Msg_AddQueue(MSG_LOAD, MOVE_NOMOVE, obj_id, x, y, heading);
-     
-      i++;
-      current_ptr = current_ptr->next;
-    } // en dof the while 
+    heading = (float)(rand() % 360);
+
+    // the object id is a little
+    // tricky, we will use the id given by the server
+    // for server bots, we will use obj_id++
+    obj_id = current_ptr->object_id;
+    Msg_AddQueue(MSG_LOAD, MOVE_NOMOVE, obj_id, x, y, heading);
+
+    i++;
+    current_ptr = current_ptr->next;
+  }  // en dof the while
 
   // we added the clients, now add the servers bots
   // and of-course the users bot id
   // <adding multiple local bots is optional right now>
-  
+
   // add the local server as a user
   PositionBot(&bot);
-  
+
   x = bot.x;
   y = bot.y;
-  
-  heading = (float)(rand()%360);
+
+  heading = (float)(rand() % 360);
 
   // using the last object id, we will just add 1
   // i and obj_id should match, but you never know
@@ -203,52 +190,47 @@ void Build_StartMsg(void)
   // This seems like a nice place to send off
   // the position message
   // once this message is sent, then the client will start playing
-  // and then waitin     
+  // and then waitin
 
-  msg_ptr = Convert_MsgList(); 
+  msg_ptr = Convert_MsgList();
 
   // loop through again for each client
   //
   // send the udp packets
-  res = i * sizeof(Msg);  
+  res = i * sizeof(Msg);
 
   current_ptr = client_list->front;
   // iterate through the list
-  while(current_ptr != NULL)
-    {
+  while (current_ptr != NULL)
+  {
+    sock = current_ptr->sock;
 
-      sock = current_ptr->sock;
+    sendto(sock, msg_ptr, res, 0, (struct sockaddr*)&current_ptr->client_addr,
+           sizeof(current_ptr->client_addr));
 
-      sendto(sock, msg_ptr, res, 0,
-	     (struct sockaddr *)&current_ptr->client_addr, 
-	     sizeof(current_ptr->client_addr));
+    current_ptr = current_ptr->next;
 
-      current_ptr = current_ptr->next;
-
-    } // en dof the while      
+  }  // en dof the while
 
   // setup where the server is in running mode
   Set_ServRunning();
 
-  // 
+  //
   // and finally set the number of network bots
   MAX_NETWORK_BOTS = i;
- 
+
   // now delete the list
   Delete_Msg_List();
 
-  
   // and also reset the message que
   Reset_MessageCount();
-  
+
   //
   // Create another message list for collecting normal operation
   // messages
   Create_Msg_List();
-  
-} // end of the function 
 
-
+}  // end of the function
 
 //
 // SNAPSHOT INTERFACE -------------
@@ -261,77 +243,67 @@ void Build_StartMsg(void)
 //
 // Shapshot_StartTime
 //
-void Snapshot_StartTime(void)
-{
-   gettimeofday(&SnapStartTime, NULL);
-  
-} // end of the function 
+void Snapshot_StartTime(void) { gettimeofday(&SnapStartTime, NULL); }  // end of the function
 
 //
 // Perform
 void mPerformSnapshot(void)
-{ 
-  void *msg_ptr = NULL;
+{
+  void* msg_ptr = NULL;
   int res = 0;
   int sock;
   int res_count = 0;
-  
 
   int h;
-  Client *current_ptr = NULL;
-
+  Client* current_ptr = NULL;
 
   float e_time;
   float r_time;
-  
+
   gettimeofday(&SnapEndTime, NULL);
 
   e_time = SNAP_ELAPSED;
   r_time = e_time * 1000;
 
-  if (r_time > SNAP_SHOT_T) {
-
+  if (r_time > SNAP_SHOT_T)
+  {
     gettimeofday(&SnapStartTime, NULL);
 
     // perform the snapshot
     //====================
 
     // send to every client the message queu
-    //msg_ptr = Convert_MsgList(); 
+    // msg_ptr = Convert_MsgList();
     msg_ptr = Finalize_Messages(&res_count);
 
     // loop through again for each client
     //
     // send the udp packets
-    res = res_count * sizeof(Msg);  
-    
+    res = res_count * sizeof(Msg);
+
     current_ptr = client_list->front;
     // iterate through the list
-    while(current_ptr != NULL)
-      {
-	
-	sock = current_ptr->sock;
-	
-	h = sendto(sock, msg_ptr, res, 0,
-	       (struct sockaddr *)&current_ptr->client_addr, 
-	       sizeof(current_ptr->client_addr));
+    while (current_ptr != NULL)
+    {
+      sock = current_ptr->sock;
 
-	current_ptr = current_ptr->next;
+      h = sendto(sock, msg_ptr, res, 0, (struct sockaddr*)&current_ptr->client_addr,
+                 sizeof(current_ptr->client_addr));
 
-      } // en dof the while      
+      current_ptr = current_ptr->next;
 
-    
+    }  // en dof the while
+
     // now delete the list and create another one
     Delete_Msg_List();
 
     Reset_MessageCount();
 
     Create_Msg_List();
-    
-  } // end of if
 
-} // end of the function 
+  }  // end of if
 
+}  // end of the function
 
 //=============
 
@@ -339,34 +311,30 @@ void mPerformSnapshot(void)
 // Server data
 // - this func is open to suggestion
 // this the id for each client
-int Set_ClientID(void)
-{
-  return client_list->objects;
-
-} // end of function
+int Set_ClientID(void) { return client_list->objects; }  // end of function
 
 //// CreateMsgList
 //
-ClientList *CreateClientList(void) {
-  
-  ClientList *result = malloc(sizeof(ClientList));
+ClientList* CreateClientList(void)
+{
+  ClientList* result = malloc(sizeof(ClientList));
 
   result->front = NULL;
   result->objects = 0;
 
   return result;
-  
-} // end of teh function 
+
+}  // end of teh function
 
 //
 // DestroyMsgList
-void DestroyClientList(ClientList *list)
+void DestroyClientList(ClientList* list)
 {
   Client *pos, *next;
   pos = list->front;
 
-  while(pos != NULL) {
-    
+  while (pos != NULL)
+  {
     next = pos->next;
 
     // delete msgobj
@@ -374,99 +342,96 @@ void DestroyClientList(ClientList *list)
 
     pos = next;
 
-  } // end of the while 
-  
+  }  // end of the while
+
   RELEASE_OBJECT(list);
 
-} // end of the function x
-
+}  // end of the function x
 
 //
 // Insert
 //
-void InsertClientFront(ClientList *list, Client *obj)
+void InsertClientFront(ClientList* list, Client* obj)
 {
-  Client *new_node = NULL;
-  
+  Client* new_node = NULL;
+
   new_node = obj;
 
   if (list->front == NULL)
-    {
-      list->front = new_node;
-    } else {
-      
-      new_node->next = list->front;
-      
-      list->front = new_node;
+  {
+    list->front = new_node;
+  }
+  else
+  {
+    new_node->next = list->front;
 
-    } // end of if-else
+    list->front = new_node;
+
+  }  // end of if-else
 
   list->objects++;
-  
-} // end of teh func
 
+}  // end of teh func
 
 // WRAPPER FUNCTIONS ===============================
 
 //
 // void Setup
 //
-void InsertClient(Client **ptr)
+void InsertClient(Client** ptr)
 {
   (*ptr) = CreateClientObj();
-  
+
   (*ptr)->list_id = client_list->objects;
 
   InsertClientFront(client_list, *ptr);
 
-} // end of the function 
+}  // end of the function
 
 //
 // Set_SockAddr
 // - uses memcpy
-void Set_SockAddr(Client *ptr, struct sockaddr_in *c_addr)
+void Set_SockAddr(Client* ptr, struct sockaddr_in* c_addr)
 {
-
   memcpy(&ptr->client_addr, c_addr, sizeof(struct sockaddr_in));
 
-} // end of func
+}  // end of func
 
 //
 // Parse_Msg
 // - the cool thing about your own api
 // is you make your own rules, here just look for ?
 //
-void Parse_Msg(char *msg, char *name, char *os, int *vers)
+void Parse_Msg(char* msg, char* name, char* os, int* vers)
 {
   int i;
   int j;
-  char *buf=NULL;
+  char* buf = NULL;
   char n[3][32];
- 
+
   j = 0;
   // search for ?
   // we probably should return an error code, maybe later
-  for (buf=msg,i=0; *buf != '\0';)
-    {      
+  for (buf = msg, i = 0; *buf != '\0';)
+  {
+    if (*buf == '?')
+    {
+      // finish this string
+      n[j][i] = '\0';
 
-      if (*buf == '?')
-	{
-	  // finish this string
-	  n[j][i] = '\0';
+      i = 0;
+      j++;
+      ((char*)buf)++;
+      continue;
+    }  // end of the if
 
-	  i = 0;
-	  j++;
-	  ((char *)buf)++;
-	  continue;
-	} // end of the if 
-      
-      n[j][i] = *buf;
+    n[j][i] = *buf;
 
-      i++;
-      ((char *)buf)++;
+    i++;
+    ((char*)buf)++;
 
-    } // end of the for 
-  
+  }  // end of the for
+
   // cap her!!!!
   n[j][i] = '\0';
 
@@ -476,16 +441,16 @@ void Parse_Msg(char *msg, char *name, char *os, int *vers)
 
   *vers = atoi(n[1]);
 
-} // end of the function
+}  // end of the function
 
 //
 // Client _Add Queue
 //
-void Client_AddQueue(int sock, struct sockaddr_in *c_addr, int object_id, char *msg)
+void Client_AddQueue(int sock, struct sockaddr_in* c_addr, int object_id, char* msg)
 {
-  char *buf = NULL;
+  char* buf = NULL;
 
-  Client *ptr = NULL;
+  Client* ptr = NULL;
 
   InsertClient(&ptr);
 
@@ -494,18 +459,17 @@ void Client_AddQueue(int sock, struct sockaddr_in *c_addr, int object_id, char *
 
   Set_SockAddr(ptr, c_addr);
 
-  buf = (char *)inet_ntoa(c_addr->sin_addr);
+  buf = (char*)inet_ntoa(c_addr->sin_addr);
   strcpy(ptr->ip_address, buf);
-  Parse_Msg(msg, ptr->user_name, ptr->os_str, (int *)&ptr->vers);
+  Parse_Msg(msg, ptr->user_name, ptr->os_str, (int*)&ptr->vers);
 
-} // end of the function 
-
+}  // end of the function
 
 //
 // CreateMsgObj
-Client *CreateClientObj(void)
+Client* CreateClientObj(void)
 {
-  Client *ptr = NULL;
+  Client* ptr = NULL;
 
   ptr = malloc(sizeof(Client));
 
@@ -514,20 +478,12 @@ Client *CreateClientObj(void)
   ptr->next = NULL;
 
   return ptr;
-} // end of teh function
-
+}  // end of teh function
 
 //
 // MORE WRAPPER FUNCTIONS --
 //
 
-void Create_Client_List(void)
-{
-  client_list = CreateClientList();
-} // end of thefunctino
+void Create_Client_List(void) { client_list = CreateClientList(); }  // end of thefunctino
 
-void Delete_Client_List(void)
-{
-  DestroyClientList(client_list);
-} // end of the functino 
-
+void Delete_Client_List(void) { DestroyClientList(client_list); }  // end of the functino

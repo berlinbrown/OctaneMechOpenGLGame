@@ -40,16 +40,16 @@
 
 // timeout at 5 seconds
 // 1 is really too long but we will be nice
-#define ALARM_TIMEOUT                      10                
+#define ALARM_TIMEOUT 10
 
 // you may need a lot, you may need a little
 #define MAX_MESSAGES 200
 
 #define RELEASE_OBJ(x) \
- if (x != NULL) \
-  free(x)       \
+  if (x != NULL) free(x)
 
-enum MsgType { 
+enum MsgType
+{
   MSG_MOVE = 0,
   MSG_CHAT = 1,
   MSG_LOGIN = 2,
@@ -57,7 +57,8 @@ enum MsgType {
   MSG_LOAD = 4
 };
 
-enum MoveType {
+enum MoveType
+{
   MOVE_FORWARD = 8,
   MOVE_BACKWARD = 16,
   MOVE_TURNLEFT = 32,
@@ -67,48 +68,48 @@ enum MoveType {
   MOVE_COLLIDE = 512,
 };
 
-// 
+//
 
-// have to be careful, dont want 
+// have to be careful, dont want
 // too many variables
 //
-// most messages will revolve around 
+// most messages will revolve around
 // movement
-typedef struct tagMsg {
-
+typedef struct tagMsg
+{
   int msg_type;
   int move_type;
-  int msg_id;          // the index
-  int object_id;       // the client connect id
+  int msg_id;     // the index
+  int object_id;  // the client connect id
 
-  // move 
+  // move
   float pos_x;
   float pos_y;
   float heading;
-  
+
   // misc messages
   char msg[42];
 
-  struct tagMsg *next;
+  struct tagMsg* next;
 } Msg, *MsgPtr;
 
 //
 // MsgList
-typedef struct tagMsgList {
-  Msg *front;
+typedef struct tagMsgList
+{
+  Msg* front;
   int objects;
 } MsgList;
 
-
-Msg *CreateMsgObj(void);
+Msg* CreateMsgObj(void);
 void Create_Msg_List(void);
 void Delete_Msg_List(void);
 void Print_Msg_List(void);
 
 void Msg_Test(void);
 void Msg_AddQueue(int msg_type, int move_type, int obj_id, float px, float py, float h);
-void *Convert_MsgList(void);
-Msg *GetMsgCluster(void);
+void* Convert_MsgList(void);
+Msg* GetMsgCluster(void);
 void Print_MsgTest(void);
 
 void Clear_FirstMsg(void);
@@ -127,8 +128,8 @@ int Get_MessageCount(void);
 
 void Set_MsgIndex(int val);
 void Set_MsgId(int val);
-Msg *Get_Messages(int *msg_count, int *msg_id);
-void *Finalize_Messages(int *res_count);
+Msg* Get_Messages(int* msg_count, int* msg_id);
+void* Finalize_Messages(int* res_count);
 void Reset_Message(void);
 
 #endif

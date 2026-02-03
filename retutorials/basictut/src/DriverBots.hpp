@@ -33,76 +33,73 @@
 
 //
 // Driver bots class, contains position and speeds
-class DriverBots {
-    public:
-        DriverBots();
-        
-        void wanderCommand();
-        
-    private:
-        float	x;
-        float	y;
-        float	linearv;	// speed
-        float	size[3];	// scale 
-        float	heading;	// direction
-        float	target_dir;	// target heading
-        float	color[3];
-        int		id;
-        int		alive;
-        int		numSteps;	// how many steps ant has moved
-        float	turning_speed;
+class DriverBots
+{
+ public:
+  DriverBots();
 
-        int		state;			// what is bot doing
-        int		straightSteps;	// steps before changing direction
-        float	food;
-        float	foodstore;
-        int		turn_rand;
-        int		turn_direction;	
+  void wanderCommand();
 
-        bool	go_home;
+ private:
+  float x;
+  float y;
+  float linearv;     // speed
+  float size[3];     // scale
+  float heading;     // direction
+  float target_dir;  // target heading
+  float color[3];
+  int id;
+  int alive;
+  int numSteps;  // how many steps ant has moved
+  float turning_speed;
 
-        int		gun_reset;		// delay befor firing
-        int		gun_index;
+  int state;          // what is bot doing
+  int straightSteps;  // steps before changing direction
+  float food;
+  float foodstore;
+  int turn_rand;
+  int turn_direction;
 
-        bool	move_back;		// for move and turn
+  bool go_home;
 
+  int gun_reset;  // delay befor firing
+  int gun_index;
 
-        // camera helper variables
-        float	look_x;
-        float	look_y;
-        float	look_h;		// look height, actually the y
-        float	cam_x;
-        float	cam_y;
-        int		view_mode;	// first or third person
+  bool move_back;  // for move and turn
 
-        float	score;
-        int		kills;
+  // camera helper variables
+  float look_x;
+  float look_y;
+  float look_h;  // look height, actually the y
+  float cam_x;
+  float cam_y;
+  int view_mode;  // first or third person
 
-        //
-        // the rectangle of the bot
-        // Note: you have to add
-        // the x,y to this value, but dont
-        // do to this variable, use temps
-        float	x_min;
-        float	x_max;
-        float	y_min;
-        float	y_max;
+  float score;
+  int kills;
 
-        //
-        // crosshair object 
-        //
-        int		crosshair_state;
-        float	crosshair_scale;
-        
-        int		last_command;
-        int		command;
-        float	attack_angle;
-        int		target_moves;
-        int		move_index;
-        int		enemy_id;    
+  //
+  // the rectangle of the bot
+  // Note: you have to add
+  // the x,y to this value, but dont
+  // do to this variable, use temps
+  float x_min;
+  float x_max;
+  float y_min;
+  float y_max;
 
+  //
+  // crosshair object
+  //
+  int crosshair_state;
+  float crosshair_scale;
+
+  int last_command;
+  int command;
+  float attack_angle;
+  int target_moves;
+  int move_index;
+  int enemy_id;
 };
-
-
 
 #endif

@@ -41,31 +41,30 @@
 // artificial control
 //
 
-#include <windows.h>
+#include "bot.h"
+
+#include <gl\gl.h>     // Header File For The OpenGL32 Library
+#include <gl\glaux.h>  // Header File For The Glaux Library
+#include <gl\glu.h>    // Header File For The GLu32 Library
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <math.h>
-
-#include <gl\gl.h>			// Header File For The OpenGL32 Library
-#include <gl\glu.h>			// Header File For The GLu32 Library
-#include <gl\glaux.h>		// Header File For The Glaux Library
+#include <windows.h>
 
 #include "camera.h"
-#include "bot.h"
-#include "objects.h"
+#include "collision.h"
 #include "gldrawlib.h"
-#include "world.h"
 #include "globals.h"
+#include "objects.h"
 #include "octree.h"
 #include "plist.h"
-#include "collision.h"
+#include "world.h"
 
 void ProcessBotEvent(DriverBotPtr bot);
 
-static DriverBotPtr	*bot_cluster;
+static DriverBotPtr* bot_cluster;
 
-PtrList *trail_stack;
+PtrList* trail_stack;
 
 //
 // Super_LoadBots
@@ -74,22 +73,17 @@ PtrList *trail_stack;
 //
 void Super_LoadBots(void)
 {
-	bot_cluster = (DriverBotPtr *)malloc(MAX_BOTS *
-		sizeof(DriverBotPtr));
-} // end of the function
+  bot_cluster = (DriverBotPtr*)malloc(MAX_BOTS * sizeof(DriverBotPtr));
+}  // end of the function
 
 //
 // Super_KillBots(
 //
-void Super_KillBots(void)
-{
-	RELEASE_OBJECT(bot_cluster);
-
-} // end of the function 
+void Super_KillBots(void) { RELEASE_OBJECT(bot_cluster); }  // end of the function
 
 //
 // Create So many ants
-// - you can use a constant or 
+// - you can use a constant or
 // some form of percentage based on the total
 // ants that are on the grid
 // if you use a food constant, the ants will
@@ -99,57 +93,56 @@ void Super_KillBots(void)
 //
 void CreateAnts(int food)
 {
-	int		i = 0;
-	float	tmp=0;
-	int		food_tol = 0;
-	float	perct=0;
+  int i = 0;
+  float tmp = 0;
+  int food_tol = 0;
+  float perct = 0;
 
-#if	USE_FOOD_RESPAWN
-	food_tol = FOOD_RESPAWN
+#if USE_FOOD_RESPAWN
+  food_tol = FOOD_RESPAWN
 #else
-	perct = 0.05f * (float)GetAnts();
+  perct = 0.05f * (float)GetAnts();
 
-	if (perct > 1) {
-		food_tol = (int)perct * INITIAL_ANT_FOOD;
-	} else {
-		return;		// cant create any ants at the time
+  if (perct > 1)
+  {
+    food_tol = (int)perct * INITIAL_ANT_FOOD;
+  }
+  else
+  {
+    return;  // cant create any ants at the time
 
-	} // end of if-else
-		
+  }  // end of if-else
+
 #endif
 
-	if (food >= food_tol)
-	{
+      if (food >= food_tol)
+  {
+    // generate more ants
+    // depending how many ants have died
+    for (i = 0; i < MAX_BOTS; i++)
+    {
+      // look for dead slot
+      if (bot_cluster[i]->alive == DEAD_STATE)
+      {
+        // DestroyBot(bot_cluster[i]);
+        // bot_cluster[i] = CreateBot(i);
+        ResetBot(bot_cluster[i]);
 
-		// generate more ants
-		// depending how many ants have died
-		for (i = 0; i < MAX_BOTS; i++)
-		{
-			// look for dead slot
-			if (bot_cluster[i]->alive == DEAD_STATE)
-			{
+        GetAntFood(bot_cluster[i]);
 
-				//DestroyBot(bot_cluster[i]);
-				//bot_cluster[i] = CreateBot(i);
-				ResetBot(bot_cluster[i]);
+        AddAnts(1);
 
-				GetAntFood(bot_cluster[i]);
+        // dont want to over do it
+        tmp += INITIAL_ANT_FOOD;
+        if (tmp >= food_tol) break;
 
-				AddAnts(1);
+      }  // end of the if
 
-				// dont want to over do it
-				tmp += INITIAL_ANT_FOOD;
-				if (tmp >= food_tol)
-					break;
+    }  // end of the for
 
-			} // end of the if 
+  }  // end of the if
 
-		} // end of the for 
-
-	} // end of the if
-
-} // end of the functino 
-
+}  // end of the functino
 
 //
 // Find Angle
@@ -158,65 +151,58 @@ void CreateAnts(int food)
 //
 float FindAngle(float dir, float x1, float y1, float x2, float y2)
 {
+  float dx;
+  float dy;
+  float dist;
+  float angle;
 
-	float	dx;
-	float	dy;
-	float	dist;
-	float	angle;
+  if (x1 < x2)
+  {
+    dx = x2 - x1;
+    dy = (-y2) - (-y1);  // reverse direction of y
 
+    dist = (float)sqrt((dx * dx) + (dy * dy));
+    angle = (float)asin(dy / dist);
 
-	if (x1 < x2) {
+    angle = RAD_TO_DEG * angle;
 
-		dx = x2 - x1;
-		dy = (-y2) - (-y1);	// reverse direction of y
+    if (angle < 0) angle += 360.0f;
 
-		dist = (float)sqrt((dx * dx)+(dy*dy));
-		angle = (float)asin(dy / dist);
+    // convert to GL cartesian plane, 0 = 90
+    // subtract 90 degrees
+    angle -= 90.0f;
+    if (angle < 0) angle += 360.0f;
 
-		angle = RAD_TO_DEG * angle;
+    return angle;
+  }
+  else
+  {
+    dx = x2 - x1;
+    dy = y2 - y1;  // reverse direction of y
 
-		if (angle < 0)
-			angle += 360.0f;
+    dist = (float)sqrt((dx * dx) + (dy * dy));
+    angle = (float)asin(dy / dist);
 
-		// convert to GL cartesian plane, 0 = 90
-		// subtract 90 degrees
-		angle -= 90.0f;
-		if (angle < 0)
-			angle += 360.0f;
+    angle = RAD_TO_DEG * angle;
 
-		return angle;
+    if (angle < 0) angle += 360.0f;
 
-	} else {
+    // convert to GL cartesian plane, 0 = 90
+    // subtract 90 degrees
+    angle -= 90.0f;
+    if (angle < 0) angle += 360.0f;
 
-		dx = x2 - x1;
-		dy = y2 - y1;	// reverse direction of y
+    // step 3: add 180 because bot has to move toward nest
+    angle += 180.0f;
 
-		dist = (float)sqrt((dx * dx)+(dy*dy));
-		angle = (float)asin(dy / dist);
+    if (angle >= 360) angle -= 360;
 
-		angle = RAD_TO_DEG * angle;
+    return angle;
 
-		if (angle < 0)
-			angle += 360.0f;
+  }  // end if
 
-		// convert to GL cartesian plane, 0 = 90
-		// subtract 90 degrees
-		angle -= 90.0f;
-		if (angle < 0)
-			angle += 360.0f;
-
-		// step 3: add 180 because bot has to move toward nest
-		angle += 180.0f;
-
-		if (angle >= 360)
-			angle -= 360;
-
-		return angle;
-
-	} // end if 
-
-	return 0;
-} // end of the function 
+  return 0;
+}  // end of the function
 
 //
 // Method to draw food on the ant
@@ -224,24 +210,22 @@ float FindAngle(float dir, float x1, float y1, float x2, float y2)
 //
 void RenderFood(DriverBotPtr bot)
 {
+  if (bot->foodstore > 0)
+  {
+    BEGIN_BOT;
 
-	if (bot->foodstore > 0)
-	{
+    // place over the ant --
+    glTranslatef(bot->x, 0.15f, bot->y);
 
-		BEGIN_BOT;
+    glScalef(0.1f, 0.1f, 0.1f);
 
-			// place over the ant --
-			glTranslatef(bot->x, 0.15f, bot->y);
+    driver_objects[NORM_CUBE_OBJECT]->render();
 
-			glScalef(0.1f, 0.1f, 0.1f);
+    END_BOT;
 
-			driver_objects[NORM_CUBE_OBJECT]->render();
+  }  // end of the if
 
-		END_BOT;
-
-	} // end of the if 
-
-} // end of the function 
+}  // end of the function
 
 //
 // GetAntFood
@@ -249,74 +233,72 @@ void RenderFood(DriverBotPtr bot)
 //
 void GetAntFood(DriverBotPtr bot)
 {
+  float food;
+  float tmp;
 
-	float food;
-	float tmp;
-	
-	// make sure nest's food is loaded
-	bot->food = 0;
-	
-	food = INITIAL_ANT_FOOD;
+  // make sure nest's food is loaded
+  bot->food = 0;
 
-	tmp = nest.objects[0]->food - food;
-	if (tmp <= 0)
-	{
-		// find how much food nest can give
-		food = nest.objects[0]->food;
+  food = INITIAL_ANT_FOOD;
 
-		if (food <= 0)
-		{
-			nest.objects[0]->food;
-			bot->food = 0;
+  tmp = nest.objects[0]->food - food;
+  if (tmp <= 0)
+  {
+    // find how much food nest can give
+    food = nest.objects[0]->food;
 
-			return;
-		} // end of if 
+    if (food <= 0)
+    {
+      nest.objects[0]->food;
+      bot->food = 0;
 
-	} // end of the if 
+      return;
+    }  // end of if
 
-	bot->food += food;
-	
-	// detract from nests pile
-	nest.objects[0]->food -= food;
+  }  // end of the if
 
-} // end of the function 
+  bot->food += food;
 
+  // detract from nests pile
+  nest.objects[0]->food -= food;
+
+}  // end of the function
 
 //
-// Once the ant can carry food he should be able 
+// Once the ant can carry food he should be able
 // to eat it on his way back to the nest
 //
 void EatFood(DriverBotPtr bot, float food_rate)
 {
-	float food_amt;
+  float food_amt;
 
-	if (bot->foodstore > 0)
-	{
-		food_amt = food_rate;
-		
-		if ((bot->foodstore - food_amt) < 0)
-		{
-			// try to found how much food is left
-			food_amt = bot->foodstore;
-			
-			bot->foodstore = 0;	// thats all
+  if (bot->foodstore > 0)
+  {
+    food_amt = food_rate;
 
-			// add the foodstore to the edible food
-			bot->food += food_amt;
+    if ((bot->foodstore - food_amt) < 0)
+    {
+      // try to found how much food is left
+      food_amt = bot->foodstore;
 
-			return;
+      bot->foodstore = 0;  // thats all
 
-		} // end of the if
+      // add the foodstore to the edible food
+      bot->food += food_amt;
 
-		// add the food store to edible food
-		bot->foodstore -= food_amt;
-		bot->food += food_amt;
+      return;
 
-	} // end of the if 
-	else
-		bot->foodstore = 0;
+    }  // end of the if
 
-} // end of the function 
+    // add the food store to edible food
+    bot->foodstore -= food_amt;
+    bot->food += food_amt;
+
+  }  // end of the if
+  else
+    bot->foodstore = 0;
+
+}  // end of the function
 
 //
 // Metabolize
@@ -324,20 +306,20 @@ void EatFood(DriverBotPtr bot, float food_rate)
 //
 void Metabolize(DriverBotPtr bot, float food_rate)
 {
-	// no point subtracting when dead
-	if (bot->alive == DEAD_STATE)
-		return;
+  // no point subtracting when dead
+  if (bot->alive == DEAD_STATE) return;
 
-	bot->food -= food_rate;
+  bot->food -= food_rate;
 
-	// you are dead
-	if (bot->food <= 0) {
-		bot->alive = DEAD_STATE;
+  // you are dead
+  if (bot->food <= 0)
+  {
+    bot->alive = DEAD_STATE;
 
-		SubtractAnts(1);
-	} // end of the if
+    SubtractAnts(1);
+  }  // end of the if
 
-} // end of the function 
+}  // end of the function
 
 //
 // I really like the idea of a simple state machine for
@@ -352,199 +334,176 @@ void Metabolize(DriverBotPtr bot, float food_rate)
 //
 void ChangeDirection(DriverBotPtr bot)
 {
-	if (bot->go_home == true) {
-		bot->turn_rand = 3;
+  if (bot->go_home == true)
+  {
+    bot->turn_rand = 3;
 
-		bot->straightSteps	= (rand()%__go_home_steps_2) 
-			+ MIN_STRAIGHT_STEPS_2;
-	}
-	else {
-		
-		bot->turn_rand = 30;
+    bot->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
+  }
+  else
+  {
+    bot->turn_rand = 30;
 
-		// remove if you dont like calling rand
-		bot->straightSteps	= (rand()%__straight_steps) 
-		+ MIN_STRAIGHT_STEPS;
-	} // end of the if 
+    // remove if you dont like calling rand
+    bot->straightSteps = (rand() % __straight_steps) + MIN_STRAIGHT_STEPS;
+  }  // end of the if
 
+  bot->target_dir = bot->heading;
 
-	bot->target_dir = bot->heading;
+  // pick a random direction
+  bot->target_dir += rand() % bot->turn_rand;  // 30 degrees ok?
 
-	// pick a random direction
-	bot->target_dir += rand()%bot->turn_rand;		// 30 degrees ok?
+  if (bot->target_dir >= 360) bot->target_dir -= 360;
 
-	if (bot->target_dir >= 360)
-		  bot->target_dir -= 360;
+  bot->state = TURN_STATE;
 
-	bot->state = TURN_STATE;
-
-} // end of the function 
+}  // end of the function
 
 //
 // Turn
 //
 void TurnBot(DriverBotPtr bot)
 {
+  float tol;
+  float tmp;
+  float target_tmp;
 
-	float tol;
-	float tmp;
-	float target_tmp;
+  // hmm, turning speed //
+  tol = bot->turning_speed + (2.0f * bot->turning_speed);
 
-	// hmm, turning speed //
-	tol = bot->turning_speed+(2.0f*bot->turning_speed);
+  bot->heading += bot->turning_speed;
 
-	bot->heading += bot->turning_speed;
-	
-	if (bot->heading >= 360)
-		  bot->heading -= 360;
+  if (bot->heading >= 360) bot->heading -= 360;
 
-	tmp = ABS(bot->heading);
-	target_tmp = ABS(bot->target_dir);
+  tmp = ABS(bot->heading);
+  target_tmp = ABS(bot->target_dir);
 
-	// reached target direction
-	if ( (tmp > (target_tmp - tol)) && (tmp < (target_tmp + tol)) )
-	{
-		// change state
-		bot->state = MOVE_STATE;
-		
-		return;
-	} // end of the if 
+  // reached target direction
+  if ((tmp > (target_tmp - tol)) && (tmp < (target_tmp + tol)))
+  {
+    // change state
+    bot->state = MOVE_STATE;
 
-	bot->state = TURN_STATE;
+    return;
+  }  // end of the if
 
-	return;
-		
+  bot->state = TURN_STATE;
 
-} // end of the function
+  return;
 
-
+}  // end of the function
 
 //
 // MoveBot
 //
 void MoveBot(DriverBotPtr bot)
 {
+  int id = 0;
+  float* last_heading = NULL;
+  float tmp_heading = 0.0f;
 
-	int id=0;
-	float *last_heading = NULL;
-	float tmp_heading = 0.0f;
+  CollisionPtr col_ptr;
 
-	CollisionPtr col_ptr;
+  // if we have our max food move on
+  if (bot->foodstore <= MAX_FOOD_RATE)
+  {
+    id = BruteCheckFood(bot);
 
+    // check if we have found food
+    if (id > 0)
+    {
+      DropFood(bot, (id - 1), INIT_FOOD_RATE);
 
-	// if we have our max food move on
-	if (bot->foodstore <= MAX_FOOD_RATE)
-	{
+      // return home with the food
+      bot->go_home = true;
+      bot->target_dir = FindAngle(bot->heading, bot->x, bot->y, 0.0f, 0.0f);
 
-		id = BruteCheckFood(bot);
+      bot->state = TURN_STATE;
 
-		// check if we have found food
-		if (id > 0)
-		{
+      return;
+    }  // end of the if
 
-			DropFood(bot, (id-1), INIT_FOOD_RATE);
+  }  // end of the if
 
-			// return home with the food
-			bot->go_home = true;
-			bot->target_dir = 
-				FindAngle(bot->heading, bot->x, bot->y, 0.0f, 0.0f);
+  // check if we are ok to deposit food
+  if (bot->foodstore > 0)
+  {
+    // check if in the nest area
+    if ((bot->x > -GET_NEST_HWID) && (bot->x < GET_NEST_HWID) && (bot->y > -GET_NEST_HWID) &&
+        (bot->y < GET_NEST_HWID))
+    {
+      NEST_FOOD_OBJECT += bot->foodstore;
+      bot->foodstore = 0;
+      bot->go_home = false;
 
-			bot->state = TURN_STATE;
+      // Since the bot found food
+      // add the direction so that other bots
+      // can use it
+      //
+      // Note: test code, may not use in final
+      // implementation
 
-			return;
-		} // end of the if
+      // get the new heading first
+      last_heading = (float*)POP_STACK(trail_stack);
 
-	} // end of the if 
+      if (trail_stack->items < MAX_TRAIL_STACK) PUSH_STACK(trail_stack, (float*)&bot->heading);
 
-	// check if we are ok to deposit food
-	if (bot->foodstore > 0)
-	{
-		// check if in the nest area
-		if ((bot->x > -GET_NEST_HWID) &&
-			(bot->x < GET_NEST_HWID) &&
-			(bot->y > -GET_NEST_HWID) &&
-			(bot->y < GET_NEST_HWID))
-		{
-			 NEST_FOOD_OBJECT += bot->foodstore;
-			 bot->foodstore = 0;
-			 bot->go_home = false;
-
-			 // Since the bot found food
-			 // add the direction so that other bots
-			 // can use it
-			 //
-			 // Note: test code, may not use in final
-			 // implementation
-			 
-			 // get the new heading first
-			 last_heading = (float *)POP_STACK(trail_stack);
-
-			 if (trail_stack->items < MAX_TRAIL_STACK)
-				PUSH_STACK(trail_stack, (float *)&bot->heading);
-
-
-			// Once we have enough food
-			// create a new ant
-			CreateAnts(NEST_FOOD_OBJECT);
+      // Once we have enough food
+      // create a new ant
+      CreateAnts(NEST_FOOD_OBJECT);
 
 #if HUD_NEST_FOOD
-			 SetNestFood(NEST_FOOD_OBJECT);
+      SetNestFood(NEST_FOOD_OBJECT);
 #endif
 
+    }  // end of the if
 
-		} // end of the if 
+  }  // end of the if
 
-	} // end of the if 
+  bot->numSteps++;
 
-	bot->numSteps++;
+  // when to change direction
+  if ((bot->numSteps % bot->straightSteps) == 0)
+  {
+    bot->state = CHANGE_DIR_STATE;
 
-	// when to change direction
-	if ((bot->numSteps % bot->straightSteps) == 0)
-	{
+    return;  // process state else where
 
-		bot->state = CHANGE_DIR_STATE;
+  }  // end of the if
 
-		return;			// process state else where
+  // Also We need to drop pheromones on the way home
+  // Note: pretty slow algo
+  if (bot->go_home)
+  {
+    if ((bot->numSteps % PHEROMONE_DROP) == 0)
+    {
+      ActivatePheromone(bot->x, bot->y, bot->heading);
+    }  // end of the if
 
-	} // end of the if 
+  }  // end of the if
 
-	// Also We need to drop pheromones on the way home
-	// Note: pretty slow algo
-	if (bot->go_home)
-	{
-		if ((bot->numSteps % PHEROMONE_DROP) == 0)
-		{
-			ActivatePheromone(bot->x, bot->y, bot->heading);
-		} // end of the if 
+  // If we have a new heading change direction
+  if (last_heading)
+  {
+    tmp_heading = *last_heading;
 
-	} // end of the if
+    tmp_heading += 180.0f;
+    if (tmp_heading > 360.0f) tmp_heading -= 360.0f;
 
-	
-		// If we have a new heading change direction
-		if (last_heading)
-		{
-				 tmp_heading = *last_heading;
+    // change direction
+    bot->target_dir = tmp_heading;
+    bot->turn_rand = 15;
 
-				 tmp_heading += 180.0f;
-				 if (tmp_heading > 360.0f)
-					 tmp_heading -= 360.0f;
+    bot->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
 
-				 // change direction
-				 bot->target_dir = tmp_heading;
-				 bot->turn_rand = 15;
+    bot->state = TURN_STATE;
 
-				 bot->straightSteps	= (rand()%__go_home_steps_2) 
-					+ MIN_STRAIGHT_STEPS_2;
+    return;
 
-				 bot->state = TURN_STATE;
+  }  // end of the if
 
-				 return;
-
-		} // end of the if 
-
-
-	bot->x -= (float)sin(bot->heading*PI_180) * bot->linearv;
-	bot->y -= (float)cos(bot->heading*PI_180) * bot->linearv;
+  bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
+  bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
 
 #if 0
 	// perform collision test using driver
@@ -566,51 +525,50 @@ void MoveBot(DriverBotPtr bot)
 			return;
 		} // end of the if
 
-	} // end of the if 
+	} // end of the if
 #endif
 
-	bot->state = MOVE_STATE;
+  bot->state = MOVE_STATE;
 
-	return;
+  return;
 
-} // end of the function 
+}  // end of the function
 
 //
 // ProcessBotEvent
-// - to keep everything in sync, 
+// - to keep everything in sync,
 // process all bot actions in one fell swoop
 //
 void ProcessBotEvent(DriverBotPtr bot)
 {
-	// Eat food first then metabolize
-	EatFood(bot, MOVE_FOOD_RATE);
+  // Eat food first then metabolize
+  EatFood(bot, MOVE_FOOD_RATE);
 
-	// burn some food
-	Metabolize(bot, FOOD_RATE);
+  // burn some food
+  Metabolize(bot, FOOD_RATE);
 
-	// bot is dead cant do too much
-	if (bot->alive == DEAD_STATE)
-		return;
+  // bot is dead cant do too much
+  if (bot->alive == DEAD_STATE) return;
 
-	switch(bot->state)
-	{
-		case MOVE_STATE:
-			MoveBot(bot);
-		break;
+  switch (bot->state)
+  {
+    case MOVE_STATE:
+      MoveBot(bot);
+      break;
 
-		case CHANGE_DIR_STATE:
-			 ChangeDirection(bot);
-		break;
+    case CHANGE_DIR_STATE:
+      ChangeDirection(bot);
+      break;
 
-		case TURN_STATE:
-			TurnBot(bot);
-		break;
+    case TURN_STATE:
+      TurnBot(bot);
+      break;
 
-		default:break;
-	}; // end switch
+    default:
+      break;
+  };  // end switch
 
-
-} // end of the function 
+}  // end of the function
 
 //
 // LoadBotParms
@@ -618,60 +576,56 @@ void ProcessBotEvent(DriverBotPtr bot)
 //
 void LoadBotParms(DriverBotPtr bot_ptr)
 {
-		// I like to be extra careful
-	ZeroMemory((DriverBotPtr)bot_ptr, 
-			sizeof(DriverBots));
+  // I like to be extra careful
+  ZeroMemory((DriverBotPtr)bot_ptr, sizeof(DriverBots));
 
-	bot_ptr->heading = (float)(rand()%360);
-	bot_ptr->target_dir = bot_ptr->heading;
+  bot_ptr->heading = (float)(rand() % 360);
+  bot_ptr->target_dir = bot_ptr->heading;
 
-	bot_ptr->linearv=BOT_SPEED;
+  bot_ptr->linearv = BOT_SPEED;
 
-	bot_ptr->size[0]=0.2f;	// scale 
-	bot_ptr->size[1]=0.2f;
-	bot_ptr->size[2]=0.2f;
+  bot_ptr->size[0] = 0.2f;  // scale
+  bot_ptr->size[1] = 0.2f;
+  bot_ptr->size[2] = 0.2f;
 
-	bot_ptr->color[0]=0.8f;
-	bot_ptr->color[1]=((float)(rand()%1000)/2000.0f)+0.2f;
-	bot_ptr->color[2]=((float)(rand()%1000)/2000.0f)+0.2f;
+  bot_ptr->color[0] = 0.8f;
+  bot_ptr->color[1] = ((float)(rand() % 1000) / 2000.0f) + 0.2f;
+  bot_ptr->color[2] = ((float)(rand() % 1000) / 2000.0f) + 0.2f;
 
+  bot_ptr->turning_speed = ((float)(rand() % 1000) / 2000.0f) + MIN_TURN_SPEED;
 
-	bot_ptr->turning_speed = ((float)(rand()%1000)/2000.0f)
-			+MIN_TURN_SPEED;
+  bot_ptr->numSteps = 0;
+  bot_ptr->straightSteps = (rand() % __straight_steps) + MIN_STRAIGHT_STEPS;
 
-	bot_ptr->numSteps	= 0;
-	bot_ptr->straightSteps	= (rand()%__straight_steps) 
-		+ MIN_STRAIGHT_STEPS;
+  bot_ptr->state = MOVE_STATE;
+  bot_ptr->alive = ALIVE_STATE;
 
-	bot_ptr->state = MOVE_STATE;
-	bot_ptr->alive = ALIVE_STATE;
+  // for simplicity, we assume nest is at the center
+  // start off the bots at that location
+  bot_ptr->x = ((rand() % 1000) / 200.0f) - 2.5f;
+  bot_ptr->y = ((rand() % 1000) / 200.0f) - 2.5f;
 
-	// for simplicity, we assume nest is at the center
-	// start off the bots at that location
-	bot_ptr->x	= ((rand()%1000)/200.0f)-2.5f;
-	bot_ptr->y	= ((rand()%1000)/200.0f)-2.5f;
+  // food bot is holding
+  bot_ptr->foodstore = 0;
 
-	// food bot is holding
-	bot_ptr->foodstore = 0;
+  bot_ptr->turn_rand = 30;
 
-	bot_ptr->turn_rand= 30;
+  bot_ptr->go_home = false;
 
-	bot_ptr->go_home = false;
+  bot_ptr->score = 0.0f;
 
-	bot_ptr->score = 0.0f;
+  bot_ptr->kills = 0;
 
-	bot_ptr->kills = 0;
+  //
+  // Crosshair object
+  //
+  // the crosshairs expand from 1.0f
+  // to some value when alive
+  //
+  bot_ptr->crosshair_state = DEAD_STATE;
+  bot_ptr->crosshair_scale = 1.0f;
 
-	//
-	// Crosshair object
-	//
-	// the crosshairs expand from 1.0f 
-	// to some value when alive
-	//
-	bot_ptr->crosshair_state = DEAD_STATE;
-	bot_ptr->crosshair_scale = 1.0f;
-	
-} // end of the function 
+}  // end of the function
 
 //
 // CreateBot
@@ -679,17 +633,17 @@ void LoadBotParms(DriverBotPtr bot_ptr)
 //
 DriverBotPtr CreateBot(int bot_id)
 {
-	DriverBotPtr	bot_ptr;
+  DriverBotPtr bot_ptr;
 
-	bot_ptr = (DriverBotPtr)malloc(sizeof(DriverBots));
+  bot_ptr = (DriverBotPtr)malloc(sizeof(DriverBots));
 
-	LoadBotParms(bot_ptr);
+  LoadBotParms(bot_ptr);
 
-	bot_ptr->id=bot_id;
+  bot_ptr->id = bot_id;
 
-	return bot_ptr;
+  return bot_ptr;
 
-} // end of the function
+}  // end of the function
 
 //
 // ResetBot
@@ -700,111 +654,95 @@ DriverBotPtr CreateBot(int bot_id)
 //
 void ResetBot(DriverBotPtr bot_ptr)
 {
+  float* last_heading = NULL;
+  float tmp_heading = 0;
 
-	float *last_heading = NULL;
-	float tmp_heading = 0;
+  int bot_id = bot_ptr->id;
 
-	int bot_id = bot_ptr->id;
+  // I like to be extra careful
+  ZeroMemory((DriverBotPtr)bot_ptr, sizeof(DriverBots));
 
-	// I like to be extra careful
-	ZeroMemory((DriverBotPtr)bot_ptr, 
-			sizeof(DriverBots));
-	
-	LoadBotParms(bot_ptr);
+  LoadBotParms(bot_ptr);
 
-	bot_ptr->id=bot_id;
+  bot_ptr->id = bot_id;
 
+  // automatically generate a new heading
+  last_heading = (float*)POP_STACK(trail_stack);
 
-	// automatically generate a new heading
-	last_heading = (float *)POP_STACK(trail_stack);
+  // If we have a new heading change direction
+  if (last_heading)
+  {
+    tmp_heading = *last_heading;
 
-	// If we have a new heading change direction
-	if (last_heading)
-	{
-		tmp_heading = *last_heading;
+    tmp_heading += 180.0f;
+    if (tmp_heading > 360.0f) tmp_heading -= 360.0f;
 
-		tmp_heading += 180.0f;
-		if (tmp_heading > 360.0f)
-			tmp_heading -= 360.0f;
+    // change direction
+    bot_ptr->target_dir = tmp_heading;
+    bot_ptr->heading = tmp_heading;
+    bot_ptr->turn_rand = 15;
 
-		// change direction
-		bot_ptr->target_dir = tmp_heading;
-		bot_ptr->heading = tmp_heading;
-		bot_ptr->turn_rand = 15;
+    bot_ptr->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
 
-		bot_ptr->straightSteps	= (rand()%__go_home_steps_2) 
-					+ MIN_STRAIGHT_STEPS_2;
+  }  // end of the if
 
-
-	} // end of the if 
-	
-
-} // end of the function
-
+}  // end of the function
 
 //
 // DestroyBot
 //
-void DestroyBot(DriverBotPtr b)
-{
-	RELEASE_OBJECT(b);
-
-} // end of the functino 
+void DestroyBot(DriverBotPtr b) { RELEASE_OBJECT(b); }  // end of the functino
 
 //
 // RenderBot
 //
 void RenderBot(DriverBotPtr boid)
 {
+  if (boid->alive == ALIVE_STATE)
+  {
+    // If there is food, draw that also
+    RenderFood(boid);
 
-	if (boid->alive == ALIVE_STATE)
-	{
+    BEGIN_BOT;
 
-	// If there is food, draw that also
-	RenderFood(boid);
+    // Translate then rotate
+    glTranslatef(boid->x, 0, boid->y);
 
+    // rotate based on the ship struct
+    glRotatef(boid->heading, 0.0f, 1.0f, 0.0f);
 
-	BEGIN_BOT;
- 
-		// Translate then rotate
-		glTranslatef(boid->x,0,boid->y);
+    // Scale accordingly
+    glScalef(boid->size[0], boid->size[1], boid->size[2]);
 
-		// rotate based on the ship struct
-		glRotatef(boid->heading, 0.0f, 1.0f, 0.0f);
+    // This may or may not change the color
+    glColor3f(boid->color[0], boid->color[1], boid->color[2]);
 
-		// Scale accordingly
-		glScalef(boid->size[0], boid->size[1], boid->size[2]);
+    // draw the object to screen
+    driver_objects[ANT_OBJECT]->render();
 
-		// This may or may not change the color
-		glColor3f(boid->color[0], boid->color[1], boid->color[2]);
+    END_BOT;
 
-		// draw the object to screen
-		driver_objects[ANT_OBJECT]->render();
+  }  // end of the if
 
-	END_BOT;
-
-	} // end of the if 
-
-} // end of the function 
+}  // end of the function
 
 //
 // GenerateBots
 //
 void GenerateBots(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_BOTS; index++)
-	{
-		bot_cluster[index] = CreateBot(index);
+  for (index = 0; index < MAX_BOTS; index++)
+  {
+    bot_cluster[index] = CreateBot(index);
 
-	} // end of the for 
+  }  // end of the for
 
-	// create a stack for adding pheromone trails
-	trail_stack = CREATE_STACK;
+  // create a stack for adding pheromone trails
+  trail_stack = CREATE_STACK;
 
-} // end of the function
-
+}  // end of the function
 
 //
 // InitFood
@@ -812,46 +750,46 @@ void GenerateBots(void)
 //
 void InitFood(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_BOTS; index++)
-	{
-			GetAntFood(bot_cluster[index]);
+  for (index = 0; index < MAX_BOTS; index++)
+  {
+    GetAntFood(bot_cluster[index]);
 
-	} // end of the for 
+  }  // end of the for
 
-} // end of the function 
+}  // end of the function
 
 //
 // ShutdownBots
 //
 void ShutdownBots(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_BOTS; index++)
-	{
-		DestroyBot(bot_cluster[index]);
-	} // end of the for 
+  for (index = 0; index < MAX_BOTS; index++)
+  {
+    DestroyBot(bot_cluster[index]);
+  }  // end of the for
 
-	// destroy the pheromone trail stack
-	DESTROY_STACK(trail_stack);
+  // destroy the pheromone trail stack
+  DESTROY_STACK(trail_stack);
 
-} // end of the function 
+}  // end of the function
 
 //
 // Draw Bots
 //
 void DrawBots(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < MAX_BOTS; index++)
-	{
-		ProcessBotEvent(bot_cluster[index]);
+  for (index = 0; index < MAX_BOTS; index++)
+  {
+    ProcessBotEvent(bot_cluster[index]);
 
-		RenderBot(bot_cluster[index]);
+    RenderBot(bot_cluster[index]);
 
-	} // end of the for 
+  }  // end of the for
 
-} // end of the function 
+}  // end of the function

@@ -45,14 +45,13 @@
 // artificial control
 //
 
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
 
 #undef CURRENT_PTR
 #define CURRENT_PTR StaticBotPtr
@@ -85,20 +84,19 @@ GLfloat zmat_emission[] = {0.3f, 0.3f, 0.2f, 0.0f};
 // call 1. nest.generate
 // call 2. nest.drawall
 // call 3. nest.shutdown
-DriverSentinel CURRENT_BOT =
-	{
+DriverSentinel CURRENT_BOT = {
 
-		CreateSentinel,	 // create
-		DestroySentinel, // destroy
-		RenderSentinel,	 // render
-		ProcessNest,	 // process
+    CreateSentinel,   // create
+    DestroySentinel,  // destroy
+    RenderSentinel,   // render
+    ProcessNest,      // process
 
-		GenerateNests, // generate
-		ShutdownNests, // shutdown
-		DrawNests,	   // drawll
+    GenerateNests,  // generate
+    ShutdownNests,  // shutdown
+    DrawNests,      // drawll
 
-		NULL, // ptr
-		0	  // max_items
+    NULL,  // ptr
+    0      // max_items
 };
 
 //
@@ -110,147 +108,131 @@ DriverSentinel CURRENT_BOT =
 //
 static void GenerateNests(void)
 {
-	int index = 0;
+  int index = 0;
 
-	CURRENT_BOT.max_items = MAX_NESTS;
+  CURRENT_BOT.max_items = MAX_NESTS;
 
-	// create the array of pointers
-	CURRENT_BOT.objects = (CURRENT_OBJECT **)malloc(
-		sizeof(CURRENT_OBJECT *));
+  // create the array of pointers
+  CURRENT_BOT.objects = (CURRENT_OBJECT**)malloc(sizeof(CURRENT_OBJECT*));
 
-	for (index = 0; index < CURRENT_BOT.max_items; index++)
-	{
-		// this bordering on insane
-		// allocate an array of bot pointers, duh for nest
-		CURRENT_BOT.objects[index] = CURRENT_BOT.create(index);
+  for (index = 0; index < CURRENT_BOT.max_items; index++)
+  {
+    // this bordering on insane
+    // allocate an array of bot pointers, duh for nest
+    CURRENT_BOT.objects[index] = CURRENT_BOT.create(index);
 
-	} // end of the for
+  }  // end of the for
 
-	// Since I know first hand that there
-	// is only one nest, create initial food offering
-	// based on number of ants
-	nest.objects[0]->food = INITIAL_NEST_FOOD;
-
-} 
+  // Since I know first hand that there
+  // is only one nest, create initial food offering
+  // based on number of ants
+  nest.objects[0]->food = INITIAL_NEST_FOOD;
+}
 
 //
 // Shutdown Nests
 //
 static void ShutdownNests(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < CURRENT_BOT.max_items; index++)
-	{
-		CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
+  for (index = 0; index < CURRENT_BOT.max_items; index++)
+  {
+    CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
 
-	} // end of the for
-
-} 
+  }  // end of the for
+}
 
 //
 // Draw Nests
 //
 static void DrawNests(void)
 {
-	int index = 0;
+  int index = 0;
 
-	for (index = 0; index < CURRENT_BOT.max_items; index++)
-	{
-		CURRENT_BOT.process(CURRENT_BOT.objects[index]);
+  for (index = 0; index < CURRENT_BOT.max_items; index++)
+  {
+    CURRENT_BOT.process(CURRENT_BOT.objects[index]);
 
-		CURRENT_BOT.render(CURRENT_BOT.objects[index]);
+    CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 
-	} // end of the for
-
-} 
+  }  // end of the for
+}
 
 //
 // Process Events
 //
 static void ProcessNest(CURRENT_PTR b)
 {
-	// just rotate
-	b->rotation[1] += 0.5f;
-	if (b->rotation[1] >= 360)
-		b->rotation[1] -= 360;
-
-} 
+  // just rotate
+  b->rotation[1] += 0.5f;
+  if (b->rotation[1] >= 360) b->rotation[1] -= 360;
+}
 
 //
 // Create bot
 //
 static CURRENT_PTR CreateSentinel(int bot_id)
 {
-	CURRENT_PTR bot;
+  CURRENT_PTR bot;
 
-	bot = (CURRENT_PTR)malloc(sizeof(CURRENT_OBJECT));
-	ZeroMemory((CURRENT_PTR)bot,
-			   sizeof(CURRENT_OBJECT));
+  bot = (CURRENT_PTR)malloc(sizeof(CURRENT_OBJECT));
+  ZeroMemory((CURRENT_PTR)bot, sizeof(CURRENT_OBJECT));
 
-	bot->position[0] = 0;
-	bot->position[1] = 0;
-	bot->position[2] = 0;
+  bot->position[0] = 0;
+  bot->position[1] = 0;
+  bot->position[2] = 0;
 
-	bot->rotation[0] = 0;
-	bot->rotation[1] = 0;
-	bot->rotation[2] = 0;
+  bot->rotation[0] = 0;
+  bot->rotation[1] = 0;
+  bot->rotation[2] = 0;
 
-	bot->size[0] = 2.0f;
-	bot->size[1] = 2.0f;
-	bot->size[2] = 2.0f;
+  bot->size[0] = 2.0f;
+  bot->size[1] = 2.0f;
+  bot->size[2] = 2.0f;
 
-	bot->color[0] = 1.0f;
-	bot->color[1] = 1.0f;
-	bot->color[2] = 0.0f;
+  bot->color[0] = 1.0f;
+  bot->color[1] = 1.0f;
+  bot->color[2] = 0.0f;
 
-	bot->state = ALIVE_STATE;
+  bot->state = ALIVE_STATE;
 
-	return bot;
-
-} 
+  return bot;
+}
 
 //
 // DestroyBot
 //
-static void DestroySentinel(CURRENT_PTR b)
-{
-	free(b);
-
-} // end of the function
+static void DestroySentinel(CURRENT_PTR b) { free(b); }  // end of the function
 
 //
 // RenderBot
 //
 static void RenderSentinel(CURRENT_PTR boid)
 {
-	BEGIN_BOT;
+  BEGIN_BOT;
 
-	// Translate then rotate
-	glTranslatef(boid->position[0], boid->position[1],
-				 boid->position[2]);
+  // Translate then rotate
+  glTranslatef(boid->position[0], boid->position[1], boid->position[2]);
 
-	// rotate based on the ship struct
-	glRotatef(boid->rotation[1], 0.0f, 1.0f, 0.0f);
-	glRotatef(boid->rotation[0], 1.0f, 0.0f, 0.0f);
-	glRotatef(boid->rotation[2], 0.0f, 0.0f, 1.0f);
+  // rotate based on the ship struct
+  glRotatef(boid->rotation[1], 0.0f, 1.0f, 0.0f);
+  glRotatef(boid->rotation[0], 1.0f, 0.0f, 0.0f);
+  glRotatef(boid->rotation[2], 0.0f, 0.0f, 1.0f);
 
-	// Scale accordingly
-	glScalef(boid->size[0], boid->size[1], boid->size[2]);
+  // Scale accordingly
+  glScalef(boid->size[0], boid->size[1], boid->size[2]);
 
-	// This may or may not change the color
-	glColor3f(boid->color[0], boid->color[1], boid->color[2]);
+  // This may or may not change the color
+  glColor3f(boid->color[0], boid->color[1], boid->color[2]);
 
-	// draw the object to screen
-	// driver_objects[ANT_OBJECT]->render();
+  // draw the object to screen
+  // driver_objects[ANT_OBJECT]->render();
 
-	// set the material for this object
-	setmaterial(funk_ambient, funk_diffuse,
-				funk_specular, zlow_shininess, zmat_emission);
+  // set the material for this object
+  setmaterial(funk_ambient, funk_diffuse, funk_specular, zlow_shininess, zmat_emission);
 
+  gluSphere(quadric, 0.5f, 18, 8);  // draw sphere for hood
 
-	gluSphere(quadric, 0.5f, 18, 8); // draw sphere for hood
-
-	END_BOT;
-
-} 
+  END_BOT;
+}

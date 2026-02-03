@@ -37,27 +37,26 @@
 //
 #pragma once
 
-#define WORLD_HEIGHT		6.0f
-#define WORLD_COLOR glColor3f(world_ptr->color[0],		\
-			world_ptr->color[1], world_ptr->color[2]);	\
+#define WORLD_HEIGHT 6.0f
+#define WORLD_COLOR glColor3f(world_ptr->color[0], world_ptr->color[1], world_ptr->color[2]);
 
-  // till we implement lights
-#define WORLD_COLOR_2 glColor3f(world_ptr->color[0]-0.2f,		\
-			world_ptr->color[1]-0.2f, world_ptr->color[2]-0.2f);	\
+// till we implement lights
+#define WORLD_COLOR_2 \
+  glColor3f(world_ptr->color[0] - 0.2f, world_ptr->color[1] - 0.2f, world_ptr->color[2] - 0.2f);
 
 //
 // world object
 // - think 2d, x = x, y = z
-typedef struct tagDriverWorld {
+typedef struct tagDriverWorld
+{
+  float x_min;
+  float y_min;
+  float x_max;
+  float y_max;
 
-	float	x_min;
-	float	y_min;
-	float	x_max;
-	float	y_max;
+  float height;
 
-	float	height;
-
-	float	color[3];
+  float color[3];
 
 } DriverWorld, *DriverWorldPtr;
 
@@ -65,6 +64,4 @@ typedef struct tagDriverWorld {
 void CreateWorld(void);
 void ShutdownWorld(void);
 
-extern DriverWorldPtr	world_ptr;
-
-
+extern DriverWorldPtr world_ptr;

@@ -40,73 +40,73 @@
 //
 #pragma once
 
-namespace fireants {
+namespace fireants
+{
 
-    constexpr int PLAYER_0 = 0;
+constexpr int PLAYER_0 = 0;
 
-    //
-    // the drawing size
-    // in x/z
-    //
-    constexpr float FIRE_ANT_SIZE = 1.5f;
+//
+// the drawing size
+// in x/z
+//
+constexpr float FIRE_ANT_SIZE = 1.5f;
 
-    // length of the vision
-    constexpr float PERSPECTIVE_Z = 600.0f;
+// length of the vision
+constexpr float PERSPECTIVE_Z = 600.0f;
 
-    // first person mode camera
-    constexpr float FIRST_PERSON_Z = 4.3f;
-    constexpr float FIRST_HEIGHT = 2.4f;
+// first person mode camera
+constexpr float FIRST_PERSON_Z = 4.3f;
+constexpr float FIRST_HEIGHT = 2.4f;
 
-    constexpr int DRAW_LINE_SIGHT = 1;
+constexpr int DRAW_LINE_SIGHT = 1;
 
-    constexpr float LIGHT_HEIGHT_0 = 100.0f;
-    constexpr float LIGHT_HEIGHT_1 = 180.0f;
+constexpr float LIGHT_HEIGHT_0 = 100.0f;
+constexpr float LIGHT_HEIGHT_1 = 180.0f;
 
-    //
-    // max distance a bullet can travel
-    //
-    constexpr float MAX_BULLET_TRAVEL = 600.0f;
+//
+// max distance a bullet can travel
+//
+constexpr float MAX_BULLET_TRAVEL = 600.0f;
 
+// bullet height
+constexpr float BULLET_H1 = 1.8f;
+constexpr float BULLET_H2 = 2.3f;
 
-    // bullet height
-    constexpr float BULLET_H1 = 1.8f;
-    constexpr float BULLET_H2 = 2.3f;
+constexpr float BULLET_LEN = 6.0f;
 
-    constexpr float BULLET_LEN = 6.0f;
+//
+// For the hex grid
+constexpr float HEX_SIZE = 12.0f;
 
-    //
-    // For the hex grid
-    constexpr float HEX_SIZE = 12.0f;
+// the height should be 4 times othe size
+constexpr float HEX_HEIGHT = 35.0f;
 
-    // the height should be 4 times othe size
-    constexpr float HEX_HEIGHT = 35.0f;
+constexpr float WORLD_X_MIN = -300.0f;
+constexpr float WORLD_X_MAX = 300.0f;
 
-    constexpr float WORLD_X_MIN = -300.0f;
-    constexpr float WORLD_X_MAX = 300.0f;
+constexpr float WORLD_Y_MIN = -300.0f;
+constexpr float WORLD_Y_MAX = 300.0f;
 
-    constexpr float WORLD_Y_MIN = -300.0f;
-    constexpr float WORLD_Y_MAX = 300.0f;
+constexpr int VK_ESC = 0;
+constexpr int VK_F1 = 1;
+constexpr int VK_f = 3;
+constexpr int VK_UP = 7;
+constexpr int VK_DOWN = 8;
+constexpr int VK_LEFT = 9;
+constexpr int VK_RIGHT = 10;
+constexpr int VK_s = 11;
+constexpr int VK_S = 12;
+constexpr int VK_r = 13;
+constexpr int VK_R = 14;
+constexpr int VK_F = 15;
+constexpr int VK_SPACE = 16;
 
-    constexpr int VK_ESC = 0;
-    constexpr int VK_F1 = 1;
-    constexpr int VK_f = 3;
-    constexpr int VK_UP = 7;
-    constexpr int VK_DOWN = 8;
-    constexpr int VK_LEFT = 9;
-    constexpr int VK_RIGHT = 10;
-    constexpr int VK_s = 11;
-    constexpr int VK_S = 12;
-    constexpr int VK_r = 13;
-    constexpr int VK_R = 14;
-    constexpr int VK_F = 15;
-    constexpr int VK_SPACE = 16;
+void Reset_NetworkBots(void);
 
-    void Reset_NetworkBots(void);
+void Prepare_DemoMode(void);
 
-    void Prepare_DemoMode(void);
+void Run_NetworkBots(void);
 
-    void Run_NetworkBots(void);
+extern int keyCodes[20];
 
-    extern int keyCodes[20];
-
-}
+}  // namespace fireants

@@ -1,0 +1,10 @@
+# Clang-Format configuration for OctaneMechOpenGLGame
+# Based on Google style with project tweaks
+BasedOnStyle: Google
+IndentWidth: 2
+ColumnLimit: 100
+UseTab: Never
+DerivePointerBinding: false
+PointerAlignment: Left
+SortIncludes: true
+BreakBeforeBraces: Allman

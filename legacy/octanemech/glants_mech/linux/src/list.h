@@ -36,19 +36,18 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-typedef struct tagNode {
-	int data;
+typedef struct tagNode
+{
+  int data;
 
-	struct tagNode *next; 
+  struct tagNode* next;
 } Node;
 
-typedef struct tagList {
-	Node *head;
+typedef struct tagList
+{
+  Node* head;
 } List;
-
 
 void LinkTest(void);
 
-
 #endif
-

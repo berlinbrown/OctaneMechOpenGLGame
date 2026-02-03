@@ -37,12 +37,11 @@
 //  - the ant object
 //
 
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT norm_cube
@@ -58,13 +57,12 @@ static void draw_norm_cube(void);
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-	{
-		init_norm_cube,	   // init, must be called first
-		compile_norm_cube, // compile
-		draw_norm_cube,	   // draw
-		render_norm_cube,  // render to scene
-		0				   // loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_norm_cube,     // init, must be called first
+    compile_norm_cube,  // compile
+    draw_norm_cube,     // draw
+    render_norm_cube,   // render to scene
+    0                   // loaded by INIT
 };
 
 //=========================================================
@@ -76,280 +74,279 @@ DriverObjects CURRENT_OBJECT =
 //=========================================================
 static void draw_norm_cube(void)
 {
-	float v[3][3] = {0};
-	float n[3] = {0};
+  float v[3][3] = {0};
+  float n[3] = {0};
 
-	float size = 1.0f;
+  float size = 1.0f;
 
-	// Note: normals are messed up for now
-	// select between n0-n3
+  // Note: normals are messed up for now
+  // select between n0-n3
 
-	// change the size here
-	// Note: starts from ground
+  // change the size here
+  // Note: starts from ground
 
-	glBegin(GL_TRIANGLES);
+  glBegin(GL_TRIANGLES);
 
-	// left bottom front
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // left bottom front
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	CLR_0;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
+  CLR_0;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// Finish the front
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = size;
+  // Finish the front
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = size;
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = size;
 
-	CLR_1;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
+  CLR_1;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// Draw the back triangle
-	//-----------------------------
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+  // Draw the back triangle
+  //-----------------------------
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = -size;
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	CLR_2;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
+  CLR_2;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	// Finish the back
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = -size;
+  // Finish the back
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = -size;
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	MED_PURPLE;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  MED_PURPLE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
-	//  Draw the right side
-	//  Triangle
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
+  //  Draw the right side
+  //  Triangle
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	MED_BLUE;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
+  MED_BLUE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	// FINISh the right side of the box
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+  // FINISh the right side of the box
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	v[2][0] = size;
-	v[2][1] = size;
-	v[2][2] = size;
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	MED_GREEN;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  MED_GREEN;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	// FINISh the left side of the box
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = -size;
+  // FINISh the left side of the box
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	v[1][0] = -size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	MED_PURPLE;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom bac
+  MED_PURPLE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	// Draw the left side
-	// Triangle
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // Draw the left side
+  // Triangle
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = -size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = -size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	MED_RED;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
+  MED_RED;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	// Draw the top and bottom
-	v[0][0] = size;
-	v[0][1] = size;
-	v[0][2] = size;
+  // Draw the top and bottom
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	CLR_0;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
+  CLR_0;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	// Draw one of the bottom triangles
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // Draw one of the bottom triangles
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	CLR_3;
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
+  CLR_3;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	// Lets finish the bottom with the second triangle
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // Lets finish the bottom with the second triangle
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	v[2][0] = -size;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	// Go back and finish the top
-	v[0][0] = -size;
-	v[0][1] = size;
-	v[0][2] = size;
+  // Go back and finish the top
+  v[0][0] = -size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = size;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = size;
 
-	v[2][0] = -size;
-	v[2][1] = size;
-	v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	// Calc normal and draw
-	N_2;
-	GET_NORMAL;
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left side
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	glEnd();
-
-} 
+  glEnd();
+}
 
 //
 // init
@@ -358,45 +355,42 @@ static void draw_norm_cube(void)
 //
 static void init_norm_cube(int list_id)
 {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;
-
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_norm_cube(void)
 {
-	// glPushMatrix();
+  // glPushMatrix();
 
-	glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-	// glPopMatrix();
-
-} 
+  // glPopMatrix();
+}
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_norm_cube(void)
 {
-	int id;
-	// setup a spot for display list for background
-	// object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-	// call drawing function
-	// but this may method make it a little better
-	CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
-
-} 
+  glEndList();
+}

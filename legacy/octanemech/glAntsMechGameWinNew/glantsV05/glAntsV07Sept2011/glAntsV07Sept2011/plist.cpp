@@ -30,284 +30,267 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
- * 
+ *
  * https://github.com/berlinbrown/OctaneMechOpenGLGame
  */
 
-
 // Note: the direction, trail stack is defined in bot.cpp
+
+#include "plist.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "plist.h"
-
-int isempty(PtrList *list)
+int isempty(PtrList* list)
 {
-
- if (list->head == NULL)
-	return 1;		/* first pointer null, list is empty */
- else
-	return 0;
+  if (list->head == NULL)
+    return 1; /* first pointer null, list is empty */
+  else
+    return 0;
 
 } /* end of the fcuntion */
 
 //
 // CreatePtrNode
 //
-PtrNode *CreatePtrNode(void *data) {
+PtrNode* CreatePtrNode(void* data)
+{
+  PtrNode* h = (PtrNode*)malloc(sizeof(PtrNode));
 
-    PtrNode *h = (PtrNode *) malloc(sizeof(PtrNode));
+  h->ptr = data;
+  h->next = NULL;
 
-    h->ptr = data;
-    h->next = NULL;
+  return h;
 
-    return h;
-
-} // end of the function 
+}  // end of the function
 
 //
 // DestroyPtrNode
 //
-void DestroyPtrNode(PtrNode *node) {
+void DestroyPtrNode(PtrNode* node) { free(node); }  // end of the function
 
-    free(node);
-
-} // end of the function
-
-// 
+//
 // Create PtrList
 //
-PtrList *CreatePtrList() {
+PtrList* CreatePtrList()
+{
+  PtrList* result = (PtrList*)malloc(sizeof(PtrList));
 
-    PtrList *result = (PtrList *) malloc(sizeof(PtrList));
+  result->head = NULL;
+  result->items = 0;
 
-    result->head = NULL;
-	result->items = 0;
+  return result;
 
-	return result;
-
-} // end of the function 
-
+}  // end of the function
 
 //
 // DestroyPtrList
 //
-void DestroyPtrList(PtrList *list) {
+void DestroyPtrList(PtrList* list)
+{
+  PtrNode *pos, *next;
+  pos = list->head;
 
-    PtrNode *pos, *next;
-    pos = list->head;
+  while (pos != NULL)
+  {
+    next = pos->next;
 
-    while(pos != NULL) {
-        next = pos->next;
+    free(pos);
 
-        free(pos);
+    pos = next;
+  }  // end of the while
 
-        pos = next;
-    } // end of the while 
+  free(list);
 
-    free(list);
-
-} // end of the function 
-
+}  // end of the function
 
 //
 // Delete Ptr
-// 
-void DeletePtrNode(PtrList *list, void *val)
+//
+void DeletePtrNode(PtrList* list, void* val)
 {
-    PtrNode *current = list->head;
-    PtrNode *previous = NULL;
- 
-    while (current != NULL ) {
+  PtrNode* current = list->head;
+  PtrNode* previous = NULL;
 
-        if( current->ptr != val) {
+  while (current != NULL)
+  {
+    if (current->ptr != val)
+    {
+      previous = current;
+      current = previous->next;
+    }
+    else
+    {
+      if (previous != NULL)
+      {
+        previous->next = current->next;
 
-            previous = current;
-            current = previous->next;
+      }  // end of the if
 
-        } else {
+      list->items--;
 
-            if (previous != NULL ) {
+      free(current);
+      break;
 
-                previous->next = current->next;
+    }  // end of the if - else
 
-            } // end of the if 
-			
-			list->items--;
+  }  // end of the while
 
-            free(current);
-            break;
-
-        } // end of the if - else
-
-    } // end of the while 
-
-} // end of the function
-
+}  // end of the function
 
 //
 // Insert Front
-void InsertFront(PtrList *list, void *data) {
+void InsertFront(PtrList* list, void* data)
+{
+  PtrNode* new_node = NULL;
 
-	PtrNode *new_node = NULL;
+  new_node = CreatePtrNode(data);
 
-	new_node = CreatePtrNode(data);
+  if (isempty(list))
 
-	if (isempty(list))
+    list->head = new_node;
 
-  		list->head = new_node;
+  else
+  {
+    new_node->next = list->head;
+    list->head = new_node;
 
-	else {
- 		
-		new_node->next = list->head;
-		list->head = new_node;
+  }  // end if
 
-	} // end if 
+  list->items++;
 
-	list->items++;
-
-} // end of the function
+}  // end of the function
 
 //
 // Remove Front
 //
-void *RemoveFront(PtrList *list)
+void* RemoveFront(PtrList* list)
 {
-
-  PtrNode *temp_ptr = NULL;
-  void *res = NULL;
+  PtrNode* temp_ptr = NULL;
+  void* res = NULL;
 
   if (isempty(list))
-	return NULL;
-  else {
- 	temp_ptr = list->head;
-	if (list->head->next == NULL)
-		list->head = NULL; /* reset */
-	else
-		list->head = list->head->next;
+    return NULL;
+  else
+  {
+    temp_ptr = list->head;
+    if (list->head->next == NULL)
+      list->head = NULL; /* reset */
+    else
+      list->head = list->head->next;
 
-	res = temp_ptr->ptr;	// remove from list, but keep ptr
+    res = temp_ptr->ptr;  // remove from list, but keep ptr
 
-	free(temp_ptr);
-	list->items--;
+    free(temp_ptr);
+    list->items--;
 
-	return res;
+    return res;
 
-  } // end of the if-else
+  }  // end of the if-else
 
- return NULL;		// we should never get here
+  return NULL;  // we should never get here
 
-} // end of the function 
-
+}  // end of the function
 
 //
 // PrintTest
 //
-void PrintPtrList(PtrList *list)
+void PrintPtrList(PtrList* list)
 {
- PtrNode *current_ptr;
- int *x;
+  PtrNode* current_ptr;
+  int* x;
 
- if (isempty(list))
-	return;
- 
- current_ptr = list->head;
- 
- while(current_ptr != NULL)
- {
-	// interesting 
-	x = (int *)current_ptr->ptr;
+  if (isempty(list)) return;
 
-	printf("<%d>\n", (int &)*x);
- 	current_ptr = current_ptr->next;
- } // end of while
+  current_ptr = list->head;
 
-} // end of the function 
+  while (current_ptr != NULL)
+  {
+    // interesting
+    x = (int*)current_ptr->ptr;
+
+    printf("<%d>\n", (int&)*x);
+    current_ptr = current_ptr->next;
+  }  // end of while
+
+}  // end of the function
 
 //
 // PrintList
 //
-void PrintPtrListf(PtrList *list)
+void PrintPtrListf(PtrList* list)
 {
- PtrNode *current_ptr;
- float *x;
+  PtrNode* current_ptr;
+  float* x;
 
- if (isempty(list))
-	return;
- 
- current_ptr = list->head;
- 
- while(current_ptr != NULL)
- {
-	// interesting 
-	x = (float *)current_ptr->ptr;
+  if (isempty(list)) return;
 
-	printf("<%0.2f>\n", (float &)*x);
- 	current_ptr = current_ptr->next;
- } // end of while
+  current_ptr = list->head;
 
-} // end of the function 
+  while (current_ptr != NULL)
+  {
+    // interesting
+    x = (float*)current_ptr->ptr;
 
+    printf("<%0.2f>\n", (float&)*x);
+    current_ptr = current_ptr->next;
+  }  // end of while
+
+}  // end of the function
 
 //
 // PtrListTest
-// 
+//
 void PtrLinkTest(void)
 {
-	PtrList *list;
-	int *x = (int *)malloc(sizeof(int));
-	int *y = (int *)malloc(sizeof(int));
-	int *z = (int *)malloc(sizeof(int));
-	int *res;
+  PtrList* list;
+  int* x = (int*)malloc(sizeof(int));
+  int* y = (int*)malloc(sizeof(int));
+  int* z = (int*)malloc(sizeof(int));
+  int* res;
 
-	*x = 9;
-	*y = 3;
-	*z = 4;
+  *x = 9;
+  *y = 3;
+  *z = 4;
 
-	//list =  CreatePtrList();
-	list = CREATE_STACK;
-	
-	//InsertFront(list, (int *)x);
-	PUSH_STACK(list, (int *)x);
-	printf("%d PUSHED\n", *x);
+  // list =  CreatePtrList();
+  list = CREATE_STACK;
 
-	//InsertFront(list, (int *)y);
-	PUSH_STACK(list, (int *)y);
-	printf("%d PUSHED\n", *y);
+  // InsertFront(list, (int *)x);
+  PUSH_STACK(list, (int*)x);
+  printf("%d PUSHED\n", *x);
 
-	InsertFront(list, (int *)z);
-	printf("%d PUSHED\n", *z);
+  // InsertFront(list, (int *)y);
+  PUSH_STACK(list, (int*)y);
+  printf("%d PUSHED\n", *y);
 
-	//PrintPtrList(list);
+  InsertFront(list, (int*)z);
+  printf("%d PUSHED\n", *z);
 
-	// Delete a node pointer
-	//DeletePtrNode(list, y);
-	//res = (int *)RemoveFront(list);
-	res = (int *)POP_STACK(list);
-	printf("%d POPPED %d\n", *res, list->items); 
+  // PrintPtrList(list);
 
-	res = (int *)RemoveFront(list);
-	printf("%d POPPED %d\n", *res, list->items); 
+  // Delete a node pointer
+  // DeletePtrNode(list, y);
+  // res = (int *)RemoveFront(list);
+  res = (int*)POP_STACK(list);
+  printf("%d POPPED %d\n", *res, list->items);
 
-	printf("\n\n New List %d\n", list->items);
-	PrintPtrList(list);
+  res = (int*)RemoveFront(list);
+  printf("%d POPPED %d\n", *res, list->items);
 
-	InsertFront(list, (int *)y);
-	printf("%d PUSHED %d\n", *y, list->items);
+  printf("\n\n New List %d\n", list->items);
+  PrintPtrList(list);
 
-	printf("\n\n New with Added\n");
-	PrintPtrList(list);
+  InsertFront(list, (int*)y);
+  printf("%d PUSHED %d\n", *y, list->items);
 
-	DestroyPtrList(list);
+  printf("\n\n New with Added\n");
+  PrintPtrList(list);
 
-	free(x);
-	free(y);
-	free(z);
+  DestroyPtrList(list);
 
-} // end of the function 
+  free(x);
+  free(y);
+  free(z);
 
-
-
-
-
+}  // end of the function
