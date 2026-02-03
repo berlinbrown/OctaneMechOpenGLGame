@@ -45,7 +45,7 @@
 //
 // - GL init calls based on nehe's opengl library
 //		http://nehe.gamedev.net/
-// 
+//
 // my asus probe temperature monitor has my CPU
 // running at 52C, during heavy rendering
 // this should mean nothing you, however
@@ -53,89 +53,81 @@
 // - Initial version: (sat)Aug 3, 2002
 //
 
-
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
-#include <float.h>              // used for _control
-
+#include <GL/gl.h>   // Header File For The OpenGL32 Library
+#include <GL/glu.h>  // Header File For The GLu32 Library
 #include <GL/glx.h>
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
 #include <X11/extensions/xf86vmode.h>
 #include <X11/keysym.h>
+#include <float.h>  // used for _control
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 // to get the frames per second
 #include <bits/time.h>
 
-
-
-#include "resource.h"
-#include "gldrawlib.h"
-#include "objects.h"
-#include "camera.h"
 #include "bot.h"
-#include "world.h"
-#include "lights.h"
+#include "camera.h"
+#include "collision.h"
+#include "fireants.h"
+#include "gldrawlib.h"
 #include "globals.h"
+#include "keys.h"
+#include "lights.h"
 #include "list.h"
-#include "plist.h"
-#include "tree.h"
+#include "maps.h"
+#include "menu.h"
+#include "network/include/connect.h"
+#include "objects.h"
 #include "octree.h"
 #include "particles.h"
-#include "maps.h"
-#include "world.h"
-#include "collision.h"
-#include "walls.h"
-#include "fireants.h"
-#include "menu.h"
-#include "text.h"
-#include "keys.h"
+#include "plist.h"
+#include "resource.h"
 #include "sound.h"
-
-#include "network/include/connect.h"
+#include "text.h"
+#include "tree.h"
+#include "walls.h"
+#include "world.h"
 
 void Cmd_Keys(KeySym key);
 
 // use False or True here	--
-#define FULLSCREEN_MODE		False			
+#define FULLSCREEN_MODE False
 
 //
 // Begin in fullscreen - flag
-#define		FULL_SCREEN_F		0
+#define FULL_SCREEN_F 0
 
 //
 // Try 32/16
-#define		INIT_BIT_RATE		32
+#define INIT_BIT_RATE 32
 
 static GLvoid KillGLWindow(GLvoid);
 static bool CreateGLWindow(char* title, int width, int height, int bits, bool fullscreenflag);
 
-
-bool	keys[256];			// Array Used For The Keyboard Routine
+bool keys[256];  // Array Used For The Keyboard Routine
 int keyCodes[20];
 
+bool active = true;      // Window Active Flag Set To TRUE By Default
+bool fullscreen = true;  // Fullscreen Flag Set To Fullscreen Mode By Default
 
-bool	active=true;		// Window Active Flag Set To TRUE By Default
-bool	fullscreen=true;	// Fullscreen Flag Set To Fullscreen Mode By Default
+GLfloat rtri;   // Angle For The Triangle ( NEW )
+GLfloat rquad;  // Angle For The Quad ( NEW )
 
-GLfloat	rtri;				// Angle For The Triangle ( NEW )
-GLfloat	rquad;				// Angle For The Quad ( NEW )
+GLuint base;  // Base Display List For The Font Set
 
-GLuint	base;				// Base Display List For The Font Set
-
-static bool	done=false;		// Bool Variable To Exit Loop
+static bool done = false;  // Bool Variable To Exit Loop
 
 int mSuper_Loaded = LOADED_FALSE;
 
 //
 // frames per second variables
 //
-#define FRAME_RATE_SAMPLES		60
-int		frames		= 0;
-float	framerate	= 0;
-clock_t	last_time	= 0;
+#define FRAME_RATE_SAMPLES 60
+int frames = 0;
+float framerate = 0;
+clock_t last_time = 0;
 
 void LoadKeyCodes(void);
 
@@ -143,8 +135,9 @@ void LoadKeyCodes(void);
 //=====================================
 // GLWINDOW struct
 //
-typedef struct {
-  Display *dpy;
+typedef struct
+{
+  Display* dpy;
   int screen;
   Window win;
   GLXContext ctx;
@@ -156,172 +149,156 @@ typedef struct {
   unsigned int depth;
 } GLWindow;
 
-static int attrListSgl[] = {
-  GLX_RGBA, GLX_RED_SIZE, 4, 
-  GLX_GREEN_SIZE, 4, 
-  GLX_BLUE_SIZE, 4,
-  GLX_DEPTH_SIZE, 16,
-  None
-};
+static int attrListSgl[] = {GLX_RGBA,       GLX_RED_SIZE, 4,   GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4,
+                            GLX_DEPTH_SIZE, 16,           None};
 
-static int attrListDbl[] = { GLX_RGBA, GLX_DOUBLEBUFFER,
-			     GLX_GREEN_SIZE, 4,
-			     GLX_BLUE_SIZE, 4,
-			     GLX_DEPTH_SIZE, 16,
-			     None 
-};
+static int attrListDbl[] = {
+    GLX_RGBA, GLX_DOUBLEBUFFER, GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4, GLX_DEPTH_SIZE, 16, None};
 
 GLWindow GLWin;
-
 
 //
 // END LINUX GRAPHICS ROUTINES
 //
-
 
 //
 // get frames per second
 //
 void GetFramesPerSecond(void)
 {
-	clock_t		now;
-	float		delta;
+  clock_t now;
+  float delta;
 
+  if (frames++ >= FRAME_RATE_SAMPLES)
+  {
+    now = clock();
 
-	if (frames++ >= FRAME_RATE_SAMPLES)
-	{
-		now = clock();
+    delta = (now - last_time) / (float)CLOCKS_PER_SEC;
+    // delta = (now - last_time) / (float)CLK_TCK;
 
-		delta = (now - last_time) / (float)CLOCKS_PER_SEC;
-		//delta = (now - last_time) / (float)CLK_TCK;
+    last_time = now;
 
-		last_time = now;
+    framerate = FRAME_RATE_SAMPLES / delta;
 
-		framerate = FRAME_RATE_SAMPLES / delta;
+    frames = 0;
+  }  // end of the if
 
-		frames = 0;
-	} // end of the if 
-
-} // end of the functino 
+}  // end of the functino
 
 //
 // PrintText --
 //
-void PrintText(const char *fmt, ...)					// Custom GL "Print" Routine
+void PrintText(const char* fmt, ...)  // Custom GL "Print" Routine
 {
-	char		text[256];					// Holds Our String
-	va_list		ap;						// Pointer To List Of Arguments
+  char text[256];  // Holds Our String
+  va_list ap;      // Pointer To List Of Arguments
 
-	if (fmt == NULL)						// If There's No Text
-		return;							// Do Nothing
+  if (fmt == NULL)  // If There's No Text
+    return;         // Do Nothing
 
-	va_start(ap, fmt);						// Parses The String For Variables
-	    vsprintf(text, fmt, ap);					// And Converts Symbols To Actual Numbers
-	va_end(ap);							// Results Are Stored In Text
-	glPushAttrib(GL_LIST_BIT);							// Pushes The Display List Bits
-	glListBase(base - 32);								// Sets The Base Character to 32
-	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);	// Draws The Display List Text
-	glPopAttrib();								// Pops The Display List Bits
+  va_start(ap, fmt);                                  // Parses The String For Variables
+  vsprintf(text, fmt, ap);                            // And Converts Symbols To Actual Numbers
+  va_end(ap);                                         // Results Are Stored In Text
+  glPushAttrib(GL_LIST_BIT);                          // Pushes The Display List Bits
+  glListBase(base - 32);                              // Sets The Base Character to 32
+  glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text
+  glPopAttrib();                                      // Pops The Display List Bits
 
-} // end of the function s
-
+}  // end of the function s
 
 //
 // Handle_Esc
 //
 static void Handle_Esc(void)
-{ 
-      if (active)
-	{
-	  if (ant_globals->menu_mode == MENU_TITLE_MODE) {
-	    
-	    if (ant_globals->_menu_state == FIRST_TIME_TRUE)
-	      done = true;
-	    else {
-	      
-	      // put back in run mode
-	      ant_globals->paused = 0;
-	      ant_globals->menu_mode = MENU_RUN_MODE;
+{
+  if (active)
+  {
+    if (ant_globals->menu_mode == MENU_TITLE_MODE)
+    {
+      if (ant_globals->_menu_state == FIRST_TIME_TRUE)
+        done = true;
+      else
+      {
+        // put back in run mode
+        ant_globals->paused = 0;
+        ant_globals->menu_mode = MENU_RUN_MODE;
 
-	      // SHOW CURSOR FALSE
+        // SHOW CURSOR FALSE
 
-	    } // end if -else
+      }  // end if -else
 
-	  } // end of theif
-	  else if (ant_globals->menu_mode ==
-		   MENU_HELP_MODE) {
-	    
-	    ant_globals->paused = 1;
-	    ant_globals->menu_mode = MENU_TITLE_MODE;
+    }  // end of theif
+    else if (ant_globals->menu_mode == MENU_HELP_MODE)
+    {
+      ant_globals->paused = 1;
+      ant_globals->menu_mode = MENU_TITLE_MODE;
 
-	    // show cursor tru
-	   } else if (ant_globals->menu_mode ==
-		     MENU_SETTINGS_MODE) {
+      // show cursor tru
+    }
+    else if (ant_globals->menu_mode == MENU_SETTINGS_MODE)
+    {
+      ant_globals->paused = 1;
+      ant_globals->menu_mode = MENU_TITLE_MODE;
+    }
+    else
+    {
+      // done = true;
 
-	      ant_globals->paused = 1;
-	      ant_globals->menu_mode = MENU_TITLE_MODE;
-	  } else {
-	    
-	    // done = true;
+      ant_globals->paused = 1;
+      ant_globals->menu_mode = MENU_TITLE_MODE;
 
-	    ant_globals->paused = 1;
-	    ant_globals->menu_mode = MENU_TITLE_MODE;
+      // showcursor
+    }  // end of if-else
 
-	    // showcursor 
-	  } // end of if-else
-	 
+  }  // end of the if
 
-	} // end of the if 
-
-} // end of thefunction 
+}  // end of thefunction
 
 //
 // keyPressed
 //
 void keyPressed(KeySym key)
 {
-
-  switch(key)
-    {
+  switch (key)
+  {
     case XK_Tab:
       ToggleViewMode();
       break;
 
     case XK_Down:
 
-	Toggle_MenuItems(1);
-
+      Toggle_MenuItems(1);
 
       break;
 
     case XK_Up:
-	Toggle_MenuItems(-1);
-	
+      Toggle_MenuItems(-1);
+
       break;
 
     case XK_Return:
     case XK_space:
-      
-      if (Set_MenuMode())
-	{
-	  done = true;
 
-	  return;
-	} // end of the if 
+      if (Set_MenuMode())
+      {
+        done = true;
+
+        return;
+      }  // end of the if
 
       if (ant_globals->menu_mode == MENU_HELP_MODE)
-	{
-	  // ShowCursor
-	} // end of the if 
+      {
+        // ShowCursor
+      }  // end of the if
       else if (ant_globals->menu_mode == MENU_RUN_MODE)
-	{
-	  // Show Cursor
-	}  // end of if -else
+      {
+        // Show Cursor
+      }  // end of if -else
 
       break;
 
     case XK_Escape:
-      //done = true;
+      // done = true;
 
       // draw the scene
       Handle_Esc();
@@ -329,10 +306,11 @@ void keyPressed(KeySym key)
 
     case XK_P:
     case XK_p:
-      
-      if (ant_globals->menu_mode == MENU_RUN_MODE) {
-	TogglePaused();
-      } // end of the if 
+
+      if (ant_globals->menu_mode == MENU_RUN_MODE)
+      {
+        TogglePaused();
+      }  // end of the if
 
       break;
 
@@ -346,21 +324,20 @@ void keyPressed(KeySym key)
       GLWin.fs = !GLWin.fs;
       CreateGLWindow("glAnts", SCREEN_WIDTH, SCREEN_HEIGHT, 24, GLWin.fs);
       break;
+  };
 
-    }; 
-
-} // end of the function 
+}  // end of the function
 
 //
 // Cmd_KeyPress
 //
 static void Cmd_KeyPress(KeySym key)
 {
-  switch(key) 
-    {
+  switch (key)
+  {
     case XK_Escape:
-      //done = true;
-      
+      // done = true;
+
       // draw the scene
       Handle_Esc();
       break;
@@ -369,216 +346,197 @@ static void Cmd_KeyPress(KeySym key)
     case XK_q:
       done = true;
       break;
-      
+
     case XK_F1:
       KillGLWindow();
       GLWin.fs = !GLWin.fs;
       CreateGLWindow("glAnts", SCREEN_WIDTH, SCREEN_HEIGHT, 24, GLWin.fs);
       break;
-      
-    };
+  };
 
-} // end of teh function 
+}  // end of teh function
 
 //
 // LoadKeyCodes
 //
 void LoadKeyCodes(void)
 {
+  keyCodes[0] = XKeysymToKeycode(GLWin.dpy, XK_Escape);
+  keyCodes[1] = XKeysymToKeycode(GLWin.dpy, XK_F1);
+  keyCodes[2] = XKeysymToKeycode(GLWin.dpy, XK_l);
 
-    keyCodes[0] = XKeysymToKeycode(GLWin.dpy, XK_Escape);
-    keyCodes[1] = XKeysymToKeycode(GLWin.dpy, XK_F1);
-    keyCodes[2] = XKeysymToKeycode(GLWin.dpy, XK_l);
+  keyCodes[3] = XKeysymToKeycode(GLWin.dpy, XK_f);
+  keyCodes[15] = XKeysymToKeycode(GLWin.dpy, XK_F);
 
-    keyCodes[3] = XKeysymToKeycode(GLWin.dpy, XK_f);
-    keyCodes[15] = XKeysymToKeycode(GLWin.dpy, XK_F);
+  keyCodes[4] = XKeysymToKeycode(GLWin.dpy, XK_b);
+  keyCodes[5] = XKeysymToKeycode(GLWin.dpy, XK_Page_Up);
+  keyCodes[6] = XKeysymToKeycode(GLWin.dpy, XK_Page_Down);
+  keyCodes[7] = XKeysymToKeycode(GLWin.dpy, XK_Up);
+  keyCodes[8] = XKeysymToKeycode(GLWin.dpy, XK_Down);
+  keyCodes[9] = XKeysymToKeycode(GLWin.dpy, XK_Left);
+  keyCodes[10] = XKeysymToKeycode(GLWin.dpy, XK_Right);
 
-    keyCodes[4] = XKeysymToKeycode(GLWin.dpy, XK_b);
-    keyCodes[5] = XKeysymToKeycode(GLWin.dpy, XK_Page_Up);
-    keyCodes[6] = XKeysymToKeycode(GLWin.dpy, XK_Page_Down);
-    keyCodes[7] = XKeysymToKeycode(GLWin.dpy, XK_Up);
-    keyCodes[8] = XKeysymToKeycode(GLWin.dpy, XK_Down);
-    keyCodes[9] = XKeysymToKeycode(GLWin.dpy, XK_Left);
-    keyCodes[10] = XKeysymToKeycode(GLWin.dpy, XK_Right);
+  // newest chars
+  keyCodes[11] = XKeysymToKeycode(GLWin.dpy, XK_s);
+  keyCodes[12] = XKeysymToKeycode(GLWin.dpy, XK_S);
 
-    // newest chars
-    keyCodes[11] = XKeysymToKeycode(GLWin.dpy, XK_s);
-    keyCodes[12] = XKeysymToKeycode(GLWin.dpy, XK_S);
+  keyCodes[13] = XKeysymToKeycode(GLWin.dpy, XK_r);
+  keyCodes[14] = XKeysymToKeycode(GLWin.dpy, XK_R);
+  // Note: 15 used above
+  keyCodes[16] = XKeysymToKeycode(GLWin.dpy, XK_space);
 
-    keyCodes[13] = XKeysymToKeycode(GLWin.dpy, XK_r);
-    keyCodes[14] = XKeysymToKeycode(GLWin.dpy, XK_R);
-    // Note: 15 used above
-    keyCodes[16] = XKeysymToKeycode(GLWin.dpy, XK_space);
-
-  
-} // end of the function 
+}  // end of the function
 
 //
 // Draw Hud
 //
 void DrawHUD(void)
 {
+  glLoadIdentity();
 
-	glLoadIdentity();
+  // change the matrix
+  glMatrixMode(GL_PROJECTION);
 
-	// change the matrix
-	glMatrixMode(GL_PROJECTION);
+  // current view
+  glPushMatrix();
 
-	// current view
-	glPushMatrix();
+  // Begin normal code
 
-	// Begin normal code
+  // reset the matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
 
-	// reset the matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  gluPerspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, PERSPECTIVE_Z);
 
-	gluPerspective(45.0f, (GLfloat)SCREEN_WIDTH /
-		(GLfloat)SCREEN_HEIGHT, 0.1f, PERSPECTIVE_Z);
+  glMatrixMode(GL_MODELVIEW);
 
-	glMatrixMode(GL_MODELVIEW);
+  GetFramesPerSecond();  // get frames
 
-
-	GetFramesPerSecond();	// get frames
-
-} // end of the function
-
+}  // end of the function
 
 //
 // Resize gl scene
 //
-GLvoid ResizeGLScene(GLsizei width, GLsizei height)		// Resize And Initialize The GL Window
+GLvoid ResizeGLScene(GLsizei width, GLsizei height)  // Resize And Initialize The GL Window
 {
-	if (height==0)						// Prevent A Divide By Zero By
-	{
-		height=1;					// Making Height Equal One
-	}
+  if (height == 0)  // Prevent A Divide By Zero By
+  {
+    height = 1;  // Making Height Equal One
+  }
 
-	glViewport(0,0,width,height);				// Reset The Current Viewport
+  glViewport(0, 0, width, height);  // Reset The Current Viewport
 
-	glMatrixMode(GL_PROJECTION);				// Select The Projection Matrix
-	glLoadIdentity();					// Reset The Projection Matrix
+  glMatrixMode(GL_PROJECTION);  // Select The Projection Matrix
+  glLoadIdentity();             // Reset The Projection Matrix
 
-	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
+  // Calculate The Aspect Ratio Of The Window
+  gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
-	glMatrixMode(GL_MODELVIEW);				// Select The Modelview Matrix
-	glLoadIdentity();					// Reset The Modelview Matrix
+  glMatrixMode(GL_MODELVIEW);  // Select The Modelview Matrix
+  glLoadIdentity();            // Reset The Modelview Matrix
 }
 
 //
 // Init GL
 //
-int InitGL(GLvoid)					// All Setup For OpenGL Goes Here
+int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
 {
-	// seed rand generator
-	srand((unsigned int)time(NULL));
+  // seed rand generator
+  srand((unsigned int)time(NULL));
 
-	// Load the key codes --
-	LoadKeyCodes();
+  // Load the key codes --
+  LoadKeyCodes();
 
-	// enable all the goodies
-	Super_LoadGlobals();
+  // enable all the goodies
+  Super_LoadGlobals();
 
-	Load_ConfigFile();
-	Super_FireAnts();
+  Load_ConfigFile();
+  Super_FireAnts();
 
-	Create_Col_List();
-	Create_Wall_List();
+  Create_Col_List();
+  Create_Wall_List();
 
+  //
+  // loading sound library
+  printf("Loading sound library, make sure 'music apps' are closed\n");
+  Load_Audio();
 
-	//
-	// loading sound library
-	printf("Loading sound library, make sure 'music apps' are closed\n");
-	Load_Audio();
+  glShadeModel(GL_SMOOTH);               // Enable Smooth Shading
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);  // Black Background
+  glClearDepth(1.0f);                    // Depth Buffer Setup
 
-	
-	glShadeModel(GL_SMOOTH);					// Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Black Background
-	glClearDepth(1.0f);						// Depth Buffer Setup
+  glEnable(GL_NORMALIZE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+  glShadeModel(GL_SMOOTH);
 
-	glEnable(GL_NORMALIZE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+  glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Really Nice Perspective Calculations
 
-	glShadeModel(GL_SMOOTH);
+  // have to load the quadrice to be used
+  quadric = gluNewQuadric();               // Create A Pointer To The Quadric Object (NEW)
+  gluQuadricNormals(quadric, GLU_SMOOTH);  // Create Smooth Normals (NEW)
+  gluQuadricTexture(quadric, GL_TRUE);     // Create Texture Coords (NEW)
 
+  GenerateFireAnts();
 
-	glEnable(GL_DEPTH_TEST);				// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);					// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+  CreateWorld();
 
+  LoadCameras();
 
-	// have to load the quadrice to be used
-	quadric=gluNewQuadric();			// Create A Pointer To The Quadric Object (NEW)
-	gluQuadricNormals(quadric, GLU_SMOOTH);		// Create Smooth Normals (NEW)
-	gluQuadricTexture(quadric, GL_TRUE);		// Create Texture Coords (NEW)
+  // Load the objects
+  InitObjects();
+  GenerateLights();
 
+  InitGlobals();
 
-	GenerateFireAnts();		
+  Build_ParticleSet();
+  Reset_FontID();
 
-	CreateWorld();
+  // Load the title screen text
+  Load_Titles();
 
-	LoadCameras();
+  // load the text library
+  Super_MainText();
 
-	// Load the objects
-	InitObjects();
-	GenerateLights();
+  CreateWalls();
 
-	InitGlobals();
+  //
+  // Load the collsion test for the walll
+  //
 
-	Build_ParticleSet();
-	Reset_FontID();
+  // front wall
+  InsertColSegment(world_ptr->x_min, world_ptr->y_max, world_ptr->x_max, world_ptr->y_max);
 
-	// Load the title screen text
-	Load_Titles();
+  // right wall
+  InsertColSegment(world_ptr->x_max, world_ptr->y_min, world_ptr->x_max, world_ptr->y_max);
 
-	// load the text library
-	Super_MainText();
-	
-	CreateWalls();
+  // back wall
+  InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_max, world_ptr->y_min);
 
-	//
-	// Load the collsion test for the walll
-	//
-	
-	// front wall 
-	InsertColSegment(world_ptr->x_min, world_ptr->y_max,
-			 world_ptr->x_max, world_ptr->y_max);
+  // left wall
+  InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_min, world_ptr->y_max);
 
-	// right wall
-	InsertColSegment(world_ptr->x_max, world_ptr->y_min,
-			 world_ptr->x_max, world_ptr->y_max);
+  //
+  // for the network save
+  // the number of bots incase it is changed
+  MAX_SAVED_BOTS = MAX_FIRE_ANTS;
 
-	// back wall
-	InsertColSegment(world_ptr->x_min, world_ptr->y_min,
-			 world_ptr->x_max, world_ptr->y_min);
+  // end of insertion
 
-	// left wall
-	InsertColSegment(world_ptr->x_min, world_ptr->y_min,
-			 world_ptr->x_min, world_ptr->y_max);
+  Super_InitNetwork();
 
-	//
-	// for the network save
-	// the number of bots incase it is changed
-	MAX_SAVED_BOTS = MAX_FIRE_ANTS;
+  //
+  // begin in paused mode
+  //
+  Super_BeginPaused();
 
+  mSuper_Loaded = LOADED_TRUE;
 
-	// end of insertion
+  return true;  // Initialization Went OK
 
-	Super_InitNetwork();
-
-	//
-	// begin in paused mode
-	//
-	Super_BeginPaused();
-
-	mSuper_Loaded = LOADED_TRUE;
-
-
-	return true;			// Initialization Went OK
-
-} // end of the function
+}  // end of the function
 
 //
 // AnimateScene
@@ -586,82 +544,78 @@ int InitGL(GLvoid)					// All Setup For OpenGL Goes Here
 //
 void AnimateScene(void)
 {
-  if (CHECK_NET_CLIENT) {
-
+  if (CHECK_NET_CLIENT)
+  {
     AnimNetworkBots();
-
-  } else if (CHECK_NET_SERVER) {
-
+  }
+  else if (CHECK_NET_SERVER)
+  {
     AnimNetworkBots();
+  }
+  else
+  {
+    AnimFireAnts();
 
-  } else {
-
-    	AnimFireAnts();
-
-  } // endo if else
+  }  // endo if else
 
   AnimateExplosions();
 
-} // end of the function
-
-
+}  // end of the function
 
 //
 // Draw The Scene
 //
-void DrawGLScene(GLvoid)				// Here's Where We Do All The Drawing
+void DrawGLScene(GLvoid)  // Here's Where We Do All The Drawing
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-	glClearColor(0.0f, 0.0f, 0.3f, 0.0f);				// Black Background
-	
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear Screen And Depth Buffer
+  glClearColor(0.0f, 0.0f, 0.3f, 0.0f);                // Black Background
 
-	// begin scene ---
-	BEGIN_BOT;
+  // begin scene ---
+  BEGIN_BOT;
 
-	RenderWalls();
-	RenderPlane();
+  RenderWalls();
+  RenderPlane();
 
-		SetLights();
-		driver_objects[STARS_OBJECT]->render();
+  SetLights();
+  driver_objects[STARS_OBJECT]->render();
 
-		Draw_Wall_List();
+  Draw_Wall_List();
 
-		DrawExplosions();
+  DrawExplosions();
 
-		DrawFireAnts();
+  DrawFireAnts();
 
-	END_BOT;
+  END_BOT;
 
-	// Draw the multiple sets of Heads up displays
-	Super_DrawText();
+  // Draw the multiple sets of Heads up displays
+  Super_DrawText();
 
-	Draw_Title();
+  Draw_Title();
 
-	DrawHUD();
+  DrawHUD();
 
-} // end of the function 
+}  // end of the function
 
 //
 // Run_Anim
 // - combine animation and draw scene
 void Run_Anim(void)
 {
-
-  if (ant_globals->paused == 0) {
+  if (ant_globals->paused == 0)
+  {
     AnimateScene();
 
     // play music
-    //Play_Music();
+    // Play_Music();
 
-  } // end of the fi 
-    
-	DrawGLScene();		// render to window
+  }  // end of the fi
 
+  DrawGLScene();  // render to window
 
-	// Swap buffers
-	glXSwapBuffers(GLWin.dpy, GLWin.win);
+  // Swap buffers
+  glXSwapBuffers(GLWin.dpy, GLWin.win);
 
-} // end of the function
+}  // end of the function
 
 //
 // ShutdownGL
@@ -669,68 +623,64 @@ void Run_Anim(void)
 //
 void ShutdownGL(void)
 {
+  DeleteObjects();
+  ShutdownLights();
 
   DeleteObjects();
-	ShutdownLights();
 
-	DeleteObjects();
+  ShutdownFireAnts();
 
-	ShutdownFireAnts();
+  ShutdownWorld();
 
-	ShutdownWorld();
+  Delete_Wall_List();
+  Delete_Col_List();
 
-	Delete_Wall_List();
-	Delete_Col_List();
+  // destroy particle set
+  Destroy_ParticleSet();
 
-	// destroy particle set
-	Destroy_ParticleSet();
+  Super_KillText();
 
-	Super_KillText();
+  // Call after shutdown fireants
+  Super_KillFires();
 
-	// Call after shutdown fireants
-	Super_KillFires();
+  Super_DeleteNetwork();
 
-	Super_DeleteNetwork();
+  // This should probably be close to last
+  Super_KillGlobals();
 
-	// This should probably be close to last
-	Super_KillGlobals();
+  DestroyGlobals();
 
-	DestroyGlobals();
-
-} // end of the function
+}  // end of the function
 
 //
 // KILLGLWINDOW
 //
-static GLvoid KillGLWindow(GLvoid)				// Properly Kill The Window
+static GLvoid KillGLWindow(GLvoid)  // Properly Kill The Window
 {
-
   if (GLWin.ctx)
+  {
+    if (!glXMakeCurrent(GLWin.dpy, None, NULL))
     {
-      if (!glXMakeCurrent(GLWin.dpy, None, NULL))
-	{
-	  printf("released failed\n");
-	} // end of teh if 
+      printf("released failed\n");
+    }  // end of teh if
 
-      glXDestroyContext(GLWin.dpy, GLWin.ctx);
-      GLWin.ctx = NULL;
+    glXDestroyContext(GLWin.dpy, GLWin.ctx);
+    GLWin.ctx = NULL;
 
-    } // end of the if 
+  }  // end of the if
 
   // switch back to original resolution
   if (GLWin.fs)
-    {
-      XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
-      XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-    } // end of the if 
+  {
+    XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
+    XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+  }  // end of the if
 
   XCloseDisplay(GLWin.dpy);
 
-  
   ShutdownGL();
 
-
-} // end of the function
+}  // end of the function
 
 /*	This Code Creates Our OpenGL Window.  Parameters Are:					*
  *	title			- Title To Appear At The Top Of The Window			*
@@ -738,254 +688,232 @@ static GLvoid KillGLWindow(GLvoid)				// Properly Kill The Window
  *	height			- Height Of The GL Window Or Fullscreen Mode			*
  *	bits			- Number Of Bits To Use For Color (8/16/24/32)			*
  *	fullscreenflag	- Use Fullscreen Mode (TRUE) Or Windowed Mode (FALSE)	*/
- 
+
 bool CreateGLWindow(char* title, int width, int height, int bits, bool fullscreenflag)
 {
+  XVisualInfo* vi;
+  Colormap cmap;
+  int dpyWidth, dpyHeight;
+  int i;
+  int glxMajorVersion, glxMinorVersion;
+  int vidModeMajorVersion, vidModeMinorVersion;
+  XF86VidModeModeInfo** modes;
+  int modeNum;
+  int bestMode;
+  Atom wmDelete;
+  Window winDummy;
+  unsigned int borderDummy;
 
-  XVisualInfo *vi;
-    Colormap cmap;
-    int dpyWidth, dpyHeight;
-    int i;
-    int glxMajorVersion, glxMinorVersion;
-    int vidModeMajorVersion, vidModeMinorVersion;
-    XF86VidModeModeInfo **modes;
-    int modeNum;
-    int bestMode;
-    Atom wmDelete;
-    Window winDummy;
-    unsigned int borderDummy;
-    
-    GLWin.fs = fullscreenflag;
-    /* set best mode to current */
-    bestMode = 0;
-    /* get a connection */
-    GLWin.dpy = XOpenDisplay(0);
-    GLWin.screen = DefaultScreen(GLWin.dpy);
-    XF86VidModeQueryVersion(GLWin.dpy, &vidModeMajorVersion,
-        &vidModeMinorVersion);
-    printf("XF86VidModeExtension-Version %d.%d\n", vidModeMajorVersion,
-        vidModeMinorVersion);
-    XF86VidModeGetAllModeLines(GLWin.dpy, GLWin.screen, &modeNum, &modes);
-    /* save desktop-resolution before switching modes */
-    GLWin.deskMode = *modes[0];
-    /* look for mode with requested resolution */
-    for (i = 0; i < modeNum; i++)
+  GLWin.fs = fullscreenflag;
+  /* set best mode to current */
+  bestMode = 0;
+  /* get a connection */
+  GLWin.dpy = XOpenDisplay(0);
+  GLWin.screen = DefaultScreen(GLWin.dpy);
+  XF86VidModeQueryVersion(GLWin.dpy, &vidModeMajorVersion, &vidModeMinorVersion);
+  printf("XF86VidModeExtension-Version %d.%d\n", vidModeMajorVersion, vidModeMinorVersion);
+  XF86VidModeGetAllModeLines(GLWin.dpy, GLWin.screen, &modeNum, &modes);
+  /* save desktop-resolution before switching modes */
+  GLWin.deskMode = *modes[0];
+  /* look for mode with requested resolution */
+  for (i = 0; i < modeNum; i++)
+  {
+    if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
     {
-        if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
-        {
-            bestMode = i;
-        }
+      bestMode = i;
     }
-    /* get an appropriate visual */
-    vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
-    if (vi == NULL)
-    {
-        vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListSgl);
-        printf("Only Singlebuffered Visual!\n");
-    }
-    else
-    {
-        printf("Doublebuffered Visual:		[ OK ]\n");
-    }
-    glXQueryVersion(GLWin.dpy, &glxMajorVersion, &glxMinorVersion);
-    printf("glX-Version %d.%d\n", glxMajorVersion, glxMinorVersion);
-    /* create a GLX context */
-    GLWin.ctx = glXCreateContext(GLWin.dpy, vi, 0, GL_TRUE);
-    /* create a color map */
-    cmap = XCreateColormap(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
-        vi->visual, AllocNone);
-    GLWin.attr.colormap = cmap;
-    GLWin.attr.border_pixel = 0;
+  }
+  /* get an appropriate visual */
+  vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
+  if (vi == NULL)
+  {
+    vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListSgl);
+    printf("Only Singlebuffered Visual!\n");
+  }
+  else
+  {
+    printf("Doublebuffered Visual:		[ OK ]\n");
+  }
+  glXQueryVersion(GLWin.dpy, &glxMajorVersion, &glxMinorVersion);
+  printf("glX-Version %d.%d\n", glxMajorVersion, glxMinorVersion);
+  /* create a GLX context */
+  GLWin.ctx = glXCreateContext(GLWin.dpy, vi, 0, GL_TRUE);
+  /* create a color map */
+  cmap = XCreateColormap(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen), vi->visual, AllocNone);
+  GLWin.attr.colormap = cmap;
+  GLWin.attr.border_pixel = 0;
 
-    if (GLWin.fs)
-    {
-        XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, modes[bestMode]);
-        XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-        dpyWidth = modes[bestMode]->hdisplay;
-        dpyHeight = modes[bestMode]->vdisplay;
-        printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
-        XFree(modes);
-    
-        /* create a fullscreen window */
-        GLWin.attr.override_redirect = True;
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask |
-            StructureNotifyMask;
-        GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
-            0, 0, dpyWidth, dpyHeight, 0, vi->depth, InputOutput, vi->visual,
-            CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect,
-            &GLWin.attr);
-        XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
-		XMapRaised(GLWin.dpy, GLWin.win);
-        XGrabKeyboard(GLWin.dpy, GLWin.win, True, GrabModeAsync,
-            GrabModeAsync, CurrentTime);
-        XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask,
-            GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime);
-    } 
-   else
-    {
-        /* create a window in window mode*/
-        GLWin.attr.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask |
-            StructureNotifyMask;
+  if (GLWin.fs)
+  {
+    XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, modes[bestMode]);
+    XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+    dpyWidth = modes[bestMode]->hdisplay;
+    dpyHeight = modes[bestMode]->vdisplay;
+    printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
+    XFree(modes);
 
-        GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
-            0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
-            CWBorderPixel | CWColormap | CWEventMask, &GLWin.attr);
+    /* create a fullscreen window */
+    GLWin.attr.override_redirect = True;
+    GLWin.attr.event_mask =
+        ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | StructureNotifyMask;
+    GLWin.win =
+        XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen), 0, 0, dpyWidth, dpyHeight, 0,
+                      vi->depth, InputOutput, vi->visual,
+                      CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect, &GLWin.attr);
+    XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
+    XMapRaised(GLWin.dpy, GLWin.win);
+    XGrabKeyboard(GLWin.dpy, GLWin.win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+    XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask, GrabModeAsync, GrabModeAsync,
+                 GLWin.win, None, CurrentTime);
+  }
+  else
+  {
+    /* create a window in window mode*/
+    GLWin.attr.event_mask =
+        ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | StructureNotifyMask;
 
-        /* only set window title and handle wm_delete_events if in windowed mode */
-        wmDelete = XInternAtom(GLWin.dpy, "WM_DELETE_WINDOW", True);
-        XSetWMProtocols(GLWin.dpy, GLWin.win, &wmDelete, 1);
-        XSetStandardProperties(GLWin.dpy, GLWin.win, title,
-            title, None, NULL, 0, NULL);
-        XMapRaised(GLWin.dpy, GLWin.win);
-    }       
+    GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen), 0, 0, width, height, 0,
+                              vi->depth, InputOutput, vi->visual,
+                              CWBorderPixel | CWColormap | CWEventMask, &GLWin.attr);
 
-    /* connect the glx-context to the window */
-    glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
-    XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y,
-        &GLWin.width, &GLWin.height, &borderDummy, &GLWin.depth);
-    printf("Depth %d\n", GLWin.depth);
-    if (glXIsDirect(GLWin.dpy, GLWin.ctx)) 
-        printf("Direct Rendering Enabled	[ OK ]\n");
-    else
-        printf("Error: No Direct Rendering available\n");
+    /* only set window title and handle wm_delete_events if in windowed mode */
+    wmDelete = XInternAtom(GLWin.dpy, "WM_DELETE_WINDOW", True);
+    XSetWMProtocols(GLWin.dpy, GLWin.win, &wmDelete, 1);
+    XSetStandardProperties(GLWin.dpy, GLWin.win, title, title, None, NULL, 0, NULL);
+    XMapRaised(GLWin.dpy, GLWin.win);
+  }
 
-    InitGL();
+  /* connect the glx-context to the window */
+  glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+  XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y, &GLWin.width, &GLWin.height,
+               &borderDummy, &GLWin.depth);
+  printf("Depth %d\n", GLWin.depth);
+  if (glXIsDirect(GLWin.dpy, GLWin.ctx))
+    printf("Direct Rendering Enabled	[ OK ]\n");
+  else
+    printf("Error: No Direct Rendering available\n");
 
-    return True;    
-    
+  InitGL();
 
-} // end of the function 
+  return True;
 
-
+}  // end of the function
 
 //
 // main
-// 
-int main(int argc, char **argv)
+//
+int main(int argc, char** argv)
 {
   int i;
 
   char buffer[80];
 
-    XEvent event;
-    KeySym key;
-    
-    done = False;
+  XEvent event;
+  KeySym key;
 
-    // default to windowed mode
-    GLWin.fs = FULLSCREEN_MODE;
+  done = False;
 
-    CreateGLWindow("glAnts", SCREEN_WIDTH, SCREEN_HEIGHT, 24, GLWin.fs);
+  // default to windowed mode
+  GLWin.fs = FULLSCREEN_MODE;
 
-    /* wait for events*/ 
-    while (!done)
+  CreateGLWindow("glAnts", SCREEN_WIDTH, SCREEN_HEIGHT, 24, GLWin.fs);
+
+  /* wait for events*/
+  while (!done)
+  {
+    /* handle the events in the queue */
+    while (XPending(GLWin.dpy) > 0)
     {
-        /* handle the events in the queue */
-        while (XPending(GLWin.dpy) > 0)
-        {
-            XNextEvent(GLWin.dpy, &event);
-            switch (event.type)
-            {
-                case Expose:
-	                if (event.xexpose.count != 0)
-	                    break;
+      XNextEvent(GLWin.dpy, &event);
+      switch (event.type)
+      {
+        case Expose:
+          if (event.xexpose.count != 0) break;
 
+          Run_Anim();
 
-		       
-			Run_Anim();
+          break;
 
-         	        break;
+        case ConfigureNotify:
+          /* call resizeGLScene only if our window-size changed */
+          if ((event.xconfigure.width != GLWin.width) || (event.xconfigure.height != GLWin.height))
+          {
+            GLWin.width = event.xconfigure.width;
+            GLWin.height = event.xconfigure.height;
 
-	            case ConfigureNotify:
-	            /* call resizeGLScene only if our window-size changed */
-	                if ((event.xconfigure.width != GLWin.width) || 
-	                    (event.xconfigure.height != GLWin.height))
-	                {
-	                    GLWin.width = event.xconfigure.width;
-	                    GLWin.height = event.xconfigure.height;
-			    
-                        printf("Resize event\n");
+            printf("Resize event\n");
 
-	                    ResizeGLScene(event.xconfigure.width,
-	                        event.xconfigure.height);
-	                }
-	                break;
+            ResizeGLScene(event.xconfigure.width, event.xconfigure.height);
+          }
+          break;
 
-               
-			
-                case ButtonPress:
-		  
-		  // exit on mouse press
+        case ButtonPress:
 
-		  // done = True;
-                    break;
+          // exit on mouse press
 
-	    case KeyPress:
+          // done = True;
+          break;
 
-	      if (ant_globals->menu_mode == MENU_SETTINGS_MODE)
-		{
+        case KeyPress:
 
-		  key = XLookupKeysym(&event.xkey, 0);		  
+          if (ant_globals->menu_mode == MENU_SETTINGS_MODE)
+          {
+            key = XLookupKeysym(&event.xkey, 0);
 
+            Cmd_KeyPress(key);
 
-		  Cmd_KeyPress(key);
-		  
-		  // handle fullscreen press differently
-		  if (key == XK_F1)
-		    break;
-		  
-		  // process the key 
-		  Cmd_Keys(key);
+            // handle fullscreen press differently
+            if (key == XK_F1) break;
 
-		  XLookupString(&event, buffer, 10, &key, 0 ) ;	
-		  Alpha_Keys(buffer);
+            // process the key
+            Cmd_Keys(key);
 
-		}  else {
+            XLookupString(&event, buffer, 10, &key, 0);
+            Alpha_Keys(buffer);
+          }
+          else
+          {
+            key = XLookupKeysym(&event.xkey, 0);
+            keyPressed(key);
+            keys[event.xkey.keycode] = true;
 
-                    key = XLookupKeysym(&event.xkey, 0);
-                    keyPressed(key);
-		    keys[event.xkey.keycode] = true;
+          }  // end of the if
 
-		} // end of the if 
-		    
-                    break;
+          break;
 
-	    case KeyRelease:
+        case KeyRelease:
 
-	      if (ant_globals->menu_mode == MENU_SETTINGS_MODE) {
+          if (ant_globals->menu_mode == MENU_SETTINGS_MODE)
+          {
+          }
+          else
+          {
+            keys[event.xkey.keycode] = false;
 
-		} else { 
+          }  // end of the - if
 
-		  keys[event.xkey.keycode] = false; 
+          break;
 
-		} // end of the - if
-		    
-
-	      break;
-
-                case ClientMessage:
-                    if (*XGetAtomName(GLWin.dpy, event.xclient.message_type) == 
-                        *"WM_PROTOCOLS")
-                    {
-                        printf("Exiting glants...\n");
-                        done = True;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-	
-	// Check for key pressed in the camera
-	HandleCameraKeys(keys);
-
-	// run the gambit------
-	Run_Anim();
-
+        case ClientMessage:
+          if (*XGetAtomName(GLWin.dpy, event.xclient.message_type) == *"WM_PROTOCOLS")
+          {
+            printf("Exiting glants...\n");
+            done = True;
+          }
+          break;
+        default:
+          break;
+      }
     }
-    KillGLWindow();
 
-    return 0;
+    // Check for key pressed in the camera
+    HandleCameraKeys(keys);
 
-} // end of main //
+    // run the gambit------
+    Run_Anim();
+  }
+  KillGLWindow();
 
+  return 0;
+
+}  // end of main //

@@ -6,18 +6,18 @@
 
 // class for binary tree
 
-typedef struct tagTreeNode {
-	
-	int		data;
+typedef struct tagTreeNode
+{
+  int data;
 
-	struct tagTreeNode *left;
-	struct tagTreeNode *right;
+  struct tagTreeNode* left;
+  struct tagTreeNode* right;
 
 } TreeNode;
 
-typedef struct tagTree {
-
-	TreeNode *root;
+typedef struct tagTree
+{
+  TreeNode* root;
 
 } Tree;
 

@@ -39,48 +39,47 @@
 #ifndef _GLDRAWLIB_H_
 #define _GLDRAWLIB_H_
 
-#define ENABLE_CONSOLE		0
-#define USE_SMALL_SCREEN	1
+#define ENABLE_CONSOLE 0
+#define USE_SMALL_SCREEN 1
 
-#define MAX_TEXTURES		20
-
+#define MAX_TEXTURES 20
 
 #ifndef ABS
-#define ABS(x)       (((x) >= 0) ? (x) : (-(x)))
+#define ABS(x) (((x) >= 0) ? (x) : (-(x)))
 #endif
 
-#define M_PI			3.14159265358f
-#define	RAD_TO_DEG		(180.0f / M_PI) 		
+#define M_PI 3.14159265358f
+#define RAD_TO_DEG (180.0f / M_PI)
 
 // dont ask, change the order of normal
-#define N_0	CalcNormal(v[0], v[1], v[2], n)
-#define N_1	CalcNormal(v[1], v[0], v[2], n)
-#define N_2	CalcNormal(v[2], v[0], v[1], n)
+#define N_0 CalcNormal(v[0], v[1], v[2], n)
+#define N_1 CalcNormal(v[1], v[0], v[2], n)
+#define N_2 CalcNormal(v[2], v[0], v[1], n)
 
-#define N_3	CalcNormal(v[0], v[2], v[1], n)
+#define N_3 CalcNormal(v[0], v[2], v[1], n)
 
 // make sure to call this macro
-#define GET_NORMAL	glNormal3fv(n)
+#define GET_NORMAL glNormal3fv(n)
 
 #if USE_SMALL_SCREEN
-#define SCREEN_WIDTH		640
-#define SCREEN_HEIGHT		480
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 #else
-#define SCREEN_WIDTH		800
-#define SCREEN_HEIGHT		600
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 #endif
 
-#define	MED_YELLOW		glColor3f(0.8f, 0.8f, 0.0f)
-#define MED_RED			glColor3f(0.8f, 0.0f, 0.0f)
-#define MED_BLUE		glColor3f(0.0f, 0.0f, 0.8f)
-#define MED_GREEN		glColor3f(0.0f, 0.8f, 0.0f)
-#define MED_CYAN		glColor3f(0.0f, 0.7f, 0.8f)
-#define MED_PURPLE		glColor3f(0.7f, 0.0f, 0.7f)
+#define MED_YELLOW glColor3f(0.8f, 0.8f, 0.0f)
+#define MED_RED glColor3f(0.8f, 0.0f, 0.0f)
+#define MED_BLUE glColor3f(0.0f, 0.0f, 0.8f)
+#define MED_GREEN glColor3f(0.0f, 0.8f, 0.0f)
+#define MED_CYAN glColor3f(0.0f, 0.7f, 0.8f)
+#define MED_PURPLE glColor3f(0.7f, 0.0f, 0.7f)
 
-#define CLR_0		glColor3f(0.23f, 0.67f, 0.79f)
-#define CLR_1		glColor3f(0.755f, 0.234f, 0.237f)
-#define CLR_2		glColor3f(0.5646f, 0.3453f, 0.753f)
-#define CLR_3		glColor3f(0.9646f, 0.9453f, 0.353f)
+#define CLR_0 glColor3f(0.23f, 0.67f, 0.79f)
+#define CLR_1 glColor3f(0.755f, 0.234f, 0.237f)
+#define CLR_2 glColor3f(0.5646f, 0.3453f, 0.753f)
+#define CLR_3 glColor3f(0.9646f, 0.9453f, 0.353f)
 
 unsigned long getclock(void);
 
@@ -91,22 +90,18 @@ unsigned long getclock(void);
 void Load_Titles(void);
 void Draw_Title(void);
 
-
 void Normalize(float p[3]);
-void CalcNormal(float p[3],float p1[3],float p2[3], float n[3]);
+void CalcNormal(float p[3], float p1[3], float p2[3], float n[3]);
 
 void Calc_Normal(float v[3][3], float out[3]);
 
-void PrintText(const char *fmt, ...);
+void PrintText(const char* fmt, ...);
 
 void SetFunkyTexture(void);
 int GetFunkyTexture(void);
-void LoadTexture(char *filename);
+void LoadTexture(char* filename);
 void NextTexture(void);
 
 void DrawLineOfSight(float x1, float y1, float x2, float y2);
 
-
-
 #endif
-

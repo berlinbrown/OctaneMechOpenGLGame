@@ -32,7 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // fireants.h
 //
@@ -42,50 +41,49 @@
 #ifndef _FIREANTS_H_
 #define _FIREANTS_H_
 
-#define PLAYER_0		0
+#define PLAYER_0 0
 
 //
 // the drawing size
 // in x/z
 //
-#define FIRE_ANT_SIZE	1.5f
+#define FIRE_ANT_SIZE 1.5f
 
 // length of the vision
-#define PERSPECTIVE_Z	600.0f
+#define PERSPECTIVE_Z 600.0f
 
 // first person mode camera
-#define FIRST_PERSON_Z	4.3f
-#define FIRST_HEIGHT	2.4f
+#define FIRST_PERSON_Z 4.3f
+#define FIRST_HEIGHT 2.4f
 
-#define DRAW_LINE_SIGHT	1
+#define DRAW_LINE_SIGHT 1
 
-#define LIGHT_HEIGHT_0	100.0f
-#define LIGHT_HEIGHT_1	180.0f
+#define LIGHT_HEIGHT_0 100.0f
+#define LIGHT_HEIGHT_1 180.0f
 
 //
 // max distance a bullet can travel
 //
-#define MAX_BULLET_TRAVEL	600.0f
-
+#define MAX_BULLET_TRAVEL 600.0f
 
 // bullet height
-#define BULLET_H1		1.8f
-#define BULLET_H2		2.3f
+#define BULLET_H1 1.8f
+#define BULLET_H2 2.3f
 
-#define BULLET_LEN		6.0f
+#define BULLET_LEN 6.0f
 
 //
 // For the hex grid
-#define HEX_SIZE		12.0f
+#define HEX_SIZE 12.0f
 
 // the height should be 4 times othe size
-#define HEX_HEIGHT		35.0f
+#define HEX_HEIGHT 35.0f
 
-#define WORLD_X_MIN		-300.0f
-#define WORLD_X_MAX		300.0f
+#define WORLD_X_MIN -300.0f
+#define WORLD_X_MAX 300.0f
 
-#define WORLD_Y_MIN		-300.0f
-#define WORLD_Y_MAX		300.0f
+#define WORLD_Y_MIN -300.0f
+#define WORLD_Y_MAX 300.0f
 
 //
 void Prepare_DemoMode(void);

@@ -30,7 +30,7 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
- * 
+ *
  * https://github.com/berlinbrown/OctaneMechOpenGLGame
  */
 
@@ -40,227 +40,218 @@
 #ifndef _BOT_H_
 #define _BOT_H_
 
-// the number of commands in the 
+// the number of commands in the
 // command process
 //
-#define ATTACK_COMMAND		1
-#define WANDER_COMMAND		2
-#define MOVE_COMMAND		3
+#define ATTACK_COMMAND 1
+#define WANDER_COMMAND 2
+#define MOVE_COMMAND 3
 
 //
 // use TAB to toggle between modes
 //
-#define THIRD_PERSON_MODE	1
-#define FIRST_PERSON_MODE	2
+#define THIRD_PERSON_MODE 1
+#define FIRST_PERSON_MODE 2
 
 //
 // crosshairs
-// 
-#define CROSSHAIRS_SCALE	4.5f
-#define CROSSHAIRS_GROWTH	1.3f
+//
+#define CROSSHAIRS_SCALE 4.5f
+#define CROSSHAIRS_GROWTH 1.3f
 
-#define LOOKAT_OFFSET		5.0f
-#define CAMERA_BOT_OFFSET	8.0f
-#define CAMERA_HEIGHT		3.2f
+#define LOOKAT_OFFSET 5.0f
+#define CAMERA_BOT_OFFSET 8.0f
+#define CAMERA_HEIGHT 3.2f
 
-#define RELEASE_OBJECT(x)	\
-	if (x != NULL)			\
-		free(x);			\
-	x = NULL				\
+#define RELEASE_OBJECT(x) \
+  if (x != NULL) free(x); \
+  x = NULL
 
 //
-// The multiplier for kills or 
+// The multiplier for kills or
 // just normal hits
 //
-#define SCORE_NORMAL		2.0f
-#define SCORE_KILL			10.0f
-
+#define SCORE_NORMAL 2.0f
+#define SCORE_KILL 10.0f
 
 // stars.cpp
 //
-#define MAX_RAND			4096	// 4096?
-#define MAX_STARS			1200	// 2000
-#define STAR_RADIUS			710.0
-#define STAR_ROT_SPEED		0.1f;
+#define MAX_RAND 4096   // 4096?
+#define MAX_STARS 1200  // 2000
+#define STAR_RADIUS 710.0
+#define STAR_ROT_SPEED 0.1f;
 
+#define __straight_steps (MAX_STRAIGHT_STEPS - MIN_STRAIGHT_STEPS)
 
-#define __straight_steps	(MAX_STRAIGHT_STEPS-MIN_STRAIGHT_STEPS)	
-
-#define __go_home_steps_2	(MAX_STRAIGHT_STEPS_2-MIN_STRAIGHT_STEPS_2)	
+#define __go_home_steps_2 (MAX_STRAIGHT_STEPS_2 - MIN_STRAIGHT_STEPS_2)
 
 //
 // based on how much food is avaible
 // respawn so many ants
-#define USE_FOOD_RESPAWN	0
-#define ANT_RESPAWN			8
-#define FOOD_RESPAWN	(ANT_RESPAWN * INITIAL_ANT_FOOD)
+#define USE_FOOD_RESPAWN 0
+#define ANT_RESPAWN 8
+#define FOOD_RESPAWN (ANT_RESPAWN * INITIAL_ANT_FOOD)
 
+#define BEGIN_BOT glPushMatrix()
+#define END_BOT glPopMatrix()
 
-#define BEGIN_BOT		glPushMatrix()
-#define END_BOT			glPopMatrix()
+#define TURN_RIGHT 1
+#define TURN_LEFT 2
 
-#define TURN_RIGHT			1
-#define TURN_LEFT			2
+#define MOVE_STATE 0
+#define TURN_STATE 1
+#define CHANGE_DIR_STATE 2
+#define MOUNT_STATE 3
+#define SHOOT_STATE 4
+#define SET_TURN_STATE 6
+#define SET_MOUNT_STATE 7
+#define GENERATE_STATE 8
+#define GENERATE_TURN 9
+#define RECHECK_STATE 10
 
+#define TEMP_STATE 99
+#define GO_MOVE_COMMAND 999
+#define GO_ATTACK_COMMAND 998
+#define GO_WANDER_COMMAND 997
+#define EXPLODE_STATE 995
 
-#define MOVE_STATE			0
-#define TURN_STATE			1
-#define CHANGE_DIR_STATE	2
-#define MOUNT_STATE			3
-#define SHOOT_STATE			4
-#define	SET_TURN_STATE		6
-#define SET_MOUNT_STATE		7
-#define GENERATE_STATE		8
-#define GENERATE_TURN		9
-#define RECHECK_STATE		10
+#define ALIVE_STATE 1
+#define DEAD_STATE 0
+#define READY_STATE 2
 
-#define TEMP_STATE			99
-#define GO_MOVE_COMMAND		999
-#define GO_ATTACK_COMMAND	998
-#define GO_WANDER_COMMAND	997
-#define EXPLODE_STATE		995
+#define GET_NEST_WIDTH (1.5f * nest.objects[0]->size[0])
+#define GET_NEST_HWID (GET_NEST_WIDTH / 2.0f)
+#define NEST_FOOD_OBJECT nest.objects[0]->food
 
-#define ALIVE_STATE			1
-#define DEAD_STATE			0	
-#define	READY_STATE			2
-
-
-#define GET_NEST_WIDTH		(1.5f*nest.objects[0]->size[0])
-#define GET_NEST_HWID		(GET_NEST_WIDTH/2.0f)
-#define NEST_FOOD_OBJECT	nest.objects[0]->food
-
-#define INVALID_BOT			-1
+#define INVALID_BOT -1
 
 // static bot
 //
-typedef struct tagStaticBot {
+typedef struct tagStaticBot
+{
+  int list_id;
+  float position[3];
+  float rotation[3];
+  float size[3];
+  float color[3];
+  float state;
 
-	int		list_id;
-	float	position[3];
-	float	rotation[3];
-	float	size[3];
-	float	color[3];
-	float	state;
+  float food;
 
-	float	food;
+  bool delete_flag;  // deleted from pheromone list
 
-	bool	delete_flag;		// deleted from pheromone list
+  float heading;  // you can use rotation or heading
+  float linearv;
 
-	float	heading;		// you can use rotation or heading
-	float	linearv;
+  //
+  // for the collision
+  //
+  float travel;  // distance traveled
+  float final_x;
+  float final_y;
+  float max_dist;
 
-	//
-	// for the collision
-	//
-	float	travel;		// distance traveled
-	float	final_x;
-	float	final_y;
-	float	max_dist;
+  //
+  //
+  float old_x;
+  float old_y;  // for drawing a line strip
 
-	
-	//
-	// 
-	float	old_x;
-	float	old_y;			// for drawing a line strip
+  // used with bullets
+  float virt_x;
+  float virt_y;
+  float virt_heading;
+  int owner;  // owner of this bullet
 
-	// used with bullets
-	float	virt_x;
-	float	virt_y;
-	float	virt_heading;
-	int		owner;			// owner of this bullet
-
-	struct tagStaticBot *next;
+  struct tagStaticBot* next;
 
 } StaticBot, *StaticBotPtr;
 
 // functions for static bot
-typedef struct tagDriverSentinel {
+typedef struct tagDriverSentinel
+{
+  StaticBotPtr (*create)(int bot_id);
+  void (*destroy)(StaticBotPtr b);
+  void (*render)(StaticBotPtr boid);
+  void (*process)(StaticBotPtr b);
 
-	StaticBotPtr (*create)(int bot_id);
-	void (*destroy)(StaticBotPtr b);
-	void (*render)(StaticBotPtr boid);
-	void (*process)(StaticBotPtr b);
+  void (*generate)(void);
+  void (*shutdown)(void);
+  void (*drawall)(void);
 
-	void (*generate)(void);
-	void (*shutdown)(void);
-	void (*drawall)(void);
+  StaticBot** objects;
 
-	StaticBot	**objects;
-
-	int		max_items;
+  int max_items;
 
 } DriverSentinel, *DriverSentinelPtr;
 
+typedef struct tagDriverBots
+{
+  float x;
+  float y;
+  float linearv;     // speed
+  float size[3];     // scale
+  float heading;     // direction
+  float target_dir;  // target heading
+  float color[3];
+  int id;
+  int alive;
+  int numSteps;  // how many steps ant has moved
+  float turning_speed;
 
-typedef struct tagDriverBots {
-		
-	float	x;
-	float	y;
-	float	linearv;	// speed
-	float	size[3];	// scale 
-	float	heading;		// direction
-	float	target_dir;	// target heading
-	float	color[3];
-	int		id;
-	int		alive;
-	int		numSteps;	// how many steps ant has moved
-	float	turning_speed;
+  int state;          // what is bot doing
+  int straightSteps;  // steps before changing direction
+  float food;
+  float foodstore;
+  int turn_rand;
+  int turn_direction;
 
-	int		state;			// what is bot doing
-	int		straightSteps;	// steps before changing direction
-	float	food;
-	float	foodstore;
-	int		turn_rand;
-	int		turn_direction;	
+  bool go_home;
 
-	bool	go_home;
+  int gun_reset;  // delay befor firing
+  int gun_index;
 
-	int		gun_reset;		// delay befor firing
-	int		gun_index;
+  bool move_back;  // for move and turn
 
-	bool	move_back;		// for move and turn
+  // camera helper variables
+  float look_x;
+  float look_y;
+  float look_h;  // look height, actually the y
+  float cam_x;
+  float cam_y;
+  int view_mode;  // first or third person
 
+  float score;
+  int kills;
 
-	// camera helper variables
-	float	look_x;
-	float	look_y;
-	float	look_h;		// look height, actually the y
-	float	cam_x;
-	float	cam_y;
-	int		view_mode;		// first or third person
+  //
+  // the rectangle of the bot
+  // Note: you have to add
+  // the x,y to this value, but dont
+  // do to this variable, use temps
+  float x_min;
+  float x_max;
+  float y_min;
+  float y_max;
 
-	float	score;
-	int		kills;
+  //
+  // crosshair object
+  //
+  int crosshair_state;
+  float crosshair_scale;
 
-	//
-	// the rectangle of the bot
-	// Note: you have to add
-	// the x,y to this value, but dont
-	// do to this variable, use temps
-	float	x_min;
-	float	x_max;
-	float	y_min;
-	float	y_max;
+  // Add the fire ant bullets
+  // StaticBot	bullets[MAX_BULLETS];
+  StaticBot* bullets;
 
-	//
-	// crosshair object 
-	//
-	int		crosshair_state;
-	float	crosshair_scale;
+  // Command interface
+  void (*run)(struct tagDriverBots* bot);
 
-	// Add the fire ant bullets
-	//StaticBot	bullets[MAX_BULLETS];
-	StaticBot	*bullets;
-
-	// Command interface
-	void (*run)(struct tagDriverBots *bot);
-
-	int		last_command;
-	int		command;
-	float	attack_angle;
-	int		target_moves;
-	int		move_index;
-	int		enemy_id;
+  int last_command;
+  int command;
+  float attack_angle;
+  int target_moves;
+  int move_index;
+  int enemy_id;
 
 } DriverBots, *DriverBotPtr;
 
@@ -272,7 +263,7 @@ void Super_KillFires(void);
 
 // fireants.cpp
 void Reset_FireAnts(void);
-void Player_Control(bool *keys);
+void Player_Control(bool* keys);
 
 void LoadBotParms(DriverBotPtr bot_ptr);
 
@@ -317,7 +308,6 @@ void MoveFire0(int dir, int turn);
 
 extern DriverSentinel nest;
 extern DriverSentinel garden;
-extern DriverSentinel trail_set; 
-
+extern DriverSentinel trail_set;
 
 #endif

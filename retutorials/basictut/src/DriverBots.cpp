@@ -34,13 +34,12 @@
 #include <cstdlib>
 #include <iostream>
 
-DriverBots::DriverBots() {    
-}
+DriverBots::DriverBots() {}
 
 void DriverBots::wanderCommand()
 {
-    std::cout << "Running Wander Command" << std::endl;
-	this->numSteps++;
-	return;
+  std::cout << "Running Wander Command" << std::endl;
+  this->numSteps++;
+  return;
 
-} // end of the function
+}  // end of the function

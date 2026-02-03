@@ -34,7 +34,7 @@
 //
 // Berlin Brown
 // bigbinc@hotmail.com
-// 
+//
 // msg.c
 // - some msg networking code
 //
@@ -51,15 +51,15 @@
 // store the messages in an array and then send off
 // I couldnt come up with so more creative, shrug
 //
+#include "include/msg.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
 
-#include "include/msg.h"
 #include "network.h"
 
-static MsgList *msg_list;
+static MsgList* msg_list;
 
 static Msg msg_cluster[MAX_MESSAGES];
 static int msg_index = 0;
@@ -73,61 +73,46 @@ void Reset_MessageCount(void)
   Reset_MessageBytes();
   msg_index = 0;
 
-} // end of thefnction
+}  // end of thefnction
 
 //
 // Set_MsgIndex
 //
-void Set_MsgIndex(int val)
-{
-  msg_index = val;
+void Set_MsgIndex(int val) { msg_index = val; }  // end of the function
 
-} // end of the function
-
-void Set_MsgId(int val)
-{
-
-  msg_objectid = val;
-
-} // end
+void Set_MsgId(int val) { msg_objectid = val; }  // end
 
 //
 // Message Count
 //
 int Get_MessageCount(void)
 {
-  if ( (msg_list->objects >= 0) && 
-       (msg_list->objects < 40000))
-    {
+  if ((msg_list->objects >= 0) && (msg_list->objects < 40000))
+  {
+    return msg_list->objects;
 
-      return msg_list->objects;
-
-    } // end of the if 
+  }  // end of the if
 
   return 0;
-				
-} // end of the functino 
+
+}  // end of the functino
 
 //
 // For simple checks
 // get the first message
-// 
-MsgPtr Get_FirstMsg(void)
-{
-  return (MsgPtr)&msg_cluster[0];
-} // end of the function
+//
+MsgPtr Get_FirstMsg(void) { return (MsgPtr)&msg_cluster[0]; }  // end of the function
 
 //
 // GetMsgCluster
 //
-Msg *GetMsgCluster(void)
+Msg* GetMsgCluster(void)
 {
-
   // for you cs students out there
-  //return &msg_cluster[0];
+  // return &msg_cluster[0];
   return msg_cluster;
 
-} // end of func
+}  // end of func
 
 //
 // Clear_FirstMsg
@@ -139,8 +124,8 @@ void Clear_FirstMsg(void)
   msg_cluster[0].move_type = -1;
   msg_cluster[0].msg_id = -1;
   msg_cluster[0].object_id = -1;
-  
-} // end of the func
+
+}  // end of the func
 
 //
 // Get_Messages
@@ -154,14 +139,14 @@ void Clear_FirstMsg(void)
 //
 // x = Get_Messages(&y);
 //
-Msg *Get_Messages(int *msg_count, int *msg_id)
+Msg* Get_Messages(int* msg_count, int* msg_id)
 {
   *msg_count = msg_index;
   *msg_id = msg_objectid;
 
   return msg_cluster;
 
-} // end of the functio 
+}  // end of the functio
 
 //
 // Print_MsgTest
@@ -170,35 +155,34 @@ void Print_MsgTest(void)
 {
   int i;
   for (i = 0; i < 3; i++)
-    {
-      printf("%d %0.2f\n", msg_cluster[i].msg_id, msg_cluster[i].pos_x);
-    } // end of the for 
+  {
+    printf("%d %0.2f\n", msg_cluster[i].msg_id, msg_cluster[i].pos_x);
+  }  // end of the for
 
-} // end of the function 
-    
+}  // end of the function
 
 //// CreateMsgList
 //
-MsgList *CreateMsgList(void) {
-  
-  MsgList *result = malloc(sizeof(MsgList));
+MsgList* CreateMsgList(void)
+{
+  MsgList* result = malloc(sizeof(MsgList));
 
   result->front = NULL;
   result->objects = 0;
 
   return result;
-  
-} // end of teh function 
+
+}  // end of teh function
 
 //
 // DestroyMsgList
-void DestroyMsgList(MsgList *list)
+void DestroyMsgList(MsgList* list)
 {
   Msg *pos, *next;
   pos = list->front;
 
-  while(pos != NULL) {
-    
+  while (pos != NULL)
+  {
     next = pos->next;
 
     // delete msgobj
@@ -206,67 +190,63 @@ void DestroyMsgList(MsgList *list)
 
     pos = next;
 
-  } // end of the while 
-  
+  }  // end of the while
+
   list->objects = 0;
 
   RELEASE_OBJ(list);
 
-} // end of the function x
-
+}  // end of the function x
 
 //
 // Insert
 //
-void InsertMsgFront(MsgList *list, Msg *obj)
+void InsertMsgFront(MsgList* list, Msg* obj)
 {
-  Msg *new_node = NULL;
-  
+  Msg* new_node = NULL;
+
   new_node = obj;
 
   if (list->front == NULL)
-    {
-      list->front = new_node;
-    } else {
-      
-      new_node->next = list->front;
-      
-      list->front = new_node;
+  {
+    list->front = new_node;
+  }
+  else
+  {
+    new_node->next = list->front;
 
-    } // end of if-else
+    list->front = new_node;
+
+  }  // end of if-else
 
   list->objects++;
-  
-} // end of teh func
 
+}  // end of teh func
 
 // WRAPPER FUNCTIONS ===============================
 
 //
 // void Setup
 //
-void InsertMsg(Msg **ptr)
+void InsertMsg(Msg** ptr)
 {
-  (*ptr) = CreateMsgObj();  
+  (*ptr) = CreateMsgObj();
   (*ptr)->msg_id = msg_list->objects;
 
-  
-  if (msg_list->objects < MAX_MESSAGES)
-    InsertMsgFront(msg_list, *ptr);
+  if (msg_list->objects < MAX_MESSAGES) InsertMsgFront(msg_list, *ptr);
 
-} // end of the function 
+}  // end of the function
 
 //
 void Msg_AddQueue(int msg_type, int move_type, int obj_id, float px, float py, float h)
 {
-
-  Msg *ptr = NULL;
+  Msg* ptr = NULL;
 
   InsertMsg(&ptr);
 
   ptr->msg_type = msg_type;
   ptr->move_type = move_type;
-  
+
   ptr->object_id = obj_id;
 
   ptr->pos_x = px;
@@ -274,40 +254,35 @@ void Msg_AddQueue(int msg_type, int move_type, int obj_id, float px, float py, f
 
   ptr->heading = h;
 
-  
-} // end of the function 
-
+}  // end of the function
 
 //
 // Print List
 // - for testing mainly
 //
-void PrintMsgList(MsgList *list)
+void PrintMsgList(MsgList* list)
 {
-  Msg *current_ptr;
+  Msg* current_ptr;
 
-  if (list->front == NULL)
-    return;
+  if (list->front == NULL) return;
 
   current_ptr = list->front;
 
   while (current_ptr != NULL)
-    {
-      
-      printf("id: %d\n", current_ptr->msg_id);
-      
-      current_ptr = current_ptr->next;
+  {
+    printf("id: %d\n", current_ptr->msg_id);
 
-    } // end of the while 
+    current_ptr = current_ptr->next;
 
+  }  // end of the while
 
-} // end of the function 
+}  // end of the function
 
 //
 // CreateMsgObj
-Msg *CreateMsgObj(void)
+Msg* CreateMsgObj(void)
 {
-  Msg *ptr = NULL;
+  Msg* ptr = NULL;
 
   ptr = malloc(sizeof(Msg));
 
@@ -316,112 +291,91 @@ Msg *CreateMsgObj(void)
   ptr->next = NULL;
 
   return ptr;
-} // end of teh function
-
+}  // end of teh function
 
 //
 // MORE WRAPPER FUNCTIONS --
 //
 
-void Create_Msg_List(void)
-{
-  msg_list = CreateMsgList();
+void Create_Msg_List(void) { msg_list = CreateMsgList(); }  // end of thefunctino
 
-} // end of thefunctino
-
-void Delete_Msg_List(void)
-{
-  DestroyMsgList(msg_list);
-} // end of the functino 
+void Delete_Msg_List(void) { DestroyMsgList(msg_list); }  // end of the functino
 
 //
 // Print_Msg_List(void
-void Print_Msg_List(void)
-{
-  PrintMsgList(msg_list);
-} // end of the functino 
+void Print_Msg_List(void) { PrintMsgList(msg_list); }  // end of the functino
 
 //
 // Main function to the outside world
 // - convert the msg list so that it can be sent
-// out 
-void *Convert_MsgList(void)
+// out
+void* Convert_MsgList(void)
 {
-  MsgList *list = NULL;
-  Msg *current_ptr = NULL;
+  MsgList* list = NULL;
+  Msg* current_ptr = NULL;
   int index = 0;
-  void *buffer = NULL;
+  void* buffer = NULL;
 
   list = msg_list;
 
-  if (list->front == NULL)
-    return NULL;
+  if (list->front == NULL) return NULL;
 
   current_ptr = list->front;
 
   index = 0;
   while (current_ptr != NULL)
-    {
-     
-      memcpy(&msg_cluster[index], current_ptr,sizeof(Msg));  
-      index++;
-      
-      current_ptr = current_ptr->next;
+  {
+    memcpy(&msg_cluster[index], current_ptr, sizeof(Msg));
+    index++;
 
-    } // end of the while 
+    current_ptr = current_ptr->next;
+
+  }  // end of the while
 
   buffer = &msg_cluster;
 
   return buffer;
 
-} // end of the function 
-
-
+}  // end of the function
 
 //
 // Same as above --
-// out 
-void *Finalize_Messages(int *res_count)
+// out
+void* Finalize_Messages(int* res_count)
 {
-  MsgList *list = NULL;
-  Msg *current_ptr = NULL;
+  MsgList* list = NULL;
+  Msg* current_ptr = NULL;
   int index = 0;
-  void *buffer = NULL;
+  void* buffer = NULL;
 
   list = msg_list;
 
-  if (list->front == NULL)
-    return NULL;
+  if (list->front == NULL) return NULL;
 
   current_ptr = list->front;
 
   index = 0;
   while (current_ptr != NULL)
-    {
-     
-      memcpy(&msg_cluster[index], current_ptr,sizeof(Msg));  
-      index++;
-      
-      current_ptr = current_ptr->next;
+  {
+    memcpy(&msg_cluster[index], current_ptr, sizeof(Msg));
+    index++;
 
-    } // end of the while 
+    current_ptr = current_ptr->next;
 
+  }  // end of the while
 
   *res_count = index;
   buffer = &msg_cluster;
 
   return buffer;
 
-} // end of the function 
-
-
+}  // end of the function
 
 //
 // Simple test
 //
 void Msg_Test(void)
 {
- 
   Create_Msg_List();
   Msg_AddQueue(MSG_MOVE, MOVE_FORWARD, 0, 23.4, 24.5, 180.5);
   Msg_AddQueue(MSG_MOVE, MOVE_FORWARD, 0, 23.4, 24.5, 180.5);
@@ -430,8 +384,7 @@ void Msg_Test(void)
   Print_Msg_List();
   Delete_Msg_List();
 
-
-  // do it multiple times in order to make sure malloc and the 
+  // do it multiple times in order to make sure malloc and the
   // heap are up to the challenge
   Create_Msg_List();
   Msg_AddQueue(MSG_MOVE, MOVE_FORWARD, 0, 23.4, 24.5, 180.5);
@@ -448,6 +401,5 @@ void Msg_Test(void)
   Msg_AddQueue(MSG_MOVE, MOVE_FORWARD, 0, 23.4, 24.5, 180.5);
   Print_Msg_List();
   Delete_Msg_List();
-  
 
-} // end of teh function 
+}  // end of teh function

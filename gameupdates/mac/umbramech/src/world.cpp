@@ -81,7 +81,8 @@ DriverObjects CURRENT_OBJECT = {
 //
 // InitWorld
 //
-DriverWorldPtr InitWorld(void) {
+DriverWorldPtr InitWorld(void)
+{
   DriverWorldPtr world;
 
   world = (DriverWorldPtr)malloc(sizeof(DriverWorld));
@@ -106,7 +107,8 @@ DriverWorldPtr InitWorld(void) {
 //
 // DestroyWorld
 //
-void DestroyWorld(DriverWorldPtr world) {
+void DestroyWorld(DriverWorldPtr world)
+{
   // free((DriverWorldPtr)world);
   RELEASE_OBJECT(world);
 }
@@ -126,7 +128,8 @@ static void draw_walls(void) {}
 // - load anything special about the
 // one important function
 //
-static void init_walls(int list_id) {
+static void init_walls(int list_id)
+{
   CURRENT_OBJECT.visible = 1;
 
   // store the id through the function
@@ -137,7 +140,8 @@ static void init_walls(int list_id) {
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
-static void render_walls(void) {
+static void render_walls(void)
+{
   glPushMatrix();
 
   glCallList(CURRENT_OBJECT.call_id);
@@ -148,7 +152,8 @@ static void render_walls(void) {
 //=========================================================
 // compile
 //=========================================================
-static void compile_walls(void) {
+static void compile_walls(void)
+{
   int id;
   // setup a spot for display list for background
   // object = getcurrentobject();

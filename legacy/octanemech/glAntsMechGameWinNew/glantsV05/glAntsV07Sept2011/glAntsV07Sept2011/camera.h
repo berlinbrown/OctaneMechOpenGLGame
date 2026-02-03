@@ -30,7 +30,7 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
- * 
+ *
  * https://github.com/berlinbrown/OctaneMechOpenGLGame
  */
 #ifndef _CAMERA_H_
@@ -38,58 +38,56 @@
 
 #include "bot.h"
 
-#define MAX_ZOOM			45.2f
+#define MAX_ZOOM 45.2f
 
-#define OFFSET_ROTATION		8.0f
+#define OFFSET_ROTATION 8.0f
 
-const float PI		= 3.14159265358f;
-const float PI_180	= PI / 180.0f;
+const float PI = 3.14159265358f;
+const float PI_180 = PI / 180.0f;
 
-#define CAMERA		driver_camera[current_camera]
+#define CAMERA driver_camera[current_camera]
 
 typedef float Vector[3];
 
-#define MAX_CAMERAS		10	
+#define MAX_CAMERAS 10
 
+#define BEGIN_CAMERA \
+  glPushMatrix();    \
+  SetCamera();
+#define END_CAMERA glPopMatrix();
 
-#define BEGIN_CAMERA 	glPushMatrix(); SetCamera();		
-#define END_CAMERA		glPopMatrix();
+#define SELECT_CAMERA(cam_id) current_camera = cam_id
 
-#define SELECT_CAMERA(cam_id)	current_camera = cam_id
-
-#define CAMERA_STATIC			0
-#define CAMERA_WALKING			1
+#define CAMERA_STATIC 0
+#define CAMERA_WALKING 1
 
 //----------------------------------
 // define a camera struct
 //..................................
-typedef struct tagCamera 
+typedef struct tagCamera
 {
+  float position[3];  // current location
+  float angle[3];     // angle camera is pointing
+  float rotation[3];  // rotation around the world
+  float centerx;      // center axis
+  float centery;
+  float centerz;  // center axis x, y, z
 
-	float position[3];			// current location
-	float angle[3];				// angle camera is pointing
-	float rotation[3];			// rotation around the world
-	float centerx;				// center axis
-	float centery;
-	float centerz;				// center axis x, y, z
+  float Yaw;
+  float Pitch;
+  float Roll;
 
-	float Yaw;
-	float Pitch;
-	float Roll;
+  float zoom_factor;
+  float old_zoom;  // save zoom
 
-	float	zoom_factor;
-	float	old_zoom;			// save zoom
+  int id;    // id number for camera
+  int type;  // camera TYPE
 
-	int		id;					// id number for camera
-	int		type;				// camera TYPE
-	
 } DriverCamera;
-
 
 void Vector_Normalize(Vector a, Vector res);
 
-void HandleCameraKeys(bool *keys);
-
+void HandleCameraKeys(bool* keys);
 
 float GetBotX(void);
 float GetBotY(void);
@@ -108,20 +106,18 @@ void SyncCamera(void);
 
 void GetCameraBot(DriverBotPtr bot);
 
-void SpringDamp(	
-		Vector currPos,
-		Vector trgPos,     // Target Position
-		Vector prevTrgPos, // Previous Target Position
-		Vector result,
+void SpringDamp(Vector currPos,
+                Vector trgPos,      // Target Position
+                Vector prevTrgPos,  // Previous Target Position
+                Vector result,
 
-		float springConst,  // Hooke's Constant
-		float dampConst,    // Damp Constant
-		float springLen);
+                float springConst,  // Hooke's Constant
+                float dampConst,    // Damp Constant
+                float springLen);
 
-extern DriverCamera *driver_camera[MAX_CAMERAS];
-extern int	current_camera;
+extern DriverCamera* driver_camera[MAX_CAMERAS];
+extern int current_camera;
 
 void ToggleViewMode(void);
-
 
 #endif

@@ -30,12 +30,13 @@ static TimePoint lastTime = Clock::now();
 
 GLuint star_list = 0;  // Global or static variable to store the list ID
 
-
-static void updateFPS() {
+static void updateFPS()
+{
   frameCount++;
   auto now = Clock::now();
   auto elapsed = std::chrono::duration<double>(now - lastTime).count();
-  if (elapsed >= 1.0) {
+  if (elapsed >= 1.0)
+  {
     fps = frameCount / elapsed;
     frameCount = 0;
     lastTime = now;
@@ -43,7 +44,8 @@ static void updateFPS() {
 }
 
 // Draws the FPS counter in screen-space
-static void renderFPS() {
+static void renderFPS()
+{
   std::ostringstream ss;
   ss << std::fixed << std::setprecision(1) << "[   ] ---- Berlin(test alpha1) -- FPS: " << fps;
   std::string text = ss.str();
@@ -62,7 +64,8 @@ static void renderFPS() {
 
   glColor3f(1, 1, 1);
   glRasterPos2i(10, 580);
-  for (char c : text) { 
+  for (char c : text)
+  {
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
   }
 
@@ -75,9 +78,11 @@ static void renderFPS() {
 }
 
 // Normalize a vector
-static void Normalize(float p[3]) {
+static void Normalize(float p[3])
+{
   float L = std::sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
-  if (L > 0.0001f) {
+  if (L > 0.0001f)
+  {
     p[0] /= L;
     p[1] /= L;
     p[2] /= L;
@@ -85,9 +90,8 @@ static void Normalize(float p[3]) {
 }
 
 // Compute normal for triangle (p, p1, p2)
-static void CalcNormal(const float p[3], const float p1[3], 
-              const float p2[3],float n[3]) {
-
+static void CalcNormal(const float p[3], const float p1[3], const float p2[3], float n[3])
+{
   float pa[3] = {p1[0] - p[0], p1[1] - p[1], p1[2] - p[2]};
   float pb[3] = {p2[0] - p[0], p2[1] - p[1], p2[2] - p[2]};
 
@@ -98,7 +102,8 @@ static void CalcNormal(const float p[3], const float p1[3],
 }
 
 // Draws a unit cube centered at origin, using GL_TRIANGLES
-static void renderCube() {
+static void renderCube()
+{
   // We'll supply material once in display(), so no glColor calls here.
   const float S = 1.0f;
   float n[3];
@@ -116,7 +121,8 @@ static void renderCube() {
   };
 
   glBegin(GL_TRIANGLES);
-  for (int i = 0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i)
+  {
     CalcNormal(vtx[faces[i][0]], vtx[faces[i][1]], vtx[faces[i][2]], n);
     glNormal3fv(n);
     glVertex3fv(vtx[faces[i][0]]);
@@ -126,51 +132,55 @@ static void renderCube() {
   glEnd();
 }
 
-void draw_hexplane(float x, float z, float y, float size) {
+void draw_hexplane(float x, float z, float y, float size)
+{
   // Enable lighting and set material properties
-  GLfloat mat_specular[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-  GLfloat mat_shininess[] = { 100.0f };
-  GLfloat mat_diffuse[] = { 0.75f, 0.75f, 0.75f, 1.0f };
+  GLfloat mat_specular[] = {0.9f, 0.9f, 0.9f, 1.0f};
+  GLfloat mat_shininess[] = {100.0f};
+  GLfloat mat_diffuse[] = {0.75f, 0.75f, 0.75f, 1.0f};
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
 
   glBegin(GL_TRIANGLES);
-  for (int i = 0; i < 6; ++i) {
-      float angle1 = i * 60.0f * DEG2RAD;
-      float angle2 = (i + 1) * 60.0f * DEG2RAD;
+  for (int i = 0; i < 6; ++i)
+  {
+    float angle1 = i * 60.0f * DEG2RAD;
+    float angle2 = (i + 1) * 60.0f * DEG2RAD;
 
-      float x1 = x + size * cosf(angle1);
-      float z1 = z + size * sinf(angle1);
+    float x1 = x + size * cosf(angle1);
+    float z1 = z + size * sinf(angle1);
 
-      float x2 = x + size * cosf(angle2);
-      float z2 = z + size * sinf(angle2);
+    float x2 = x + size * cosf(angle2);
+    float z2 = z + size * sinf(angle2);
 
-      // All normals point up since it's a flat plane
-      glNormal3f(0.0f, 1.0f, 0.0f);
+    // All normals point up since it's a flat plane
+    glNormal3f(0.0f, 1.0f, 0.0f);
 
-      glVertex3f(x,     y, z);   // Center
-      glVertex3f(x1,    y, z1);  // First vertex of triangle
-      glVertex3f(x2,    y, z2);  // Second vertex
+    glVertex3f(x, y, z);    // Center
+    glVertex3f(x1, y, z1);  // First vertex of triangle
+    glVertex3f(x2, y, z2);  // Second vertex
   }
   glEnd();
 }
 
-static void draw_star_layer(int count, float radius, float point_size) {
+static void draw_star_layer(int count, float radius, float point_size)
+{
   glPointSize(point_size);
   glBegin(GL_POINTS);
-  for (int i = 0; i < count; i++) {
-      float x = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
-      float y = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
-      float z = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
-      glVertex3f(x, y, z);
+  for (int i = 0; i < count; i++)
+  {
+    float x = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+    float y = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+    float z = radius * ((float)(rand() % 4096) / 4096.0f) - radius / 2.0f;
+    glVertex3f(x, y, z);
   }
   glEnd();
 }
 
-static void draw_stars(void) {
-
+static void draw_stars(void)
+{
   const int MAX_STARS = 1400;
   const float STAR_RADIUS = 200.0f;
 
@@ -187,9 +197,9 @@ static void draw_stars(void) {
   glEnable(GL_LIGHTING);
 }
 
-
 // Position camera via gluLookAt
-static void updateCamera() {
+static void updateCamera()
+{
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   float lx = std::sin(camYaw), lz = -std::cos(camYaw);
@@ -197,10 +207,12 @@ static void updateCamera() {
 }
 
 // WASD + QE + Esc
-static void keyboard(unsigned char key, int, int) {
+static void keyboard(unsigned char key, int, int)
+{
   const float moveSpeed = 0.2f;
   const float turnSpeed = 0.05f;
-  switch (key) {
+  switch (key)
+  {
     case 'w':
       camX += std::sin(camYaw) * moveSpeed;
       camZ -= std::cos(camYaw) * moveSpeed;
@@ -228,7 +240,8 @@ static void keyboard(unsigned char key, int, int) {
   glutPostRedisplay();
 }
 
-static void draw_wirebox(void) {
+static void draw_wirebox(void)
+{
   float size = 4.4f;
 
   glColor3f(1.0f, 1.0f, 1.0f);
@@ -275,7 +288,8 @@ static void draw_wirebox(void) {
 /**
  * Main render display routine
  */
-static void display() {
+static void display()
+{
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // 1) Position camera
@@ -292,7 +306,7 @@ static void display() {
   // 3) Draw cube
   renderCube();
   draw_wirebox();
-  
+
   // Render plane
   draw_hexplane(0.0f, 0.0f, -4.0f, 8.0f);
 
@@ -306,8 +320,10 @@ static void display() {
   glutSwapBuffers();
 }
 
-static void reshape(int w, int h) {
-  if (h == 0) {
+static void reshape(int w, int h)
+{
+  if (h == 0)
+  {
     h = 1;
   }
   float ar = (float)w / h;
@@ -318,11 +334,10 @@ static void reshape(int w, int h) {
   glMatrixMode(GL_MODELVIEW);
 }
 
-static void idle() { 
-  glutPostRedisplay(); 
-}
+static void idle() { glutPostRedisplay(); }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(800, 600);
@@ -351,7 +366,7 @@ int main(int argc, char** argv) {
   glLightfv(GL_LIGHT0, GL_SPECULAR, Lspec);
 
   // build out stars
-  GLuint list_id = glGenLists(1); // Generate a unique ID
+  GLuint list_id = glGenLists(1);  // Generate a unique ID
 
   glNewList(list_id, GL_COMPILE);
   draw_stars();

@@ -35,15 +35,14 @@
 //
 // ant.cpp
 //  - the ant object
-#include <string.h>
+#include <GLUT/glut.h>   // GLUT for window/context
+#include <OpenGL/gl.h>   // Core OpenGL functions
+#include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
-
-#include <OpenGL/gl.h>      // Core OpenGL functions
-#include <OpenGL/glu.h>     // OpenGL Utility Library
-#include <GLUT/glut.h>      // GLUT for window/context
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT ant
@@ -67,210 +66,207 @@ GLfloat xmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-	{
-		init_ant,	 // init, must be called first
-		compile_ant, // compile
-		draw_ant,	 // draw
-		render_ant,	 // render to scene
-		0			 // loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_ant,     // init, must be called first
+    compile_ant,  // compile
+    draw_ant,     // draw
+    render_ant,   // render to scene
+    0             // loaded by INIT
 };
 
 //=========================================================
 //=========================================================
 static void draw_ant(void)
 {
-	float v[3][3];
-	float size = 1.0f;
-	float height = 0.6f;
+  float v[3][3];
+  float size = 1.0f;
+  float height = 0.6f;
 
-	float n[3]; // remember to free
+  float n[3];  // remember to free
 
-	// set the material for this object
-	setmaterial(xmat_ambient, xmat_diffuse,
-				xmat_specular, xlow_shininess, xmat_emission);
+  // set the material for this object
+  setmaterial(xmat_ambient, xmat_diffuse, xmat_specular, xlow_shininess, xmat_emission);
 
-	// change the size here
-	// Note: starts from ground
+  // change the size here
+  // Note: starts from ground
 
-	glBegin(GL_TRIANGLES);
+  glBegin(GL_TRIANGLES);
 
-	// Get the top
-	v[0][0] = -size;
-	v[0][1] = height;
-	v[0][2] = size;
+  // Get the top
+  v[0][0] = -size;
+  v[0][1] = height;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = height;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = height;
+  v[1][2] = size;
 
-	v[2][0] = 0.0;
-	v[2][1] = height;
-	v[2][2] = -size;
+  v[2][0] = 0.0;
+  v[2][1] = height;
+  v[2][2] = -size;
 
-	N_0;
-	glNormal3fv(n);
+  N_0;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// left bottom front
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // left bottom front
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	v[2][0] = size;
-	v[2][1] = height;
-	v[2][2] = size;
+  v[2][0] = size;
+  v[2][1] = height;
+  v[2][2] = size;
 
-	MED_BLUE;
-	// Calc normal and draw
-	N_1;
-	glNormal3fv(n);
+  MED_BLUE;
+  // Calc normal and draw
+  N_1;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = -size;
-	v[1][1] = height;
-	v[1][2] = size;
+  v[1][0] = -size;
+  v[1][1] = height;
+  v[1][2] = size;
 
-	v[2][0] = size;
-	v[2][1] = height;
-	v[2][2] = size;
+  v[2][0] = size;
+  v[2][1] = height;
+  v[2][2] = size;
 
-	MED_BLUE;
-	// Calc normal and draw
-	N_0;
-	glNormal3fv(n);
+  MED_BLUE;
+  // Calc normal and draw
+  N_0;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// BOTTOM
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // BOTTOM
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = 0.0f;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	v[2][0] = 0.0f;
-	v[2][1] = 0.0f;
-	v[2][2] = -size;
+  v[2][0] = 0.0f;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	MED_YELLOW;
-	// Calc normal and draw]
-	N_0;
-	glNormal3fv(n);
+  MED_YELLOW;
+  // Calc normal and draw]
+  N_0;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// right side
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // right side
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = 0.0f;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = 0.0f;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = 0.0f;
-	v[2][1] = height;
-	v[2][2] = -size;
+  v[2][0] = 0.0f;
+  v[2][1] = height;
+  v[2][2] = -size;
 
-	MED_CYAN;
-	// Calc normal and draw
-	N_1;
-	glNormal3fv(n);
+  MED_CYAN;
+  // Calc normal and draw
+  N_1;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// still right side
-	v[0][0] = size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // still right side
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = size;
-	v[1][1] = height;
-	v[1][2] = size;
+  v[1][0] = size;
+  v[1][1] = height;
+  v[1][2] = size;
 
-	v[2][0] = 0.0f;
-	v[2][1] = height;
-	v[2][2] = -size;
+  v[2][0] = 0.0f;
+  v[2][1] = height;
+  v[2][2] = -size;
 
-	MED_CYAN;
-	// Calc normal and draw
-	N_0;
-	glNormal3fv(n);
+  MED_CYAN;
+  // Calc normal and draw
+  N_0;
+  glNormal3fv(n);
 
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// right side
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // right side
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = 0.0f;
-	v[1][1] = 0.0f;
-	v[1][2] = -size;
+  v[1][0] = 0.0f;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	v[2][0] = 0.0f;
-	v[2][1] = height;
-	v[2][2] = -size;
+  v[2][0] = 0.0f;
+  v[2][1] = height;
+  v[2][2] = -size;
 
-	MED_PURPLE;
-	N_2;
-	glNormal3fv(n);
+  MED_PURPLE;
+  N_2;
+  glNormal3fv(n);
 
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  // Calc normal and draw
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	// still right side
-	v[0][0] = -size;
-	v[0][1] = 0.0f;
-	v[0][2] = size;
+  // still right side
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	v[1][0] = -size;
-	v[1][1] = height;
-	v[1][2] = size;
+  v[1][0] = -size;
+  v[1][1] = height;
+  v[1][2] = size;
 
-	v[2][0] = 0.0f;
-	v[2][1] = height;
-	v[2][2] = -size;
+  v[2][0] = 0.0f;
+  v[2][1] = height;
+  v[2][2] = -size;
 
-	MED_PURPLE;
-	N_1;
-	glNormal3fv(n);
+  MED_PURPLE;
+  N_1;
+  glNormal3fv(n);
 
-	// Calc normal and draw
-	glVertex3fv(v[0]);
-	glVertex3fv(v[1]);
-	glVertex3fv(v[2]); // triangle left bottom front
+  // Calc normal and draw
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	glEnd();
-
-} 
+  glEnd();
+}
 
 //
 // init
@@ -279,45 +275,42 @@ static void draw_ant(void)
 //
 static void init_ant(int list_id)
 {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;
-
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_ant(void)
 {
-	// glPushMatrix();
+  // glPushMatrix();
 
-	glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-	// glPopMatrix();
-
-} 
+  // glPopMatrix();
+}
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_ant(void)
 {
-	int id;
-	// setup a spot for display list for background
-	// object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-	// call drawing function
-	// but this may method make it a little better
-	CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
-
-} 
+  glEndList();
+}

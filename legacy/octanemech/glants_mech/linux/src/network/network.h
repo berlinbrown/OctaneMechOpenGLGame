@@ -39,13 +39,13 @@
 #ifndef _NETWORK_H_
 #define _NETWORK_H_
 
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
-// make sure this matches the server 
+// make sure this matches the server
 #if 1
 #define UDP_PROTOCOL
 #else
@@ -55,35 +55,34 @@
 #define MAXPENDING 12
 #define MAX_SIZE 4096
 
+#define _CONNECTED_ 1
+#define _NOT_CONNECTED_ 0
 
-#define _CONNECTED_                 1
-#define _NOT_CONNECTED_             0
+#define _WAITING_ 2
+#define _RUNNING_ 4
+#define _READY_ 8
 
-#define _WAITING_                    2
-#define _RUNNING_                    4
-#define _READY_                      8
+#define _HELLO_MSG_ "glAnts Server Hello"
 
-#define _HELLO_MSG_                "glAnts Server Hello"
+#define _TYPE_SERVER_ 2
+#define _TYPE_CLIENT_ 4
 
-#define _TYPE_SERVER_               2
-#define _TYPE_CLIENT_               4
+#define _WATCHDOG_ON_ 1
+#define _WATCHDOG_OFF_ 2
 
-#define _WATCHDOG_ON_               1
-#define _WATCHDOG_OFF_              2
+#define CHECK_WATCHDOG (client_obj.watchdog == _WATCHDOG_ON_)
+#define TURNOFF_WATCHDOG client_obj.watchdog = _WATCHDOG_OFF_
+#define TURNON_WATCHDOG client_obj.watchdog = _WATCHDOG_ON_
 
-#define CHECK_WATCHDOG              (client_obj.watchdog == _WATCHDOG_ON_)
-#define TURNOFF_WATCHDOG             client_obj.watchdog = _WATCHDOG_OFF_
-#define TURNON_WATCHDOG              client_obj.watchdog = _WATCHDOG_ON_
-
-#define _NET_SCREEN_X                5
-#define _NET_SCREEN_Y1                448
-#define _NET_SCREEN_Y2                460
+#define _NET_SCREEN_X 5
+#define _NET_SCREEN_Y1 448
+#define _NET_SCREEN_Y2 460
 
 //
 // com_obj
 //
-typedef struct tagComObj {
-
+typedef struct tagComObj
+{
   int id;
   int sock;
   char ipaddress[32];
@@ -97,16 +96,16 @@ typedef struct tagComObj {
   unsigned short port;
 
   int connect_flag;
-  int connect_type;         // client/server
-  int watchdog;            // on or off
+  int connect_type;  // client/server
+  int watchdog;      // on or off
 
-  int activity;             // waiting/running
- 
+  int activity;  // waiting/running
+
 } ComObj, *ComObjPtr;
 
 void WaitChar(void);
-void *WaitMsg(void *args);
-void Connect(ComObjPtr com_obj, char *ip, int port);
+void* WaitMsg(void* args);
+void Connect(ComObjPtr com_obj, char* ip, int port);
 void RunTest(void);
 
 void Get_LocalAddress(void);
@@ -122,6 +121,5 @@ int Get_ServObjID(void);
 
 void Reset_MessageBytes(void);
 void Reset_MessageCount(void);
-
 
 #endif

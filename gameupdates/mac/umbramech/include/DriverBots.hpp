@@ -28,170 +28,164 @@
  * Date: 4/2025
  */
 
- #pragma once
+#pragma once
 
 // static bot
 //
-typedef struct tagStaticBot {
+typedef struct tagStaticBot
+{
+  int list_id;
+  float position[3];
+  float rotation[3];
+  float size[3];
+  float color[3];
+  float state;
 
-	int		list_id;
-	float	position[3];
-	float	rotation[3];
-	float	size[3];
-	float	color[3];
-	float	state;
+  float food;
 
-	float	food;
+  bool delete_flag;  // deleted from pheromone list
 
-	bool	delete_flag;		// deleted from pheromone list
+  float heading;  // you can use rotation or heading
+  float linearv;
 
-	float	heading;		// you can use rotation or heading
-	float	linearv;
+  //
+  // for the collision
+  //
+  float travel;  // distance traveled
+  float final_x;
+  float final_y;
+  float max_dist;
 
-	//
-	// for the collision
-	//
-	float	travel;		// distance traveled
-	float	final_x;
-	float	final_y;
-	float	max_dist;
+  //
+  //
+  float old_x;
+  float old_y;  // for drawing a line strip
 
-	
-	//
-	// 
-	float	old_x;
-	float	old_y;			// for drawing a line strip
+  // used with bullets
+  float virt_x;
+  float virt_y;
+  float virt_heading;
+  int owner;  // owner of this bullet
 
-	// used with bullets
-	float	virt_x;
-	float	virt_y;
-	float	virt_heading;
-	int		owner;			// owner of this bullet
-
-	struct tagStaticBot *next;
+  struct tagStaticBot* next;
 
 } StaticBot, *StaticBotPtr;
 
 // functions for static bot
-typedef struct tagDriverSentinel {
+typedef struct tagDriverSentinel
+{
+  StaticBotPtr (*create)(int bot_id);
+  void (*destroy)(StaticBotPtr b);
+  void (*render)(StaticBotPtr boid);
+  void (*process)(StaticBotPtr b);
 
-	StaticBotPtr (*create)(int bot_id);
-	void (*destroy)(StaticBotPtr b);
-	void (*render)(StaticBotPtr boid);
-	void (*process)(StaticBotPtr b);
+  void (*generate)(void);
+  void (*shutdown)(void);
+  void (*drawall)(void);
 
-	void (*generate)(void);
-	void (*shutdown)(void);
-	void (*drawall)(void);
+  StaticBot** objects;
 
-	StaticBot	**objects;
-
-	int		max_items;
+  int max_items;
 
 } DriverSentinel, *DriverSentinelPtr;
 
-
-typedef struct tagDriverBots {
-		
-
-
+typedef struct tagDriverBots
+{
 } DriverBots, *DriverBotPtr;
-
 
 /**
  * @class DriverBots
  * Driver bots class, contains position and speeds
- */ 
-class DriverBots {
-    public:
-        DriverBots();
-        
-        DriverBotPtr createBot(int bot_id);
+ */
+class DriverBots
+{
+ public:
+  DriverBots();
 
-        void generateCommand(int cmd);
-        void loadBotParms();
+  DriverBotPtr createBot(int bot_id);
 
-        void wanderCommand();
-        void moveCommand();
-        void attackCommand();
+  void generateCommand(int cmd);
+  void loadBotParms();
 
-        int bruteCheckFood();
-        void dropFood(int id, float food_rate);
+  void wanderCommand();
+  void moveCommand();
+  void attackCommand();
 
-        void destroyBot();
-        void getAntFood();
-        void resetBot();
-        bool checkSight(DriverBotPtr nme);
+  int bruteCheckFood();
+  void dropFood(int id, float food_rate);
 
-        void PositionBot();
+  void destroyBot();
+  void getAntFood();
+  void resetBot();
+  bool checkSight(DriverBotPtr nme);
 
-    private:
-        float	x;
-        float	y;
-        float	linearv;	// speed
-        float	size[3];	// scale 
-        float	heading;	// direction
-        float	target_dir;	// target heading
-        float	color[3];
-        int		id;
-        int		alive;
-        int		numSteps;	// how many steps ant has moved
-        float	turning_speed;
+  void PositionBot();
 
-        int		state;			// what is bot doing
-        int		straightSteps;	// steps before changing direction
-        float	food;
-        float	foodstore;
-        int		turn_rand;
-        int		turn_direction;	
+ private:
+  float x;
+  float y;
+  float linearv;     // speed
+  float size[3];     // scale
+  float heading;     // direction
+  float target_dir;  // target heading
+  float color[3];
+  int id;
+  int alive;
+  int numSteps;  // how many steps ant has moved
+  float turning_speed;
 
-        bool	go_home;
+  int state;          // what is bot doing
+  int straightSteps;  // steps before changing direction
+  float food;
+  float foodstore;
+  int turn_rand;
+  int turn_direction;
 
-        int		gun_reset;		// delay befor firing
-        int		gun_index;
+  bool go_home;
 
-        bool	move_back;		// for move and turn
+  int gun_reset;  // delay befor firing
+  int gun_index;
 
+  bool move_back;  // for move and turn
 
-        // camera helper variables
-        float	look_x;
-        float	look_y;
-        float	look_h;		// look height, actually the y
-        float	cam_x;
-        float	cam_y;
-        int		view_mode;	// first or third person
+  // camera helper variables
+  float look_x;
+  float look_y;
+  float look_h;  // look height, actually the y
+  float cam_x;
+  float cam_y;
+  int view_mode;  // first or third person
 
-        float	score;
-        int		kills;
+  float score;
+  int kills;
 
-        //
-        // the rectangle of the bot
-        // Note: you have to add
-        // the x,y to this value, but dont
-        // do to this variable, use temps
-        float	x_min;
-        float	x_max;
-        float	y_min;
-        float	y_max;
+  //
+  // the rectangle of the bot
+  // Note: you have to add
+  // the x,y to this value, but dont
+  // do to this variable, use temps
+  float x_min;
+  float x_max;
+  float y_min;
+  float y_max;
 
-        //
-        // crosshair object 
-        //
-        int		crosshair_state;
-        float	crosshair_scale;
+  //
+  // crosshair object
+  //
+  int crosshair_state;
+  float crosshair_scale;
 
-        // Add the fire ant bullets
-        //StaticBot	bullets[MAX_BULLETS];
-        StaticBot	*bullets;
+  // Add the fire ant bullets
+  // StaticBot	bullets[MAX_BULLETS];
+  StaticBot* bullets;
 
-        // Command interface
-        void (*run)(struct tagDriverBots *bot);
+  // Command interface
+  void (*run)(struct tagDriverBots* bot);
 
-        int		last_command;
-        int		command;
-        float	attack_angle;
-        int		target_moves;
-        int		move_index;
-        int		enemy_id;    
-
+  int last_command;
+  int command;
+  float attack_angle;
+  int target_moves;
+  int move_index;
+  int enemy_id;
 };

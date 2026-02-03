@@ -54,9 +54,7 @@ static float mCameraAng = 0.0f;
 // Follow this object
 static DriverBotPtr camera_bot;
 
-void GetCameraBot(DriverBotPtr bot) {
-  camera_bot = bot;
-}  // end of the function
+void GetCameraBot(DriverBotPtr bot) { camera_bot = bot; }  // end of the function
 
 //
 // GetBotX
@@ -84,7 +82,7 @@ static float fTime;
 //
 // Array of camera objects
 //
-DriverCamera *driver_camera[MAX_CAMERAS] = {
+DriverCamera* driver_camera[MAX_CAMERAS] = {
     &camera0,
     &camera1,
     &camera2,
@@ -94,7 +92,8 @@ DriverCamera *driver_camera[MAX_CAMERAS] = {
 //
 // Vector_Minus
 //
-void Vector_Minus(Vector a, Vector b, Vector res) {
+void Vector_Minus(Vector a, Vector b, Vector res)
+{
   res[0] = a[0] - b[0];
   res[1] = a[1] - b[1];
   res[2] = a[2] - b[2];
@@ -103,7 +102,8 @@ void Vector_Minus(Vector a, Vector b, Vector res) {
 //
 // Vector_Add
 //
-void Vector_Add(Vector a, Vector b, Vector res) {
+void Vector_Add(Vector a, Vector b, Vector res)
+{
   res[0] = a[0] + b[0];
   res[1] = a[1] + b[1];
   res[2] = a[2] + b[2];
@@ -112,21 +112,18 @@ void Vector_Add(Vector a, Vector b, Vector res) {
 //
 // Vector_Length
 //
-float Vector_Length(Vector a) {
-  return (float)sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-}
+float Vector_Length(Vector a) { return (float)sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]); }
 
 //
 // DotProduct
 //
-float DotProduct(Vector a, Vector b) {
-  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-}
+float DotProduct(Vector a, Vector b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
 
 //
 // Vector_Normalize
 //
-void Vector_Normalize(Vector a, Vector res) {
+void Vector_Normalize(Vector a, Vector res)
+{
   float len;
 
   len = Vector_Length(a);
@@ -144,7 +141,8 @@ void Vector_Normalize(Vector a, Vector res) {
 //
 // Vector_Multiply
 //
-void Vector_Multiply(Vector a, Vector res, float b) {
+void Vector_Multiply(Vector a, Vector res, float b)
+{
   res[0] = a[0] * b;
   res[1] = a[1] * b;
   res[2] = a[2] * b;
@@ -155,15 +153,15 @@ a
     // A spring dampening function
     // for the camera
     //
-    void
-    SpringDamp(Vector currPos,
-               Vector trgPos,      // Target Position
-               Vector prevTrgPos,  // Previous Target Position
-               Vector result,
+    void SpringDamp(Vector currPos,
+                    Vector trgPos,      // Target Position
+                    Vector prevTrgPos,  // Previous Target Position
+                    Vector result,
 
-               float springConst,  // Hooke's Constant
-               float dampConst,    // Damp Constant
-               float springLen) {
+                    float springConst,  // Hooke's Constant
+                    float dampConst,    // Damp Constant
+                    float springLen)
+{
   Vector disp;      // Displacement
   Vector velocity;  // Velocity
   Vector mx;
@@ -204,7 +202,8 @@ a
 // For each specific camera
 // place in a particular position
 //
-static void SetupCamera(void) {
+static void SetupCamera(void)
+{
   // start at zero
   SELECT_CAMERA(0);
   PosCamera(0.0f, 2.0f, -10.0f);
@@ -222,7 +221,8 @@ static void SetupCamera(void) {
 // Mouse_Movement
 // - handle mouse movement
 //
-void Mouse_Movement(void) {
+void Mouse_Movement(void)
+{
   // POINT mouse_pos;
   float ang_z = 0.0f;
 
@@ -258,13 +258,16 @@ void Mouse_Movement(void) {
 // the camera objects
 // reset variables all to zero, etc
 //
-void LoadCameras(void) {
+void LoadCameras(void)
+{
   int index = 0;
   int i = 0;
   current_camera = 0;
 
-  for (index = 0; index < MAX_CAMERAS; index++) {
-    for (i = 0; i < 3; i++) {
+  for (index = 0; index < MAX_CAMERAS; index++)
+  {
+    for (i = 0; i < 3; i++)
+    {
       driver_camera[index]->angle[i] = 0.0f;
       driver_camera[index]->position[i] = 0.0f;
       driver_camera[index]->rotation[i] = 0.0f;
@@ -291,7 +294,8 @@ void LoadCameras(void) {
 // a simple iterator, basically cycle through
 // the cameras
 //
-void ToggleCamera(void) {
+void ToggleCamera(void)
+{
   current_camera++;
 
   if (current_camera >= MAX_CAMERAS) current_camera = 0;
@@ -305,7 +309,8 @@ void ToggleCamera(void) {
 //  - this is the main matrix, everything it must be
 // restored so everything else should have a push or pop
 //=========================================================
-void SetCamera(void) {
+void SetCamera(void)
+{
   glRotatef(CAMERA->angle[1], 0.0f, 1.0f, 0.0f);
   glRotatef(CAMERA->angle[0], 1.0f, 0.0f, 0.0f);
   glRotatef(CAMERA->angle[2], 0.0f, 0.0f, 1.0f);
@@ -324,7 +329,8 @@ void SetCamera(void) {
 // - basically translate camera
 // Note: this should only be called once dont put in loop
 //=========================================================
-void TranslateCamera(float x, float y, float z) {
+void TranslateCamera(float x, float y, float z)
+{
   // move camera to according position
   CAMERA->position[0] += x;
   CAMERA->position[1] += y;
@@ -334,16 +340,20 @@ void TranslateCamera(float x, float y, float z) {
 //=========================================================
 // check angle
 //---------------------------------------------------------
-void checkangle(void) {
+void checkangle(void)
+{
   int index = 0;
   //  check the bounds
 
-  for (index = 0; index < 3; index++) {
-    if (CAMERA->angle[index] < 0) {
+  for (index = 0; index < 3; index++)
+  {
+    if (CAMERA->angle[index] < 0)
+    {
       CAMERA->angle[index] += 360;
     }  // end of the
 
-    if (CAMERA->angle[index] >= 360) {
+    if (CAMERA->angle[index] >= 360)
+    {
       CAMERA->angle[index] -= 360;
     }  // end of the
 
@@ -354,14 +364,18 @@ void checkangle(void) {
 //=========================================================
 // check rotation
 //---------------------------------------------------------
-void checkrotation(void) {
+void checkrotation(void)
+{
   int index = 0;
-  for (index = 0; index < 3; index++) {
-    if (CAMERA->rotation[index] < 0) {
+  for (index = 0; index < 3; index++)
+  {
+    if (CAMERA->rotation[index] < 0)
+    {
       CAMERA->rotation[index] += 360;
     }  // end of the
 
-    if (CAMERA->rotation[index] >= 360) {
+    if (CAMERA->rotation[index] >= 360)
+    {
       CAMERA->rotation[index] -= 360;
     }  // end of the
 
@@ -374,7 +388,8 @@ void checkrotation(void) {
 // - aim the camera a given directino
 // Note: this should only be called once, dont put in loop
 //=========================================================
-void AngleCamera(float x, float y, float z) {
+void AngleCamera(float x, float y, float z)
+{
   // this may be a little tricky to understand
   // but rotate around own axis if angle flag of
   CAMERA->rotation[0] += x;
@@ -388,7 +403,8 @@ void AngleCamera(float x, float y, float z) {
 // turn camera
 // - similar to rotate camera
 //=========================================================
-void TurnCamera(float x, float y, float z) {
+void TurnCamera(float x, float y, float z)
+{
   CAMERA->angle[0] += x;  // rotation around own axis
   CAMERA->angle[1] -= y;
   CAMERA->angle[2] += z;
@@ -401,7 +417,8 @@ void TurnCamera(float x, float y, float z) {
 // - give a solid constant position
 // might be used at the beginning of the main drawing loop
 //=========================================================
-void PosCamera(float x, float y, float z) {
+void PosCamera(float x, float y, float z)
+{
   // move camera to according position
   CAMERA->position[0] = x;
   CAMERA->position[1] = -y;
@@ -413,7 +430,8 @@ void PosCamera(float x, float y, float z) {
 // - give a solid constant position
 // might be used at the beginning of the main drawing loop
 //=========================================================
-void Pos_Camera(float x, float y, float z) {
+void Pos_Camera(float x, float y, float z)
+{
   // move camera to according position
   CAMERA->position[0] = x;
   CAMERA->position[1] = y;
@@ -423,7 +441,8 @@ void Pos_Camera(float x, float y, float z) {
 //=========================================================
 // set the rotation angles of the cameras
 ///========================================================
-void SetCameraRot(float x, float y, float z) {
+void SetCameraRot(float x, float y, float z)
+{
   // setup the camera rotations
   // The trick is figure out which rotation
   // to use (angle or rotation)
@@ -437,7 +456,8 @@ void SetCameraRot(float x, float y, float z) {
 // set angles of the camera
 // interesting
 //=========================================================
-void SetCameraAngle(float x, float y, float z) {
+void SetCameraAngle(float x, float y, float z)
+{
   CAMERA->angle[0] = x;
   CAMERA->angle[1] = y;
   CAMERA->angle[2] = z;
@@ -446,14 +466,16 @@ void SetCameraAngle(float x, float y, float z) {
 //
 // Move Forward
 //
-void MoveForward(void) {
+void MoveForward(void)
+{
   float heading = 0;
   float xpos, zpos;
 
   float speed = camera_speed;
   float new_speed;
 
-  if (CAMERA->type == CAMERA_WALKING) {
+  if (CAMERA->type == CAMERA_WALKING)
+  {
     heading = CAMERA->angle[1];
 
     new_speed = fTime * speed;
@@ -461,8 +483,9 @@ void MoveForward(void) {
     zpos = (float)cos(heading * PI_180) * new_speed;
 
     TranslateCamera(-xpos, 0.0f, zpos);
-
-  } else {
+  }
+  else
+  {
     TranslateCamera(0.0f, 0.0f, camera_speed);
   }  // end of if
 
@@ -471,14 +494,16 @@ void MoveForward(void) {
 //
 // Move Backwards
 //
-void MoveBackward(void) {
+void MoveBackward(void)
+{
   float heading = 0;
   float xpos, zpos;
 
   float speed = camera_speed;
   float new_speed;
 
-  if (CAMERA->type == CAMERA_WALKING) {
+  if (CAMERA->type == CAMERA_WALKING)
+  {
     heading = CAMERA->angle[1];
 
     heading = CAMERA->angle[1];
@@ -488,8 +513,9 @@ void MoveBackward(void) {
     zpos = (float)cos(heading * PI_180) * new_speed;
 
     TranslateCamera(xpos, 0.0f, -zpos);
-
-  } else {
+  }
+  else
+  {
     TranslateCamera(0.0f, 0.0f, -camera_speed);
   }  // end of if
 
@@ -498,14 +524,17 @@ void MoveBackward(void) {
 //
 // MoveLeft
 //
-void MoveLeft(void) {
+void MoveLeft(void)
+{
   float angle;
 
-  if (CAMERA->type == CAMERA_WALKING) {
+  if (CAMERA->type == CAMERA_WALKING)
+  {
     angle = fTime * turning_speed;
     TurnCamera(0.0f, angle, 0.0f);
-
-  } else {
+  }
+  else
+  {
     angle = fTime * camera_speed;
     TranslateCamera(camera_speed, 0.0f, 0.0f);
   }  // end of if
@@ -515,21 +544,25 @@ void MoveLeft(void) {
 //
 // SyncCamera
 //
-void SyncCamera(void) {
+void SyncCamera(void)
+{
   // sync the camera with the timing
 }
 
 //
 // MoveRight
 //
-void MoveRight(void) {
+void MoveRight(void)
+{
   float angle;
 
-  if (CAMERA->type == CAMERA_WALKING) {
+  if (CAMERA->type == CAMERA_WALKING)
+  {
     angle = fTime * turning_speed;
     TurnCamera(0.0f, -angle, 0.0f);
-
-  } else {
+  }
+  else
+  {
     angle = fTime * camera_speed;
     TranslateCamera(-angle, 0.0f, 0.0f);
   }  // end of if
@@ -541,7 +574,8 @@ void MoveRight(void) {
 // - gives kind of a matrix effect
 // - not really, but at least I tried
 //
-void Paused_Camera(void) {
+void Paused_Camera(void)
+{
   float ang;
   float rad;
   float tmp_heading;
@@ -596,8 +630,7 @@ void Paused_Camera(void) {
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(cam_x, (CAMERA_HEIGHT * CAMERA->zoom_factor), cam_y, x, 0.0f, y,
-            0.0f, 1.0f, 0.0f);
+  gluLookAt(cam_x, (CAMERA_HEIGHT * CAMERA->zoom_factor), cam_y, x, 0.0f, y, 0.0f, 1.0f, 0.0f);
 
   // Rotate the paused camera a bot
   // based on the frame rate
@@ -613,7 +646,8 @@ void Paused_Camera(void) {
 //
 // FirstPersonMode
 //
-static void FirstPersonMode(bool *keys) {
+static void FirstPersonMode(bool* keys)
+{
   float x, y;
   float h;
   float cam_x;
@@ -630,14 +664,15 @@ static void FirstPersonMode(bool *keys) {
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, h,
-            y, 0.0f, 1.0f, 0.0f);
+  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, h, y, 0.0f, 1.0f,
+            0.0f);
 
   // player control, strange place I know
   Player_Control(keys);
 }
 
-static void ThirdPersonMode(bool *keys) {
+static void ThirdPersonMode(bool* keys)
+{
   float x, y;
   float cam_x;
   float cam_y;
@@ -656,8 +691,8 @@ static void ThirdPersonMode(bool *keys) {
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x,
-            0.0f, y, 0.0f, 1.0f, 0.0f);
+  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, 0.0f, y, 0.0f, 1.0f,
+            0.0f);
 
   // player control, strange place I know
   Player_Control(keys);
@@ -668,12 +703,15 @@ static void ThirdPersonMode(bool *keys) {
 //
 // Note: this should be called in WinProc, Winmain
 //
-void ToggleViewMode(void) {
+void ToggleViewMode(void)
+{
   // cant change mode while paused
   if (ant_globals->paused == 1) return;
 
-  if (camera_bot->id == PLAYER_0) {
-    if (camera_bot->alive == DEAD_STATE) {
+  if (camera_bot->id == PLAYER_0)
+  {
+    if (camera_bot->alive == DEAD_STATE)
+    {
       camera_bot->view_mode = THIRD_PERSON_MODE;
       return;
     }  // end of the if
@@ -684,7 +722,8 @@ void ToggleViewMode(void) {
       camera_bot->view_mode = THIRD_PERSON_MODE;
 
   }  // end of the if
-  else {
+  else
+  {
     camera_bot->view_mode = THIRD_PERSON_MODE;
 
   }  // end of the if -else
@@ -694,17 +733,22 @@ void ToggleViewMode(void) {
 // Handle Camera Keys
 //
 // Also handles the following camera
-void HandleCameraKeys(bool *keys) {
-  if (ant_globals->paused == 0) {
-    if (camera_bot->view_mode == THIRD_PERSON_MODE) {
+void HandleCameraKeys(bool* keys)
+{
+  if (ant_globals->paused == 0)
+  {
+    if (camera_bot->view_mode == THIRD_PERSON_MODE)
+    {
       ThirdPersonMode(keys);
-
-    } else if (camera_bot->view_mode == FIRST_PERSON_MODE) {
+    }
+    else if (camera_bot->view_mode == FIRST_PERSON_MODE)
+    {
       FirstPersonMode(keys);
 
     }  // end of the if --
-
-  } else {
+  }
+  else
+  {
     Paused_Camera();
 
   }  // end of the if else

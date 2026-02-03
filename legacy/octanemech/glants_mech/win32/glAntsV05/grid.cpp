@@ -40,40 +40,35 @@
 //
 // - draw a simple grid in the background
 //
-#include <windows.h>
+#include <gl\gl.h>     // Header File For The OpenGL32 Library
+#include <gl\glaux.h>  // Header File For The Glaux Library
+#include <gl\glu.h>    // Header File For The GLu32 Library
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <gl\gl.h>			// Header File For The OpenGL32 Library
-#include <gl\glu.h>			// Header File For The GLu32 Library
-#include <gl\glaux.h>		// Header File For The Glaux Library
+#include <windows.h>
 
 #include "objects.h"
 
-
 #undef CURRENT_OBJECT
-#define CURRENT_OBJECT			grid
+#define CURRENT_OBJECT grid
 
 static void draw_grid(void);
 static void compile_grid(void);
 static void render_grid(void);
 static void init_grid(int list_id);
 
-
 //
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects grid =
-{
-	init_grid,			// init, must be called first
-	compile_grid,		// compile
-	draw_grid,			// draw 
-	render_grid,			// render to scene
-	0					// loaded by INIT
+DriverObjects grid = {
+    init_grid,     // init, must be called first
+    compile_grid,  // compile
+    draw_grid,     // draw
+    render_grid,   // render to scene
+    0              // loaded by INIT
 };
-
 
 //---------------------------------------------------------
 // Note: these functions are misc objects
@@ -84,54 +79,54 @@ DriverObjects grid =
 //=========================================================
 static void drawbackxy(float gridsize, float sections)
 {
- float i = 0.0f;
- float j = 0.0f;
+  float i = 0.0f;
+  float j = 0.0f;
 
-	for (i= -gridsize; i <= gridsize; i+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(i, 0.0f,      -gridsize);			
-		 glVertex3f(i, gridsize,  -gridsize);
-		glEnd();
-	} // end of the for
+  for (i = -gridsize; i <= gridsize; i += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(i, 0.0f, -gridsize);
+    glVertex3f(i, gridsize, -gridsize);
+    glEnd();
+  }  // end of the for
 
-	// now draw the other lines --
-	for (j = 0.0f; j <= gridsize; j+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(-gridsize, j,   -gridsize);			
-		 glVertex3f(gridsize,  j,   -gridsize);
-		glEnd();
-	} // end of the functino
+  // now draw the other lines --
+  for (j = 0.0f; j <= gridsize; j += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(-gridsize, j, -gridsize);
+    glVertex3f(gridsize, j, -gridsize);
+    glEnd();
+  }  // end of the functino
 
-} // end of function
+}  // end of function
 
 //=========================================================
 // draw back drop yz
 //=========================================================
 static void drawbackyz(float gridsize, float sections)
 {
-float i = 0.0f;
-float j = 0.0f;
+  float i = 0.0f;
+  float j = 0.0f;
 
-	for (i= -gridsize; i <= gridsize; i+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(gridsize, 0.0f,      i);			
-		 glVertex3f(gridsize, gridsize,  i);
-		glEnd();
-	} // end of the for
+  for (i = -gridsize; i <= gridsize; i += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(gridsize, 0.0f, i);
+    glVertex3f(gridsize, gridsize, i);
+    glEnd();
+  }  // end of the for
 
-	// now draw the other lines --
-	for (j = 0.0f; j <= gridsize; j+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(gridsize, j,   -gridsize);			
-		 glVertex3f(gridsize,  j,    gridsize);
-		glEnd();
-	} // end of the functino
+  // now draw the other lines --
+  for (j = 0.0f; j <= gridsize; j += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(gridsize, j, -gridsize);
+    glVertex3f(gridsize, j, gridsize);
+    glEnd();
+  }  // end of the functino
 
-} // end of the functin
+}  // end of the functin
 
 //=========================================================
 // draw grid
@@ -140,28 +135,27 @@ float j = 0.0f;
 //=========================================================
 static void drawbackxz(float gridsize, float sections)
 {
+  float i = 0.0f;
+  float j = 0.0f;
 
-	float i = 0.0f;
-	float j = 0.0f;
+  for (i = -gridsize; i <= gridsize; i += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(i, 0.0f, -gridsize);
+    glVertex3f(i, 0.0f, gridsize);
+    glEnd();
+  }  // end of the for
 
-	for (i= -gridsize; i <= gridsize; i+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(i, 0.0f,  -gridsize);			
-		 glVertex3f(i, 0.0f,   gridsize);
-		glEnd();
-	} // end of the for
+  // now draw the other lines
+  for (j = -gridsize; j <= gridsize; j += sections)
+  {
+    glBegin(GL_LINES);
+    glVertex3f(-gridsize, 0.0f, j);
+    glVertex3f(gridsize, 0.0f, j);
+    glEnd();
+  }  // end of the functino
 
-	// now draw the other lines
-	for (j = -gridsize; j <= gridsize; j+=sections)
-	{
-		glBegin(GL_LINES);
-		 glVertex3f(-gridsize, 0.0f,   j);			
-		 glVertex3f( gridsize, 0.0f,   j);
-		glEnd();
-	} // end of the functino
-
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // drawbackground
@@ -172,63 +166,57 @@ static void draw_grid(void)
 #if 0
    //drawbackxz(GRID_SIZE, 1.0f);
 #endif
-   drawbackxy(GRID_SIZE, 1.0f);
-   drawbackyz(GRID_SIZE, 1.0f);
+  drawbackxy(GRID_SIZE, 1.0f);
+  drawbackyz(GRID_SIZE, 1.0f);
 
-} // end of the function
-
+}  // end of the function
 
 //
 // init
 // - load anything special about the
-// one important function 
+// one important function
 //
 static void init_grid(int list_id)
 {
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;	
-	
-} // end of the functino
-
+}  // end of the functino
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_grid(void)
 {
+  glPushMatrix();
 
-	glPushMatrix();
+  // standard color - green
+  glColor3f(0.0f, 0.8f, 0.0f);
 
-		// standard color - green
-		glColor3f(0.0f, 0.8f, 0.0f);
+  glCallList(CURRENT_OBJECT.call_id);
 
-		glCallList(CURRENT_OBJECT.call_id);
+  glPopMatrix();
 
-	glPopMatrix();
-
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_grid(void)
 {
-	int id;
-	// setup a spot for display list for background
-	//object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-		// call drawing function
-		// but this may method make it a little better
-		CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
+  glEndList();
 
-} // end of the function
-
-
+}  // end of the function

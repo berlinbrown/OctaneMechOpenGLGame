@@ -34,22 +34,22 @@
 
 // KEYS.H
 
-#define MAX_INPUT_STR             32
+#define MAX_INPUT_STR 32
 
 // see keys.c
-#define SEL_SERVER_MODE           0
-#define SEL_CLIENT_MODE           1
+#define SEL_SERVER_MODE 0
+#define SEL_CLIENT_MODE 1
 
-#define START_SEL                 0
-#define SEL_SERVER_MAX            5
-#define SEL_CLIENT_MAX            5
+#define START_SEL 0
+#define SEL_SERVER_MAX 5
+#define SEL_CLIENT_MAX 5
 
-#define SEL_TYPE_TEXT             0
-#define SEL_TYPE_BOOL             1
-#define SEL_TYPE_IP               2
-#define SEL_TYPE_NUMERIC          3
-#define SEL_TYPE_APPLY            4
-#define SEL_TYPE_NOCHANGE         5
+#define SEL_TYPE_TEXT 0
+#define SEL_TYPE_BOOL 1
+#define SEL_TYPE_IP 2
+#define SEL_TYPE_NUMERIC 3
+#define SEL_TYPE_APPLY 4
+#define SEL_TYPE_NOCHANGE 5
 
 void Display_NetSel(char str[26][80]);
-void Alpha_Keys(char *buffer);
+void Alpha_Keys(char* buffer);

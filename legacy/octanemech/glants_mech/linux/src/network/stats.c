@@ -42,72 +42,59 @@
 // Notice: I used long names for functions
 // I dont want to use very often
 //
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
-
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
 
-#include "network.h"
 #include "include/msg.h"
+#include "network.h"
 
 static struct timeval start_time;
 static struct timeval end_time;
 static double packet_time;
 
-
-struct sockaddr *client_addie = NULL;
+struct sockaddr* client_addie = NULL;
 
 //
 // start_net_time
 //
-void Start_Net_Time(void)
-{
-  gettimeofday(&start_time, NULL);
-  
-} // end of the function 
+void Start_Net_Time(void) { gettimeofday(&start_time, NULL); }  // end of the function
 
 //
 // End_Net_Time
 //
 void End_Net_Time(void)
 {
- 
-
   // record response
   gettimeofday(&end_time, NULL);
 
   end_time.tv_sec -= start_time.tv_sec;
   end_time.tv_usec -= start_time.tv_usec;
-  
+
   if (end_time.tv_usec < 0L)
-    {
+  {
+    end_time.tv_usec += 1000000L;
+    end_time.tv_sec -= 1;
 
-      end_time.tv_usec += 1000000L;
-      end_time.tv_sec -= 1;
-
-    } // end of the if 
+  }  // end of the if
 
   // This may be off...I am sleepy
-  packet_time = (double)end_time.tv_sec + 
-    ((double)end_time.tv_usec/1000000.0L);
+  packet_time = (double)end_time.tv_sec + ((double)end_time.tv_usec / 1000000.0L);
 
   packet_time *= 1000.0L;
 
-} // end of the function 
+}  // end of the function
 
 //
 // Print_Net_Time
-void Print_Net_Time(void)
-{
-  printf("64byte packet: %0.3fms\n", packet_time);
-} // end of the if
+void Print_Net_Time(void) { printf("64byte packet: %0.3fms\n", packet_time); }  // end of the if
 
 //
 // Set_SockAddr
@@ -121,58 +108,51 @@ void Send_Net_Packet(int sock, int serv_sock)
   char buffer[80];
   int h;
 
-  memset(buffer, 0xff, 64*sizeof(char));
+  memset(buffer, 0xff, 64 * sizeof(char));
   buffer[64] = '\0';
-  
-        // send array of data
-#if defined(UDP_PROTOCOL)
-  
-  res = strlen(buffer);
-  
-      h = sendto(serv_sock, buffer, res, 0, 
-	     (struct sockaddr *)client_addie, sizeof(struct sockaddr));
 
-      if (h < 0)
-	{
-	  fprintf(stderr, "sendto() packet: failed %d err: %d\n", res, h);
-	} // end of if 
+  // send array of data
+#if defined(UDP_PROTOCOL)
+
+  res = strlen(buffer);
+
+  h = sendto(serv_sock, buffer, res, 0, (struct sockaddr*)client_addie, sizeof(struct sockaddr));
+
+  if (h < 0)
+  {
+    fprintf(stderr, "sendto() packet: failed %d err: %d\n", res, h);
+  }  // end of if
 
 #else
-      res = strlen(buffer);
-      send(sock, buffer, res, 0);
-#endif      
+  res = strlen(buffer);
+  send(sock, buffer, res, 0);
+#endif
 
-      // start the race......
-      Start_Net_Time();
-      
+  // start the race......
+  Start_Net_Time();
 
-} // end of func
+}  // end of func
 
 //
 // Recv_Net_Packet
 void Recv_Net_Packet(int sock, int serv_sock)
 {
-  struct sockaddr *client_addr;
+  struct sockaddr* client_addr;
   int len;
   char buffer[80];
   int res;
 
-  
-
 #if defined(UDP_PROTOCOL)
 
-      len = sizeof(client_addr);
-      
-      res = recvfrom(serv_sock, buffer, 80, 0,
-		     (struct sockaddr *)&client_addr, &len);
-#else 
-      // get the message      
-      res = recv(sock, buffer, 80, 0);      
+  len = sizeof(client_addr);
+
+  res = recvfrom(serv_sock, buffer, 80, 0, (struct sockaddr*)&client_addr, &len);
+#else
+  // get the message
+  res = recv(sock, buffer, 80, 0);
 #endif
-      
 
-      End_Net_Time();
-      Print_Net_Time();
+  End_Net_Time();
+  Print_Net_Time();
 
-
-} // end of the functuion
+}  // end of the functuion

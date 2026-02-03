@@ -32,29 +32,28 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // Berlin Brown
 // bigbinc@hotmail.com
 //
 // play.c
 //
-#include <malloc.h>
+#include <fcntl.h>
 #include <limits.h>
+#include <linux/soundcard.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <linux/soundcard.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "sound.h"
 
 Sample snd[NUM_SAMPLES];
-char *audio_dev = "/dev/dsp";
+char* audio_dev = "/dev/dsp";
 int audiofd;
 int playingBeam, playingMusic;
 
@@ -64,84 +63,50 @@ int musicCount;
 int soundOn;
 int musicOn;
 
-
 //
 // Kill_Sounds
 //
-void Kill_Sounds(void)
-{
-
-  Snd_restore();
-
-} // end of the fnuction 
+void Kill_Sounds(void) { Snd_restore(); }  // end of the fnuction
 
 //
 // Turn_SoundOff
 //
-void Turn_SoundOff(void)
-{
-  soundOn = 0;
-} //  end of the function 
+void Turn_SoundOff(void) { soundOn = 0; }  //  end of the function
 
 //
 // Turn on
 //
-void Turn_SoundOn(void)
-{
-  soundOn = 1;
-} // end of the function 
+void Turn_SoundOn(void) { soundOn = 1; }  // end of the function
 
 //
 // Toggle_Sound(void0
 //
-void Toggle_Sound(void)
-{
-  soundOn = !soundOn;
-} // end of the fnction 
+void Toggle_Sound(void) { soundOn = !soundOn; }  // end of the fnction
 
 //
 // get Sound On
 //
-int Get_SoundOn(void)
-{
-
-  return soundOn;
-
-} // end of the function 
+int Get_SoundOn(void) { return soundOn; }  // end of the function
 
 //
 // Turn_MusicOff
 //
-void Turn_MusicOff(void)
-{
-  musicOn = 0;
-} // end of the functino
+void Turn_MusicOff(void) { musicOn = 0; }  // end of the functino
 
 //
 // Turn_MusicOn
 //
-void Turn_MusicOn(void)
-{
-  musicOn = 1;
-} // end of the function 
+void Turn_MusicOn(void) { musicOn = 1; }  // end of the function
 
 //
 // Toggle Music
 //
-void Toggle_Music(void)
-{
-  musicOn = !musicOn;
-
-} // end of func
+void Toggle_Music(void) { musicOn = !musicOn; }  // end of func
 
 //
 // Get Music
 //
-int Get_MusicOn(void)
-{
-  return musicOn;
-} // end of the function 
-
+int Get_MusicOn(void) { return musicOn; }  // end of the function
 
 //
 // Load_Audio
@@ -159,38 +124,36 @@ void Load_Audio(void)
   soundOn = 1;
   musicOn = 1;
 
-  if (stat(audio_dev, &st) >= 0) 
+  if (stat(audio_dev, &st) >= 0)
+  {
+    audiofd = open(audio_dev, O_WRONLY);
+
+    if (audiofd >= 0)
     {
-      audiofd = open(audio_dev, O_WRONLY);
+      noSound = 0;
+      close(audiofd);
 
-      if (audiofd >= 0)
-	{
-	  noSound = 0;
-	  close(audiofd);
-	  
-	} // end of the if 
+    }  // end of the if
 
-    } // end of the if 
+  }  // end of the if
 
   if (!noSound)
-    {
-      
-      // load all the sound effects into memory
-      Snd_loadRawSample("misc/tech.raw", &snd[0]);
-      Snd_loadRawSample("misc/1.raw", &snd[1]);
+  {
+    // load all the sound effects into memory
+    Snd_loadRawSample("misc/tech.raw", &snd[0]);
+    Snd_loadRawSample("misc/1.raw", &snd[1]);
 
-    } // end of th eif 
+  }  // end of th eif
 
   if (Snd_init(NUM_SAMPLES, snd, SAMPLE_RATE, NUM_CHANNELS, audio_dev) == EXIT_FAILURE)
-    {
+  {
+    fprintf(stderr, "Cannot load sound library\n");
+    return;
 
-      fprintf(stderr, "Cannot load sound library\n");      
-      return;
-
-    } // end of the if 
+  }  // end of the if
 #endif
-  
-} // end of the function 
+
+}  // end of the function
 
 //
 // flushSounds
@@ -202,23 +165,22 @@ void flushSounds(void)
   playingMusic--;
 
   if (playingMusic < 0)
-    {
-      playingMusic = 0;
-    } // end of the if 
+  {
+    playingMusic = 0;
+  }  // end of the if
 
-} // end of the functino 
+}  // end of the functino
 
 //
 // outAudio
 //
 void outAudio(int sCounter)
 {
-  if ((sCounter < 0) || (sCounter >= NUM_SAMPLES))
-    return;
-  
+  if ((sCounter < 0) || (sCounter >= NUM_SAMPLES)) return;
+
   Snd_effect(sCounter, sCounter);
-  
-} // end of the functino 
+
+}  // end of the functino
 
 //
 // doSound
@@ -226,32 +188,29 @@ void outAudio(int sCounter)
 void doSound(int theSound)
 {
   if (!noSound)
-    {
-      
-    } // end of the if 
+  {
+  }  // end of the if
 
-} // end of the function 
+}  // end of the function
 
 //
 // Do_FireSound
 //
 void Do_FireSound(void)
 {
-
 #if SOUND_TURN_ON
   outAudio(0);
 #endif
 
-} // end of the fnuctino 
+}  // end of the fnuctino
 
 //
 // Play_Music
 //
 void Play_Music(void)
 {
-
 #if SOUND_TURN_ON
   outAudio(1);
 #endif
 
-} // end of the function 
+}  // end of the function

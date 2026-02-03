@@ -30,29 +30,28 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
- * 
+ *
  * https://github.com/berlinbrown/OctaneMechOpenGLGame
  */
 
 #ifndef _LIGHTS_H_
 #define _LIGHTS_H_
 
-#define ENABLE_LIGHTS		1
+#define ENABLE_LIGHTS 1
 
-#define MAX_LIGHTS			10
+#define MAX_LIGHTS 10
 
 //
 // simple, I love it
 //
-typedef struct tagDriverLights {
-
-	float position[4];
-	float state;
-	int		index_id;
-	int		light_id;	// used with GL_LIGHT0, etc
+typedef struct tagDriverLights
+{
+  float position[4];
+  float state;
+  int index_id;
+  int light_id;  // used with GL_LIGHT0, etc
 
 } DriverLights, *DriverLightsPtr;
-
 
 void InitMaterial(void);
 //
@@ -62,8 +61,6 @@ void GenerateLights(void);
 void ShutdownLights(void);
 void SetLights(void);
 
-
-void setmaterial(float amb[], float diff[], float spec[],
-				 float shine[], float emiss[]);
+void setmaterial(float amb[], float diff[], float spec[], float shine[], float emiss[]);
 
 #endif

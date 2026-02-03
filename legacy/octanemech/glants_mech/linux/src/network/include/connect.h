@@ -41,21 +41,21 @@
 #define CONNECT_STR "127.0.0.1"
 #define CONNECT_PORT 9000
 
-#define SNAP_ELAPSED SnapEndTime.tv_sec - SnapStartTime.tv_sec + \
-             ((SnapEndTime.tv_usec - SnapStartTime.tv_usec)/1.0E6);
+#define SNAP_ELAPSED                          \
+  SnapEndTime.tv_sec - SnapStartTime.tv_sec + \
+      ((SnapEndTime.tv_usec - SnapStartTime.tv_usec) / 1.0E6);
 
 //
 // Snapshot time
 //
-#define SNAP_SHOT_T            60
+#define SNAP_SHOT_T 60
 
 //
 // Place server object Here
 
-
 void Start_Service(char final_str[4][80], int mode);
-void Get_NetworkMsg(char *buffer);
-void Set_NetworkMsg(char *buffer);
+void Get_NetworkMsg(char* buffer);
+void Set_NetworkMsg(char* buffer);
 
 // clients.c
 void Build_StartMsg(void);
@@ -81,7 +81,7 @@ void Build_MoveMsg(float x, float y, float heading, int type);
 //
 // network.c
 void Kill_Client(void);
-void Connect_Server(char *buffer);
+void Connect_Server(char* buffer);
 void Print_NetRun(void);
 
 void Snapshot_StartTime(void);
@@ -89,6 +89,5 @@ void mPerformSnapshot(void);
 
 // call this outside of the network interface
 void Perform_Snapshots(void);
-
 
 #endif

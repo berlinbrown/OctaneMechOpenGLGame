@@ -37,19 +37,19 @@
 // bigbinc@hotmail.com
 //
 // connect.c
-// 
+//
 // - the entry point for the networking code
 //
-#include <stdio.h>
+#include "include/connect.h"
+
+#include <float.h>  // used for _control
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdlib.h>
-#include <float.h>              // used for _control
-
 
 #include "../keys.h"
-#include "include/connect.h"
 #include "include/clients.h"
 #include "network.h"
 
@@ -60,20 +60,18 @@
 static char network_msg[80] = "Use TAB to switch network modes";
 static int _cur_mode = -1;
 
-
 //
 // Super - FUNCTION
 // - must be called in main.c(glant.c)
 //
 void Super_InitNetwork(void)
 {
-  
   Snapshot_StartTime();
-  
-  Create_Client_List();
-  Create_Client();        // simple inits
 
-} // end of the function 
+  Create_Client_List();
+  Create_Client();  // simple inits
+
+}  // end of the function
 
 //
 // Super_DeleteNetwork
@@ -84,29 +82,20 @@ void Super_DeleteNetwork(void)
   Kill_Client();
   Kill_Server();
 
-} // end of the function 
+}  // end of the function
 
 //
 // Get_NetworkMsg
 //
-void Get_NetworkMsg(char *buffer)
-{
-
-  strcpy(buffer, network_msg);
-
-} // end of the function
+void Get_NetworkMsg(char* buffer) { strcpy(buffer, network_msg); }  // end of the function
 
 //
 // Set_NetworkMsg(char *buffer)
 //
-void Set_NetworkMsg(char *buffer)
-{
-  strcpy(network_msg, buffer);
-} // end of func
+void Set_NetworkMsg(char* buffer) { strcpy(network_msg, buffer); }  // end of func
 
 // we really should use final_str more
 //
-
 
 //
 // Start_Service()
@@ -120,8 +109,8 @@ void Start_Service(char final_str[4][80], int mode)
 
   strcpy(buffer, final_str[1]);  // get the connect str
 
-  switch(mode)
-    {
+  switch (mode)
+  {
     case SEL_CLIENT_MODE:
 
       _cur_mode = SEL_CLIENT_MODE;
@@ -144,15 +133,16 @@ void Start_Service(char final_str[4][80], int mode)
 
       // starting server
       Launch_Server();
-      //Kill_Server();
+      // Kill_Server();
 
       Set_NetworkMsg("Launching Server");
       break;
-      
-    default: break;
-    };
 
-} // end of the function 
+    default:
+      break;
+  };
+
+}  // end of the function
 
 //
 // Print_NetRun
@@ -161,12 +151,13 @@ void Start_Service(char final_str[4][80], int mode)
 void Print_NetRun(void)
 {
   if (_cur_mode == SEL_CLIENT_MODE)
-    {
-      Print_ClientRun();
-    } else if (_cur_mode == SEL_SERVER_MODE) {
-      
-      Print_ServerRun();
-      
-    } // end of the if
+  {
+    Print_ClientRun();
+  }
+  else if (_cur_mode == SEL_SERVER_MODE)
+  {
+    Print_ServerRun();
 
-} // end of the function 
+  }  // end of the if
+
+}  // end of the function

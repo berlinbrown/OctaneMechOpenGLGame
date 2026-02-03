@@ -68,17 +68,17 @@ static unsigned int titlesID = 5;
 #define SETTINGS_H 239
 #define DEMO_H 273
 
-static int cursor_heights[MAX_MENU_ITEMS] = {NEW_GAME_H, EXIT_H, HELP_H,
-                                             SETTINGS_H, DEMO_H};
+static int cursor_heights[MAX_MENU_ITEMS] = {NEW_GAME_H, EXIT_H, HELP_H, SETTINGS_H, DEMO_H};
 static int cursor_index = NEW_GAME_ID;
 
 //
 // Texture Image
 //
-typedef struct {
+typedef struct
+{
   int width;
   int height;
-  unsigned char *data;
+  unsigned char* data;
 
 } textureImage;
 
@@ -92,7 +92,8 @@ void Reset_DeadText(void) { m_size_z = 0.01f; }
 // - must be placed right after loadTexture
 // but I didnt want to put it in the actual function
 //
-void SetFunkyTexture(void) {
+void SetFunkyTexture(void)
+{
   LoadTexture("data/tile.bmp");
   funky_texture = textureindex - 1;
 }
@@ -105,9 +106,11 @@ int GetFunkyTexture(void) { return funky_texture; }
 //
 // NewTexure
 //
-void NextTexture(void) {
+void NextTexture(void)
+{
   textureindex++;  // up the index
-  if (textureindex > MAX_TEXTURES) {
+  if (textureindex > MAX_TEXTURES)
+  {
     textureindex = MAX_TEXTURES;
   }
 }
@@ -117,7 +120,7 @@ void NextTexture(void) {
 // - load a bitmap using aux library
 // removed AUX bitmap stuff
 //=========================================================
-void *LoadBitmap(char *filename) { return NULL; }
+void* LoadBitmap(char* filename) { return NULL; }
 
 //
 // GetTexture
@@ -128,8 +131,9 @@ unsigned int GetTexture(int index) { return texture[index]; }
 //
 // LoadBitmap for linux
 //
-int LoadBitmap_Lin(char *filename, textureImage *texture) {
-  FILE *file;
+int LoadBitmap_Lin(char* filename, textureImage* texture)
+{
+  FILE* file;
 
   unsigned short int bfType;
   long int bfOffBits;
@@ -140,16 +144,19 @@ int LoadBitmap_Lin(char *filename, textureImage *texture) {
   unsigned char temp;
 
   /* make sure the file is there and open it read-only (binary) */
-  if ((file = fopen(filename, "rb")) == NULL) {
+  if ((file = fopen(filename, "rb")) == NULL)
+  {
     printf("File not found : %s\n", filename);
     return 0;
   }
-  if (!fread(&bfType, sizeof(short int), 1, file)) {
+  if (!fread(&bfType, sizeof(short int), 1, file))
+  {
     printf("Error reading file!\n");
     return 0;
   }
   /* check if file is a bitmap */
-  if (bfType != 19778) {
+  if (bfType != 19778)
+  {
     printf("Not a Bitmap-File!\n");
     return 0;
   }
@@ -157,7 +164,8 @@ int LoadBitmap_Lin(char *filename, textureImage *texture) {
   /* skip file size and reserved fields of bitmap file header */
   fseek(file, 8, SEEK_CUR);
   /* get the position of the actual bitmap data */
-  if (!fread(&bfOffBits, sizeof(long int), 1, file)) {
+  if (!fread(&bfOffBits, sizeof(long int), 1, file))
+  {
     printf("Error reading file!\n");
     return 0;
   }
@@ -175,18 +183,21 @@ int LoadBitmap_Lin(char *filename, textureImage *texture) {
 
   /* get the number of planes (must be set to 1) */
   fread(&biPlanes, sizeof(short int), 1, file);
-  if (biPlanes != 1) {
+  if (biPlanes != 1)
+  {
     printf("Error: number of Planes not 1!\n");
     return 0;
   }
   /* get the number of bits per pixel */
-  if (!fread(&biBitCount, sizeof(short int), 1, file)) {
+  if (!fread(&biBitCount, sizeof(short int), 1, file))
+  {
     printf("Error reading file!\n");
     return 0;
   }
 
   // printf("Bits per Pixel: %d\n", biBitCount);
-  if (biBitCount != 24) {
+  if (biBitCount != 24)
+  {
     printf("Bits per Pixel not 24\n");
     return 0;
   }
@@ -196,12 +207,14 @@ int LoadBitmap_Lin(char *filename, textureImage *texture) {
   texture->data = malloc(biSizeImage);
   /* seek to the actual data */
   fseek(file, bfOffBits, SEEK_SET);
-  if (!fread(texture->data, biSizeImage, 1, file)) {
+  if (!fread(texture->data, biSizeImage, 1, file))
+  {
     printf("Error loading file!\n");
     return 0;
   }
   /* swap red and blue (bgr -> rgb) */
-  for (i = 0; i < biSizeImage; i += 3) {
+  for (i = 0; i < biSizeImage; i += 3)
+  {
     temp = texture->data[i];
     texture->data[i] = texture->data[i + 2];
     texture->data[i + 2] = temp;
@@ -214,24 +227,26 @@ int LoadBitmap_Lin(char *filename, textureImage *texture) {
 // loadtexture
 // - load a texture based on glaux load bitmap
 //---------------------------------------------------------
-void LoadTexture(char *filename) {
-  textureImage *texture_image;
+void LoadTexture(char* filename)
+{
+  textureImage* texture_image;
   texture_image = malloc(sizeof(textureImage));
 
   // load the bitmap, from the file
-  if (LoadBitmap_Lin(filename, texture_image)) {
+  if (LoadBitmap_Lin(filename, texture_image))
+  {
     // Bind the texture
     glBindTexture(GL_TEXTURE_2D, GetTexture(0));
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture_image->width,
-                 texture_image->height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 texture_image->data);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture_image->width, texture_image->height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, texture_image->data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   }  // end of the if
 
   // free the memory we just allocated, it is probably going in vram
-  if (texture_image) {
+  if (texture_image)
+  {
     if (texture_image->data) free(texture_image->data);
 
     free(texture_image);
@@ -243,21 +258,22 @@ void LoadTexture(char *filename) {
 //
 // LoadTitleBitmap
 //
-void Load_Titles(void) {
-  textureImage *texture_image;
+void Load_Titles(void)
+{
+  textureImage* texture_image;
   texture_image = malloc(sizeof(textureImage));
 
   // load the bitmap, from the file
-  if (LoadBitmap_Lin("data/title1.ilf", texture_image)) {
+  if (LoadBitmap_Lin("data/title1.ilf", texture_image))
+  {
     // glGenTextures(1, &titlesID);
     titlesID = 8;
     glBindTexture(GL_TEXTURE_2D, titlesID);
 
     // GL_LUMINANCE_ALPHA
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_image->width,
-                 texture_image->height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 texture_image->data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_image->width, texture_image->height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, texture_image->data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -265,7 +281,8 @@ void Load_Titles(void) {
   }  // end of the if
 
   // free the memory we just allocated, it is probably going in vram
-  if (texture_image) {
+  if (texture_image)
+  {
     if (texture_image->data) free(texture_image->data);
 
     free(texture_image);
@@ -275,7 +292,8 @@ void Load_Titles(void) {
 //
 // Title_Begin
 //
-static void Title_Begin(void) {
+static void Title_Begin(void)
+{
   // Push the neccessary Matrices on the stack
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -311,7 +329,8 @@ static void Title_Begin(void) {
 //
 // TitleEnd
 //
-static void Title_End(void) {
+static void Title_End(void)
+{
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
@@ -326,7 +345,8 @@ static void Title_End(void) {
 // Render_Name
 // - the title of the game
 //
-void Render_BText(int val, float x, float y, float Yoffset) {
+void Render_BText(int val, float x, float y, float Yoffset)
+{
   float t_offset;
   float t_height;
   float tex_y_1, tex_y_2;
@@ -361,7 +381,8 @@ void Render_BText(int val, float x, float y, float Yoffset) {
 // Render _ Trick
 // - the title of the game !!!!
 //**
-void Render_BTrick(int val, float perc, float x, float y, float Yoffset) {
+void Render_BTrick(int val, float perc, float x, float y, float Yoffset)
+{
   float t_offset;
   float t_height;
   float tex_y_1, tex_y_2;
@@ -431,7 +452,8 @@ void Render_BTrick(int val, float perc, float x, float y, float Yoffset) {
 //
 // Draw_Shadow
 //
-void Draw_Shadow(void) {
+void Draw_Shadow(void)
+{
   int dx = 2;
   int box_top = (SCREEN_HEIGHT / 2) + 100;
   int box_bottom = (SCREEN_HEIGHT / 2) + 200;
@@ -453,7 +475,8 @@ void Draw_Shadow(void) {
 //
 // Draw_Cursor
 //
-void Draw_Cursor(int y) {
+void Draw_Cursor(int y)
+{
   int left_far;
   int left_mid;
   int left_inside;
@@ -561,7 +584,8 @@ void Draw_Cursor(int y) {
 //
 // Draw_GameOver
 //
-void Draw_GameOver(void) {
+void Draw_GameOver(void)
+{
   float offset = 34.0f;
   float begin = 120.0f;
   float t;
@@ -586,17 +610,20 @@ void Draw_GameOver(void) {
 //
 // Draw_Title
 //
-void Draw_Title(void) {
+void Draw_Title(void)
+{
   float offset = 34.0f;
   float begin = 120.0f;
 
   // Also draw game over
   // if it is turned on
-  if (ant_globals->_menu_state == MENU_DEAD_MODE) {
+  if (ant_globals->_menu_state == MENU_DEAD_MODE)
+  {
     Draw_GameOver();
   }  // end of the  if
 
-  switch (ant_globals->menu_mode) {
+  switch (ant_globals->menu_mode)
+  {
     case MENU_HELP_MODE:
 
       glLineWidth(2.0f);
@@ -677,12 +704,17 @@ void Draw_Title(void) {
 //
 // Toggle_MenuItems
 //
-void Toggle_MenuItems(int dir) {
-  if (ant_globals->menu_mode == MENU_TITLE_MODE) {
-    if (dir == 1) {
+void Toggle_MenuItems(int dir)
+{
+  if (ant_globals->menu_mode == MENU_TITLE_MODE)
+  {
+    if (dir == 1)
+    {
       cursor_index++;
       if (cursor_index >= MAX_MENU_ITEMS) cursor_index = 0;
-    } else if (dir == -1) {
+    }
+    else if (dir == -1)
+    {
       cursor_index--;
       if (cursor_index < 0) cursor_index = MAX_MENU_ITEMS - 1;
 
@@ -695,12 +727,16 @@ void Toggle_MenuItems(int dir) {
 //
 // Set_MenuMode
 //
-bool Set_MenuMode(void) {
-  if (ant_globals->menu_mode == MENU_TITLE_MODE) {
-    switch (cursor_index) {
+bool Set_MenuMode(void)
+{
+  if (ant_globals->menu_mode == MENU_TITLE_MODE)
+  {
+    switch (cursor_index)
+    {
       case NEW_GAME_ID:
 
-        if (CHECK_NET_SERVER) {
+        if (CHECK_NET_SERVER)
+        {
           if (ant_globals->_menu_state == FIRST_TIME_TRUE)
             cursor_index = NEW_GAME_ID;
           else
@@ -720,7 +756,9 @@ bool Set_MenuMode(void) {
           Reset_NetworkBots();
 
           return false;
-        } else {
+        }
+        else
+        {
           if (ant_globals->_menu_state == FIRST_TIME_TRUE)
             cursor_index = NEW_GAME_ID;
           else

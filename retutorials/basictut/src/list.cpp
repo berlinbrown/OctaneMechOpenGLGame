@@ -41,9 +41,7 @@
 #include <iostream>
 
 // Node constructor
-Node::Node(int value) : data(value), next(nullptr) {
-    
-}
+Node::Node(int value) : data(value), next(nullptr) {}
 
 Node::~Node() = default;  // not required but shown explicitly
 
@@ -53,21 +51,28 @@ List::~List() = default;
 
 bool List::isEmpty() const { return head == nullptr; }
 
-void List::insertFront(int data) {
+void List::insertFront(int data)
+{
   auto new_node = std::make_unique<Node>(data);
   new_node->next = std::move(head);
   head = std::move(new_node);
 }
 
-void List::deleteNode(int val) {
-  Node *current = head.get();
-  Node *previous = nullptr;
+void List::deleteNode(int val)
+{
+  Node* current = head.get();
+  Node* previous = nullptr;
 
-  while (current) {
-    if (current->data == val) {
-      if (previous) {
+  while (current)
+  {
+    if (current->data == val)
+    {
+      if (previous)
+      {
         previous->next = std::move(current->next);
-      } else {
+      }
+      else
+      {
         head = std::move(current->next);
       }
       return;
@@ -77,9 +82,11 @@ void List::deleteNode(int val) {
   }
 }
 
-void List::printList() const {
-  Node *current = head.get();
-  while (current) {
+void List::printList() const
+{
+  Node* current = head.get();
+  while (current)
+  {
     std::cout << "<" << current->data << ">\n";
     current = current->next.get();
   }

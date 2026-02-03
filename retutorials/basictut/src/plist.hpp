@@ -36,29 +36,29 @@
 // list.h
 #pragma once
 
-#include <cstddef> // for size_t
+#include <cstddef>  // for size_t
 
 // Forward declaration
 class PtrNode;
 
 class PtrList
 {
-public:
-    PtrList();
-    ~PtrList();
+ public:
+  PtrList();
+  ~PtrList();
 
-    bool isEmpty() const;
-    void insertFront(void *data);
-    void *removeFront();
-    void deleteNode(void *val);
-    void printListAsInt() const;
-    void printListAsFloat() const;
-    size_t size() const;
+  bool isEmpty() const;
+  void insertFront(void* data);
+  void* removeFront();
+  void deleteNode(void* val);
+  void printListAsInt() const;
+  void printListAsFloat() const;
+  size_t size() const;
 
-private:
-    PtrNode *head;
-    size_t items;
+ private:
+  PtrNode* head;
+  size_t items;
 
-    PtrNode *createNode(void *data);
-    void destroyNode(PtrNode *node);
+  PtrNode* createNode(void* data);
+  void destroyNode(PtrNode* node);
 };

@@ -66,7 +66,8 @@ DriverObjects CURRENT_OBJECT = {
 };
 
 //=========================================================
-static void draw_wirebox(void) {
+static void draw_wirebox(void)
+{
   float size = 0.4f;
 
   glColor3f(1.0f, 1.0f, 1.0f);
@@ -114,7 +115,8 @@ static void draw_wirebox(void) {
 // - load anything special about the
 // one important function
 //
-static void init_wirebox(int list_id) {
+static void init_wirebox(int list_id)
+{
   CURRENT_OBJECT.visible = 1;
 
   // store the id through the function
@@ -126,7 +128,8 @@ static void init_wirebox(int list_id) {
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
-static void render_wirebox(void) {
+static void render_wirebox(void)
+{
   // glPushMatrix();
 
   glCallList(CURRENT_OBJECT.call_id);
@@ -137,7 +140,8 @@ static void render_wirebox(void) {
 //=========================================================
 // compile
 //=========================================================
-static void compile_wirebox(void) {
+static void compile_wirebox(void)
+{
   int id;
   // setup a spot for display list for background
   // object = getcurrentobject();

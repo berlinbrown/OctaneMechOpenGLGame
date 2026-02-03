@@ -39,22 +39,20 @@
 // but a box
 //
 
+#include <GL/gl.h>   // Header File For The OpenGL32 Library
+#include <GL/glu.h>  // Header File For The GLu32 Library
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <GL/gl.h>			// Header File For The OpenGL32 Library
-#include <GL/glu.h>			// Header File For The GLu32 Library
-
-
-#include "gldrawlib.h"
-#include "objects.h"
-#include "lights.h"
-#include "plist.h"
 #include "collision.h"
+#include "gldrawlib.h"
+#include "lights.h"
+#include "objects.h"
+#include "plist.h"
 #include "walls.h"
 
 #undef CURRENT_OBJECT
-#define CURRENT_OBJECT			pyramid
+#define CURRENT_OBJECT pyramid
 
 static void init_pyramid(int list_id);
 static void compile_pyramid(void);
@@ -62,557 +60,514 @@ static void draw_pyramid(void);
 static void render_pyramid(void);
 static void draw_pyramid(void);
 
-
-GLfloat dmat_ambient[] = { 0.0f, 0.0f, 0.9f, 1.0f };
-GLfloat dmat_diffuse[] = { 0.3f, 0.8f, 0.8f, 1.0f };
-GLfloat dmat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat dno_shininess[] = { 0.0f };
-GLfloat dlow_shininess[] = { 5.0f };
-GLfloat dhigh_shininess[] = { 100.0f};
+GLfloat dmat_ambient[] = {0.0f, 0.0f, 0.9f, 1.0f};
+GLfloat dmat_diffuse[] = {0.3f, 0.8f, 0.8f, 1.0f};
+GLfloat dmat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat dno_shininess[] = {0.0f};
+GLfloat dlow_shininess[] = {5.0f};
+GLfloat dhigh_shininess[] = {100.0f};
 GLfloat dmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
-
 
 //
 // here is the level
 // 14 walls, 5 cols
 // 60.0f is a good height
 //
-#define LEVEL_MAX_WALLS		10
-static float level_0[LEVEL_MAX_WALLS][5] = 
-	{ { -200.0f, 260.0f, 100.0f, 30.0f, 70.0f },		// 1
-	{ -110.0f, 200.0f, 50.0f, 40.0f, 70.0f },			// 2
-	{ -70.0f, 0.0f, 20.0f, 40.0f, 80.0f },				// 3
-	{ 70.0f, 0.0f, 20.0f, 40.0f, 56.0f },				// 4
-	{ 0.0f, 70.0f, 50.0f, 30.0f, 66.0f },				// 5
-	{ 0.0f, -70.0f,50.0f, 30.0f, 60.0f },				// 6
-	{ -220.0f, -240.0f, 70.0f, 40.0f, 70.0f },			// 7
-	{	180.0f, -100.0f, 50.0f, 30.0f, 55.0f },			// 8
-	{ 260.0f, 100.0f, 80.0f, 30.0f, 68.0f },			// 9
-	{ 220.0f, 80.0f, 40.0f, 30.0f, 55.0f }				// 10
+#define LEVEL_MAX_WALLS 10
+static float level_0[LEVEL_MAX_WALLS][5] = {
+    {-200.0f, 260.0f, 100.0f, 30.0f, 70.0f},  // 1
+    {-110.0f, 200.0f, 50.0f, 40.0f, 70.0f},   // 2
+    {-70.0f, 0.0f, 20.0f, 40.0f, 80.0f},      // 3
+    {70.0f, 0.0f, 20.0f, 40.0f, 56.0f},       // 4
+    {0.0f, 70.0f, 50.0f, 30.0f, 66.0f},       // 5
+    {0.0f, -70.0f, 50.0f, 30.0f, 60.0f},      // 6
+    {-220.0f, -240.0f, 70.0f, 40.0f, 70.0f},  // 7
+    {180.0f, -100.0f, 50.0f, 30.0f, 55.0f},   // 8
+    {260.0f, 100.0f, 80.0f, 30.0f, 68.0f},    // 9
+    {220.0f, 80.0f, 40.0f, 30.0f, 55.0f}      // 10
 
 };
-
 
 //
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
 //
-DriverObjects CURRENT_OBJECT =
-{
-	init_pyramid,			// init, must be called first
-	compile_pyramid,		// compile
-	draw_pyramid,			// draw 
-	render_pyramid,			// render to scene
-	0					// loaded by INIT
+DriverObjects CURRENT_OBJECT = {
+    init_pyramid,     // init, must be called first
+    compile_pyramid,  // compile
+    draw_pyramid,     // draw
+    render_pyramid,   // render to scene
+    0                 // loaded by INIT
 };
 
-
-static CollisionList *wall_list;
+static CollisionList* wall_list;
 
 //
 // WALLSOBJECTS GO HERE
 //=========================================================
 
 //
-static void SetupWall(CollisionObj **ptr)
+static void SetupWall(CollisionObj** ptr)
 {
-	(*ptr) = CreateCollisionObj();
+  (*ptr) = CreateCollisionObj();
 
-	(*ptr)->id = wall_list->objects;
+  (*ptr)->id = wall_list->objects;
 
-	InsertColFront(wall_list, *ptr); 
+  InsertColFront(wall_list, *ptr);
 
-} // end of the function
-
+}  // end of the function
 
 //
 // InsertWall
 //
-void InsertWall(float x, float y, 
-				float width, float height, float height_2)
+void InsertWall(float x, float y, float width, float height, float height_2)
 {
-	float x_min,x_max, y_min, y_max;
+  float x_min, x_max, y_min, y_max;
 
-	// set up the struct
-	CollisionObj *ptr = NULL;
- 
-	SetupWall(&(ptr));	// inserted into standard list
+  // set up the struct
+  CollisionObj* ptr = NULL;
 
-	ptr->movement_type =  PLANE_COL_TYPE;	// moves
+  SetupWall(&(ptr));  // inserted into standard list
 
-	ptr->box_x = x;
-	ptr->box_y = y;
+  ptr->movement_type = PLANE_COL_TYPE;  // moves
 
-	if (width <= 0)
-		width = 1.0f;
+  ptr->box_x = x;
+  ptr->box_y = y;
 
-	if (height <= 0)
-		height = 1.0f;
+  if (width <= 0) width = 1.0f;
 
-	ptr->size[0] = width;
-	ptr->size[1] = height_2;
-	ptr->size[2] = height;
+  if (height <= 0) height = 1.0f;
 
-	// increase the width a little so it doesnt
-	// look like the objects are crossing over
-	width	*= 1.1f;
-	height	*= 1.1f;
+  ptr->size[0] = width;
+  ptr->size[1] = height_2;
+  ptr->size[2] = height;
 
-	x_min = x - (width / 2.0f);
-	x_max = x + (width / 2.0f);
+  // increase the width a little so it doesnt
+  // look like the objects are crossing over
+  width *= 1.1f;
+  height *= 1.1f;
 
-	y_min = y - (height / 2.0f);
-	y_max = y + (height / 2.0f);
+  x_min = x - (width / 2.0f);
+  x_max = x + (width / 2.0f);
 
-	//
-	// In order to insert a wall of the box
-	// we need the xmins and maxes and the normals
-	// 4 differnt walls
-	//
+  y_min = y - (height / 2.0f);
+  y_max = y + (height / 2.0f);
 
-	// front wall
-	InsertColSegment(x_min, y_max, x_max, y_max);
+  //
+  // In order to insert a wall of the box
+  // we need the xmins and maxes and the normals
+  // 4 differnt walls
+  //
 
-	// right wall
-	InsertColSegment(x_max, y_min, x_max, y_max);
+  // front wall
+  InsertColSegment(x_min, y_max, x_max, y_max);
 
-	// back wall (top)
-	InsertColSegment(x_min, y_min, x_max, y_min);
+  // right wall
+  InsertColSegment(x_max, y_min, x_max, y_max);
 
-	// left wall 
-	InsertColSegment(x_min, y_min, x_min, y_max);
+  // back wall (top)
+  InsertColSegment(x_min, y_min, x_max, y_min);
 
+  // left wall
+  InsertColSegment(x_min, y_min, x_min, y_max);
 
-} // end of the function 
+}  // end of the function
 
 //
 // Create Walls
 //
 void CreateWalls(void)
 {
-	int i = 0;
-	//InsertWall(4.0f, -10.0f, 20.0f, 0.5f, 55.0f);
+  int i = 0;
+  // InsertWall(4.0f, -10.0f, 20.0f, 0.5f, 55.0f);
 
-	for (i = 0; i < LEVEL_MAX_WALLS; i++)
-	{
+  for (i = 0; i < LEVEL_MAX_WALLS; i++)
+  {
+    InsertWall(level_0[i][0], level_0[i][1], level_0[i][2], level_0[i][3], level_0[i][4]);
+  }  // end of the for
 
-		InsertWall(level_0[i][0], level_0[i][1],
-					level_0[i][2], level_0[i][3],
-					level_0[i][4]);
-	} // end of the for 
-
-} // end of teh fucntion
-
+}  // end of teh fucntion
 
 //
 // PrintList
 //
-void Draw_Walls(CollisionList *list)
+void Draw_Walls(CollisionList* list)
 {
+  CollisionObj* current_ptr;
 
- CollisionObj *current_ptr;
+  if (list->front == NULL) return;
 
- if (list->front == NULL)
-	return;
- 
- current_ptr = list->front;
- 
- while(current_ptr != NULL)
- {
+  current_ptr = list->front;
 
-	// draw the wall
-	glPushMatrix();
+  while (current_ptr != NULL)
+  {
+    // draw the wall
+    glPushMatrix();
 
-	glTranslatef(current_ptr->box_x, 0.0f, current_ptr->box_y);
+    glTranslatef(current_ptr->box_x, 0.0f, current_ptr->box_y);
 
-	glScalef(current_ptr->size[0], current_ptr->size[1],
-		current_ptr->size[2]);
+    glScalef(current_ptr->size[0], current_ptr->size[1], current_ptr->size[2]);
 
-	driver_objects[PYRAMID_OBJECT]->render();
+    driver_objects[PYRAMID_OBJECT]->render();
 
-	glPopMatrix();
+    glPopMatrix();
 
- 	current_ptr = current_ptr->next;
+    current_ptr = current_ptr->next;
 
- } // end of while
+  }  // end of while
 
-} // end of the function 
-
+}  // end of the function
 
 //
 // Create wall list
 //
-void Create_Wall_List(void)
-{
-	wall_list =  CreateCollisionList(); 
-} // end of the function
+void Create_Wall_List(void) { wall_list = CreateCollisionList(); }  // end of the function
 
-// 
+//
 // Delelet Col List
 //
-void Delete_Wall_List(void)
-{
-	DestroyColList(wall_list);
-} // end of the function 
+void Delete_Wall_List(void) { DestroyColList(wall_list); }  // end of the function
 
 //
 // Print_Col_List
 //
-void Print_Wall_List(void)
-{
-	PrintCollisionList(wall_list);
-
-} // end of the function 
+void Print_Wall_List(void) { PrintCollisionList(wall_list); }  // end of the function
 
 //
 // Draw_Wall_List
 //
-void Draw_Wall_List(void)
-{
-	Draw_Walls(wall_list);
-} // end of the functino
+void Draw_Wall_List(void) { Draw_Walls(wall_list); }  // end of the functino
 
 //
 // END WALLOBJECTS
 //=========================================================
 static void draw_pyramid(void)
 {
-	float v[3][3] = { 0 };
-	float n[3] = { 0 };
+  float v[3][3] = {0};
+  float n[3] = {0};
 
-	float size = 0.5f;
+  float size = 0.5f;
 
-	
 #if ENABLE_LIGHTS
-			// set the material for this object
-		setmaterial(dmat_ambient, dmat_diffuse, 
-				dmat_specular, dlow_shininess, dmat_emission);
-
+  // set the material for this object
+  setmaterial(dmat_ambient, dmat_diffuse, dmat_specular, dlow_shininess, dmat_emission);
 
 #endif
-	
-	// Note: normals are messed up for now
-	// select between n0-n3
 
-	// change the size here
-	// Note: starts from ground
+  // Note: normals are messed up for now
+  // select between n0-n3
 
-	glBegin(GL_TRIANGLES);
-	 
-	// left bottom front
-	  v[0][0] = -size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = size;
+  // change the size here
+  // Note: starts from ground
 
-	  v[1][0] = size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = size;
+  glBegin(GL_TRIANGLES);
 
-	  v[2][0] = size;
-	  v[2][1] = size;
-	  v[2][2] = size;
+  // left bottom front
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	  CLR_0;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
+  CLR_0;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	  // Finish the front
-	  v[0][0] = size;
-	  v[0][1] = size;
-	  v[0][2] = size;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	  v[1][0] = -size;
-	  v[1][1] = size;
-	  v[1][2] = size;
+  // Finish the front
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	  v[2][0] = -size;
-	  v[2][1] = 0.0f;
-	  v[2][2] = size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = size;
 
-	  CLR_1;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = size;
 
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
+  CLR_1;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
 
-	  // Draw the back triangle
-	  //-----------------------------
-	  v[0][0] = -size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = -size;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	  v[1][0] = size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = -size;
+  // Draw the back triangle
+  //-----------------------------
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	  v[2][0] = size;
-	  v[2][1] = size;
-	  v[2][2] = -size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	  CLR_2;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom bac
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	  // Finish the back
-	  v[0][0] = size;
-	  v[0][1] = size;
-	  v[0][2] = -size;
+  CLR_2;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	  v[1][0] = -size;
-	  v[1][1] = size;
-	  v[1][2] = -size;
+  // Finish the back
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = 0.0f;
-	  v[2][2] = -size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	  MED_PURPLE;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom front
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
-	  // Draw the right side
-	  // Triangle
-	  v[0][0] = size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = size;
+  MED_PURPLE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom front
 
-	  v[1][0] = size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = -size;
+  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
+  //  Draw the right side
+  //  Triangle
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	  v[2][0] = size;
-	  v[2][1] = size;
-	  v[2][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	  MED_BLUE;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom bac
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	  // FINISh the right side of the box
-	  v[0][0] = size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = -size;
+  MED_BLUE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	  v[1][0] = size;
-	  v[1][1] = size;
-	  v[1][2] = -size;
+  // FINISh the right side of the box
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	  v[2][0] = size;
-	  v[2][1] = size;
-	  v[2][2] = size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	  MED_GREEN;
-	  // Calc normal and draw
-	  	  N_2;
-		  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom bac
+  v[2][0] = size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	  // FINISh the left side of the box
-	  v[0][0] = -size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = -size;
+  MED_GREEN;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	  v[1][0] = -size;
-	  v[1][1] = size;
-	  v[1][2] = -size;
+  // FINISh the left side of the box
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = size;
-	  v[2][2] = size;
+  v[1][0] = -size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	  MED_PURPLE;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left bottom bac
+  MED_PURPLE;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left bottom bac
 
-	  // Draw the left side
-	  // Triangle
-	  v[0][0] = -size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = size;
+  // Draw the left side
+  // Triangle
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	  v[1][0] = -size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = -size;
+  v[1][0] = -size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = size;
-	  v[2][2] = size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = size;
 
-	  MED_RED;
-	  // Calc normal and draw
-	 	  N_2;
-		  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left side
+  MED_RED;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	  // Draw the top and bottom
-	  v[0][0] = size;
-	  v[0][1] = size;
-	  v[0][2] = size;
+  // Draw the top and bottom
+  v[0][0] = size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	  v[1][0] = size;
-	  v[1][1] = size;
-	  v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = size;
-	  v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	  CLR_0;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left side
+  CLR_0;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	  // Draw one of the bottom triangles
-	  v[0][0] = size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = size;
+  // Draw one of the bottom triangles
+  v[0][0] = size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	  v[1][0] = size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = -size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = 0.0f;
-	  v[2][2] = -size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
+  CLR_3;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	  CLR_3;
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left side
+  // Lets finish the bottom with the second triangle
+  v[0][0] = -size;
+  v[0][1] = 0.0f;
+  v[0][2] = size;
 
-	  // Lets finish the bottom with the second triangle
-	  v[0][0] = -size;
-	  v[0][1] = 0.0f;
-	  v[0][2] = size;
+  v[1][0] = size;
+  v[1][1] = 0.0f;
+  v[1][2] = size;
 
-	  v[1][0] = size;
-	  v[1][1] = 0.0f;
-	  v[1][2] = size;
+  v[2][0] = -size;
+  v[2][1] = 0.0f;
+  v[2][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = 0.0f;
-	  v[2][2] = -size;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	  // Calc normal and draw
-	 	  N_2;
-		  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left side
+  // Go back and finish the top
+  v[0][0] = -size;
+  v[0][1] = size;
+  v[0][2] = size;
 
-	  // Go back and finish the top
-	  v[0][0] = -size;
-	  v[0][1] = size;
-	  v[0][2] = size;
+  v[1][0] = size;
+  v[1][1] = size;
+  v[1][2] = size;
 
-	  v[1][0] = size;
-	  v[1][1] = size;
-	  v[1][2] = size;
+  v[2][0] = -size;
+  v[2][1] = size;
+  v[2][2] = -size;
 
-	  v[2][0] = -size;
-	  v[2][1] = size;
-	  v[2][2] = -size;
+  // Calc normal and draw
+  N_2;
+  GET_NORMAL;
+  glVertex3fv(v[0]);
+  glVertex3fv(v[1]);
+  glVertex3fv(v[2]);  // triangle left side
 
-	  // Calc normal and draw
-	  N_2;
-	  GET_NORMAL;
-	  glVertex3fv(v[0]);
-	  glVertex3fv(v[1]);
-	  glVertex3fv(v[2]);	// triangle left side
+  glEnd();
 
-	glEnd();
-
-} // end of the function
-
-
+}  // end of the function
 
 //
 // init
 // - load anything special about the
-// one important function 
+// one important function
 //
 static void init_pyramid(int list_id)
 {
+  CURRENT_OBJECT.visible = 1;
 
-	CURRENT_OBJECT.visible = 1;
+  // store the id through the function
+  // there is probably a better way to do this
+  CURRENT_OBJECT.call_id = list_id;
 
-	// store the id through the function
-	// there is probably a better way to do this
-	CURRENT_OBJECT.call_id = list_id;	
-	
-} // end of the functino
-
+}  // end of the functino
 
 //=========================================================
 // Now the function to actually draw it
 //=========================================================
 static void render_pyramid(void)
 {
-		//glPushMatrix();
+  // glPushMatrix();
 
-			glCallList(CURRENT_OBJECT.call_id);
+  glCallList(CURRENT_OBJECT.call_id);
 
-		//glPopMatrix();
+  // glPopMatrix();
 
-} // end of the function
+}  // end of the function
 
 //=========================================================
 // compile
 //=========================================================
 static void compile_pyramid(void)
 {
-	int id;
-	// setup a spot for display list for background
-	//object = getcurrentobject();
-	id = CURRENT_OBJECT.call_id;
+  int id;
+  // setup a spot for display list for background
+  // object = getcurrentobject();
+  id = CURRENT_OBJECT.call_id;
 
-	// apply list
-	glNewList(id, GL_COMPILE);
+  // apply list
+  glNewList(id, GL_COMPILE);
 
-		// call drawing function
-		// but this may method make it a little better
-		CURRENT_OBJECT.draw();
+  // call drawing function
+  // but this may method make it a little better
+  CURRENT_OBJECT.draw();
 
-	glEndList();
+  glEndList();
 
-} // end of the function
-
+}  // end of the function

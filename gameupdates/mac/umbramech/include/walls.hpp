@@ -37,8 +37,7 @@
 //
 #pragma once
 
-#define WALL_HEIGHT				12.0f
-
+#define WALL_HEIGHT 12.0f
 
 void Draw_Wall_List(void);
 void Create_Wall_List(void);
@@ -46,5 +45,3 @@ void Delete_Wall_List(void);
 void Print_Wall_List(void);
 
 void CreateWalls(void);
-
-

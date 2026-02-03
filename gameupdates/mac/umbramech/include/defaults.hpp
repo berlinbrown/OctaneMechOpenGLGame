@@ -32,43 +32,42 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-
 //
 // bot.h
 //
 
 #pragma once
 
-#define D_LINE_OF_SIGHT		14.0f
-#define D_ATTACK_RADIUS		4.0f;
-#define D_BULLET_DAMAGE		280.0f	// 200=750 pretty good
-#define D_MIN_BULLET_SPEED	0.30f;
-#define D_USE_ANT_ENGINE		0
-#define D_MAX_FIRE_ANTS		4		// default: 10
-#define D_MAX_BOTS			120
-#define D_USE_GARDEN_AREA		1					
-#define D_MAX_TRAIL_STACK		300
-#define D_DYING_STATE			390
-#define	D_MAX_PHEROMONES		200
-#define D_PHEROMONE_LIFE		1000
-#define D_PHEROMONE_DROP		40
-#define D_MAX_BULLETS			20
-#define	D_MAX_FIRE_SPEED		10
-#define D_MAX_GARDENS			35		// 48 default
-#define D_BOT_SPEED			0.09f
-#define D_BOT_MAX_SPEED		0.14f
-#define D_MIN_TURN_SPEED		1.1f;	// default:0.8
-#define	D_CHECK_RESPAWN		600
-#define D_GARD_RESPAWN_RATE	15		// default: 32
-#define D_MIN_STRAIGHT_STEPS	60
+#define D_LINE_OF_SIGHT 14.0f
+#define D_ATTACK_RADIUS 4.0f;
+#define D_BULLET_DAMAGE 280.0f  // 200=750 pretty good
+#define D_MIN_BULLET_SPEED 0.30f;
+#define D_USE_ANT_ENGINE 0
+#define D_MAX_FIRE_ANTS 4  // default: 10
+#define D_MAX_BOTS 120
+#define D_USE_GARDEN_AREA 1
+#define D_MAX_TRAIL_STACK 300
+#define D_DYING_STATE 390
+#define D_MAX_PHEROMONES 200
+#define D_PHEROMONE_LIFE 1000
+#define D_PHEROMONE_DROP 40
+#define D_MAX_BULLETS 20
+#define D_MAX_FIRE_SPEED 10
+#define D_MAX_GARDENS 35  // 48 default
+#define D_BOT_SPEED 0.09f
+#define D_BOT_MAX_SPEED 0.14f
+#define D_MIN_TURN_SPEED 1.1f;  // default:0.8
+#define D_CHECK_RESPAWN 600
+#define D_GARD_RESPAWN_RATE 15  // default: 32
+#define D_MIN_STRAIGHT_STEPS 60
 
-#define D_MAX_STRAIGHT_STEPS	200
-#define D_MIN_STRAIGHT_STEPS_2	150
-#define D_MAX_STRAIGHT_STEPS_2	360
-#define D_INITIAL_ANT_FOOD	1000
-#define D_INITIAL_GARD_FOOD	7000	// default: 3000-8000
-#define D_FOOD_WIDTH			0.3f
-#define D_INIT_FOOD_RATE		480		// realistically this should be low
-#define D_MAX_FOOD_RATE		850		// but 400-1000 is ok
-#define D_MOVE_FOOD_RATE 		1.7f		
-#define	D_FOOD_RATE			0.4f	// 0.35-0.8
+#define D_MAX_STRAIGHT_STEPS 200
+#define D_MIN_STRAIGHT_STEPS_2 150
+#define D_MAX_STRAIGHT_STEPS_2 360
+#define D_INITIAL_ANT_FOOD 1000
+#define D_INITIAL_GARD_FOOD 7000  // default: 3000-8000
+#define D_FOOD_WIDTH 0.3f
+#define D_INIT_FOOD_RATE 480  // realistically this should be low
+#define D_MAX_FOOD_RATE 850   // but 400-1000 is ok
+#define D_MOVE_FOOD_RATE 1.7f
+#define D_FOOD_RATE 0.4f  // 0.35-0.8
