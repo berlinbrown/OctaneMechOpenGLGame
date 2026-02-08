@@ -32,12 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // camera.cpp
-//
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -50,15 +47,12 @@ static int mouse_y = SCREEN_HEIGHT / 2;
 
 static float mCameraAng = 0.0f;
 
-//
 // Follow this object
 static DriverBotPtr camera_bot;
 
-void GetCameraBot(DriverBotPtr bot) { camera_bot = bot; }  // end of the function
+void GetCameraBot(DriverBotPtr bot) { camera_bot = bot; }
 
-//
 // GetBotX
-//
 float GetBotX(void) { return camera_bot->x; }
 
 float GetBotY(void) { return camera_bot->y; }
@@ -79,9 +73,7 @@ static DriverCamera camera3;
 
 static float fTime;
 
-//
 // Array of camera objects
-//
 DriverCamera* driver_camera[MAX_CAMERAS] = {
     &camera0,
     &camera1,
@@ -89,9 +81,7 @@ DriverCamera* driver_camera[MAX_CAMERAS] = {
     &camera3,
 };
 
-//
 // Vector_Minus
-//
 void Vector_Minus(Vector a, Vector b, Vector res)
 {
   res[0] = a[0] - b[0];
@@ -99,9 +89,7 @@ void Vector_Minus(Vector a, Vector b, Vector res)
   res[2] = a[2] - b[2];
 }
 
-//
 // Vector_Add
-//
 void Vector_Add(Vector a, Vector b, Vector res)
 {
   res[0] = a[0] + b[0];
@@ -109,19 +97,13 @@ void Vector_Add(Vector a, Vector b, Vector res)
   res[2] = a[2] + b[2];
 }
 
-//
 // Vector_Length
-//
 float Vector_Length(Vector a) { return (float)sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]); }
 
-//
 // DotProduct
-//
 float DotProduct(Vector a, Vector b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
 
-//
 // Vector_Normalize
-//
 void Vector_Normalize(Vector a, Vector res)
 {
   float len;
@@ -138,21 +120,16 @@ void Vector_Normalize(Vector a, Vector res)
   res[2] = a[2] * len;
 }
 
-//
 // Vector_Multiply
-//
 void Vector_Multiply(Vector a, Vector res, float b)
 {
   res[0] = a[0] * b;
   res[1] = a[1] * b;
   res[2] = a[2] * b;
 }
-a
 
-    //
     // A spring dampening function
     // for the camera
-    //
     void SpringDamp(Vector currPos,
                     Vector trgPos,      // Target Position
                     Vector prevTrgPos,  // Previous Target Position
@@ -198,10 +175,8 @@ a
   // result[2] = currPos[2];
 }
 
-//
 // For each specific camera
 // place in a particular position
-//
 static void SetupCamera(void)
 {
   // start at zero
@@ -215,12 +190,10 @@ static void SetupCamera(void)
   // make sure to reset when done
   SELECT_CAMERA(0);
 
-}  // end of the if
+}
 
-//
 // Mouse_Movement
 // - handle mouse movement
-//
 void Mouse_Movement(void)
 {
   // POINT mouse_pos;
@@ -250,14 +223,12 @@ void Mouse_Movement(void)
 
   if (CAMERA->zoom_factor < 3.0) CAMERA->zoom_factor = 3.0f;
 
-}  // end of the if
+}
 
-//
 // Load Cameras
 // - basically a constructor for
 // the camera objects
 // reset variables all to zero, etc
-//
 void LoadCameras(void)
 {
   int index = 0;
@@ -271,7 +242,7 @@ void LoadCameras(void)
       driver_camera[index]->angle[i] = 0.0f;
       driver_camera[index]->position[i] = 0.0f;
       driver_camera[index]->rotation[i] = 0.0f;
-    }  // end of the for
+    }
 
     driver_camera[index]->id = index;
     driver_camera[index]->type = CAMERA_STATIC;
@@ -282,18 +253,16 @@ void LoadCameras(void)
 
     driver_camera[index]->zoom_factor = 3.2f;
 
-  }  // end of the function
+  }
 
   // perform camera specific operations
   SetupCamera();
 }
 
-//
 // Toggle Camera
 // - switch to a different camera using
 // a simple iterator, basically cycle through
 // the cameras
-//
 void ToggleCamera(void)
 {
   current_camera++;
@@ -301,14 +270,12 @@ void ToggleCamera(void)
   if (current_camera >= MAX_CAMERAS) current_camera = 0;
 }
 
-//=========================================================
 // positioncamera
 // - setup the camera
 // this should be called before all drawing code
 // NOTE: there is a load id, that is important
 //  - this is the main matrix, everything it must be
 // restored so everything else should have a push or pop
-//=========================================================
 void SetCamera(void)
 {
   glRotatef(CAMERA->angle[1], 0.0f, 1.0f, 0.0f);
@@ -322,13 +289,11 @@ void SetCamera(void)
   glRotatef(CAMERA->rotation[0], 1.0f, 0.0f, 0.0f);
   glRotatef(CAMERA->rotation[2], 0.0f, 0.0f, 1.0f);
 
-}  // end of the function
+}
 
-//=========================================================
 // movecamera
 // - basically translate camera
 // Note: this should only be called once dont put in loop
-//=========================================================
 void TranslateCamera(float x, float y, float z)
 {
   // move camera to according position
@@ -337,9 +302,7 @@ void TranslateCamera(float x, float y, float z)
   CAMERA->position[2] += z;
 }
 
-//=========================================================
 // check angle
-//---------------------------------------------------------
 void checkangle(void)
 {
   int index = 0;
@@ -350,20 +313,18 @@ void checkangle(void)
     if (CAMERA->angle[index] < 0)
     {
       CAMERA->angle[index] += 360;
-    }  // end of the
+    }
 
     if (CAMERA->angle[index] >= 360)
     {
       CAMERA->angle[index] -= 360;
-    }  // end of the
+    }
 
-  }  // end of the for
+  }
 
-}  // end of the function
+}
 
-//=========================================================
 // check rotation
-//---------------------------------------------------------
 void checkrotation(void)
 {
   int index = 0;
@@ -372,22 +333,20 @@ void checkrotation(void)
     if (CAMERA->rotation[index] < 0)
     {
       CAMERA->rotation[index] += 360;
-    }  // end of the
+    }
 
     if (CAMERA->rotation[index] >= 360)
     {
       CAMERA->rotation[index] -= 360;
-    }  // end of the
+    }
 
-  }  // end of the for
+  }
 
-}  // end of the function
+}
 
-//---------------------------------------------------------
 // angle camera
 // - aim the camera a given directino
 // Note: this should only be called once, dont put in loop
-//=========================================================
 void AngleCamera(float x, float y, float z)
 {
   // this may be a little tricky to understand
@@ -397,12 +356,10 @@ void AngleCamera(float x, float y, float z)
   CAMERA->rotation[2] += z;
   checkrotation();  // check bounds 0->359
 
-}  // end of the function
+}
 
-//=========================================================
 // turn camera
 // - similar to rotate camera
-//=========================================================
 void TurnCamera(float x, float y, float z)
 {
   CAMERA->angle[0] += x;  // rotation around own axis
@@ -410,13 +367,11 @@ void TurnCamera(float x, float y, float z)
   CAMERA->angle[2] += z;
   checkangle();  // check bounds 0->359
 
-}  // end of the function
+}
 
-//=========================================================
 // put camera
 // - give a solid constant position
 // might be used at the beginning of the main drawing loop
-//=========================================================
 void PosCamera(float x, float y, float z)
 {
   // move camera to according position
@@ -425,11 +380,9 @@ void PosCamera(float x, float y, float z)
   CAMERA->position[2] = z;
 }
 
-//=========================================================
 // put camera
 // - give a solid constant position
 // might be used at the beginning of the main drawing loop
-//=========================================================
 void Pos_Camera(float x, float y, float z)
 {
   // move camera to according position
@@ -438,7 +391,6 @@ void Pos_Camera(float x, float y, float z)
   CAMERA->position[2] = z;
 }
 
-//=========================================================
 // set the rotation angles of the cameras
 ///========================================================
 void SetCameraRot(float x, float y, float z)
@@ -450,22 +402,18 @@ void SetCameraRot(float x, float y, float z)
   CAMERA->rotation[1] = y;
   CAMERA->rotation[2] = z;
 
-}  // end of the function
+}
 
-//=========================================================
 // set angles of the camera
 // interesting
-//=========================================================
 void SetCameraAngle(float x, float y, float z)
 {
   CAMERA->angle[0] = x;
   CAMERA->angle[1] = y;
   CAMERA->angle[2] = z;
-}  // end of the funtino
+}
 
-//
 // Move Forward
-//
 void MoveForward(void)
 {
   float heading = 0;
@@ -487,13 +435,11 @@ void MoveForward(void)
   else
   {
     TranslateCamera(0.0f, 0.0f, camera_speed);
-  }  // end of if
+  }
 
-}  // end of the function
+}
 
-//
 // Move Backwards
-//
 void MoveBackward(void)
 {
   float heading = 0;
@@ -517,13 +463,11 @@ void MoveBackward(void)
   else
   {
     TranslateCamera(0.0f, 0.0f, -camera_speed);
-  }  // end of if
+  }
 
-}  // end of the function
+}
 
-//
 // MoveLeft
-//
 void MoveLeft(void)
 {
   float angle;
@@ -537,21 +481,17 @@ void MoveLeft(void)
   {
     angle = fTime * camera_speed;
     TranslateCamera(camera_speed, 0.0f, 0.0f);
-  }  // end of if
+  }
 
-}  // end of the function
+}
 
-//
 // SyncCamera
-//
 void SyncCamera(void)
 {
   // sync the camera with the timing
 }
 
-//
 // MoveRight
-//
 void MoveRight(void)
 {
   float angle;
@@ -565,15 +505,13 @@ void MoveRight(void)
   {
     angle = fTime * camera_speed;
     TranslateCamera(-angle, 0.0f, 0.0f);
-  }  // end of if
+  }
 
-}  // end of the function
+}
 
-//
 // Paused_Camera
 // - gives kind of a matrix effect
 // - not really, but at least I tried
-//
 void Paused_Camera(void)
 {
   float ang;
@@ -588,9 +526,7 @@ void Paused_Camera(void)
   float x, y;
   float t;
 
-  //
   // calculate the lookat point
-  //
   ang = CAMERA->rotation[1] + camera_bot->heading + mCameraAng;
 
   // now the next point of the triangle
@@ -643,9 +579,7 @@ void Paused_Camera(void)
   if (mCameraAng > 360.0f) mCameraAng -= 360.0f;
 }
 
-//
 // FirstPersonMode
-//
 static void FirstPersonMode(bool* keys)
 {
   float x, y;
@@ -698,11 +632,8 @@ static void ThirdPersonMode(bool* keys)
   Player_Control(keys);
 }
 
-//
 // ToggleViewMode
-//
 // Note: this should be called in WinProc, Winmain
-//
 void ToggleViewMode(void)
 {
   // cant change mode while paused
@@ -714,24 +645,22 @@ void ToggleViewMode(void)
     {
       camera_bot->view_mode = THIRD_PERSON_MODE;
       return;
-    }  // end of the if
+    }
 
     if (camera_bot->view_mode == THIRD_PERSON_MODE)
       camera_bot->view_mode = FIRST_PERSON_MODE;
     else
       camera_bot->view_mode = THIRD_PERSON_MODE;
 
-  }  // end of the if
+  }
   else
   {
     camera_bot->view_mode = THIRD_PERSON_MODE;
 
-  }  // end of the if -else
+  }
 }
 
-//
 // Handle Camera Keys
-//
 // Also handles the following camera
 void HandleCameraKeys(bool* keys)
 {
@@ -745,11 +674,11 @@ void HandleCameraKeys(bool* keys)
     {
       FirstPersonMode(keys);
 
-    }  // end of the if --
+    }
   }
   else
   {
     Paused_Camera();
 
-  }  // end of the if else
+  }
 }

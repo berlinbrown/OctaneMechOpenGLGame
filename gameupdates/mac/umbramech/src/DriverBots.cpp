@@ -52,7 +52,7 @@ void DriverBots::moveFireAnt()
 
     return;  // process state else where
 
-  }  // end of the if
+  }
 
   // movement code
   this->x -= (float)sin(this->heading * PI_180) * this->linearv;
@@ -77,14 +77,13 @@ void DriverBots::moveFireAnt()
 
     return;
 
-  }  // end of the if
+  }
 
   this->state = MOVE_STATE;
 
   return;
 }
 
-//
 // FindBot
 // - return a number of the first bot found
 static int FindBot(DriverBotPtr bot)
@@ -101,16 +100,14 @@ static int FindBot(DriverBotPtr bot)
 
     if (CheckSight(bot, fire_cluster[index])) return index;
 
-  }  // end of the for
+  }
 
   return INVALID_BOT;
 }
 
-//
 // SearchEvent
 // - use another state
 // for processing the search events
-//
 bool DriverBots::SearchEvent(DriverBotPtr bot)
 {
   int res;
@@ -135,18 +132,14 @@ bool DriverBots::SearchEvent(DriverBotPtr bot)
   return true;
 }
 
-//
 // FindCameraPos
-//
 void DriverBots::FindCameraPos(DriverBotPtr bot)
 {
   float tmp_heading;
   float tmp_x, tmp_y;
   float rad;
 
-  //
   // Set the camera lookat and position
-  //
   tmp_heading = this->heading + 90.0f;
   if (tmp_heading > 360.0f) tmp_heading -= 360.0f;
 
@@ -177,9 +170,7 @@ void DriverBots::FindCameraPos(DriverBotPtr bot)
   this->cam_y = tmp_y;
 }
 
-//
 // Process FireEvent
-//
 void DriverBots::wanderCommand(DriverBotPtr bot)
 {
   // bot is dead cant do too much
@@ -229,7 +220,6 @@ void DriverBots::wanderCommand(DriverBotPtr bot)
   };  // end switch
 }
 
-//
 // GenerateMove
 // - pick a move spot for attacking
 // -
@@ -237,7 +227,6 @@ void DriverBots::wanderCommand(DriverBotPtr bot)
 // may cross over the nme to get to some
 // spot, hmm, not very effective
 // so use GenerateBoxMove also
-//
 void DriverBots::GenerateMove(DriverBotPtr bot, int next_state)
 {
   int res;
@@ -288,10 +277,8 @@ void DriverBots::GenerateMove(DriverBotPtr bot, int next_state)
   this->state = next_state;
 }
 
-//
 // Generate Box Move
 // A little bit more effective
-//
 void DriverBots::GenerateBoxMove(DriverBotPtr bot, int next_state)
 {
   int res;
@@ -350,12 +337,9 @@ void DriverBots::GenerateBoxMove(DriverBotPtr bot, int next_state)
   this->state = next_state;
 }
 
-//
 // Assault, no move just attack
-//
 // if you want something basic, this is it
 // no thrills, just shoot
-//
 void DriverBots::assaultMove(DriverBotPtr bot, int next_state)
 {
   int res;
@@ -379,10 +363,8 @@ void DriverBots::assaultMove(DriverBotPtr bot, int next_state)
   this->state = next_state;
 }
 
-//
 // Generate_Turn
 // - turn towards the nme again
-//
 void DriverBots::generateTurn(DriverBotPtr bot)
 {
   int res;
@@ -397,11 +379,9 @@ void DriverBots::generateTurn(DriverBotPtr bot)
   this->state = SET_MOUNT_STATE;
 }
 
-//
 // Reach Target
 // - travel so many moves based
 // on target_moves
-//
 void DriverBots::Reach_Target(DriverBotPtr bot)
 {
   CollisionObj* col_ptr;
@@ -415,7 +395,7 @@ void DriverBots::Reach_Target(DriverBotPtr bot)
   {
     this->state = GENERATE_TURN;
     return;
-  }  // end of the if
+  }
 
   this->x -= (float)sin(this->heading * PI_180) * this->linearv;
   this->y -= (float)cos(this->heading * PI_180) * this->linearv;
@@ -429,7 +409,7 @@ void DriverBots::Reach_Target(DriverBotPtr bot)
     this->x += (float)sin(this->heading * PI_180) * this->linearv;
     this->y += (float)cos(this->heading * PI_180) * this->linearv;
 
-  }  // end of the if
+  }
 
   // Now check how many times we have moved
   this->move_index++;
@@ -441,13 +421,11 @@ void DriverBots::Reach_Target(DriverBotPtr bot)
   {
     // done, now move to next state
     this->state = GENERATE_TURN;
-  }  // end of the if
+  }
 
-}  // end of the function
+}
 
-//
 // Move Command
-//
 void DriverBots::moveCommand(DriverBotPtr bot)
 {
   int check_rand;
@@ -466,7 +444,6 @@ void DriverBots::moveCommand(DriverBotPtr bot)
       // This is the heart of the AI
 
       // find a location to move to
-      //
 
       if (this->food > DYING_STATE)
       {
@@ -474,7 +451,7 @@ void DriverBots::moveCommand(DriverBotPtr bot)
           Assault_Move(bot, SET_TURN_STATE);
         else
           GenerateBoxMove(bot, SET_TURN_STATE);
-      }  // end of the if
+      }
       else
       {
         // also increase the speed a little bit
@@ -482,7 +459,7 @@ void DriverBots::moveCommand(DriverBotPtr bot)
         if (this->linearv >= BOT_MAX_SPEED) this->linearv = BOT_MAX_SPEED;
 
         Assault_Move(bot, SET_TURN_STATE);
-      }  // end of if
+      }
 
       break;
 
@@ -536,10 +513,8 @@ void DriverBots::moveCommand(DriverBotPtr bot)
   };  // end switch
 }
 
-//
 // Rescan_Enemy
 // - check for the nme again
-//
 void Rescan_Enemy(DriverBotPtr bot)
 {
   int res;
@@ -566,9 +541,7 @@ void Rescan_Enemy(DriverBotPtr bot)
   this->state = SET_MOUNT_STATE;
 }
 
-//
 // Attack Command
-//
 void DriverBots::attackCommand(DriverBotPtr bot)
 {
   // bot is dead cant do too much
@@ -616,4 +589,4 @@ void DriverBots::attackCommand(DriverBotPtr bot)
       break;
   };
 
-}  // end of the function
+}

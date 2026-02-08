@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // bot.h
-//
 
 #pragma once
 

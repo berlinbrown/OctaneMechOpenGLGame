@@ -32,10 +32,8 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // wirebox.cpp
 // - do we need a file for each object....yes!
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -52,11 +50,9 @@ static void draw_wirebox(void);
 static void render_wirebox(void);
 static void draw_wirebox(void);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_wirebox,     // init, must be called first
     compile_wirebox,  // compile
@@ -65,7 +61,6 @@ DriverObjects CURRENT_OBJECT = {
     0                 // loaded by INIT
 };
 
-//=========================================================
 static void draw_wirebox(void)
 {
   float size = 0.4f;
@@ -110,11 +105,9 @@ static void draw_wirebox(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_wirebox(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -123,11 +116,9 @@ static void init_wirebox(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_wirebox(void)
 {
   // glPushMatrix();
@@ -137,9 +128,7 @@ static void render_wirebox(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_wirebox(void)
 {
   int id;

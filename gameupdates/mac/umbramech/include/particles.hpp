@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // particles.h
-//
 
 #pragma once
 
@@ -49,12 +47,11 @@
 
 #define PARTICLE_SPEED 0.3f
 
-//
 // particles will be made up
 // of debris and particles
-//
-typedef struct tagParticle
+class Particle
 {
+ public:
   int p_id;
 
   float p_pos[3];
@@ -62,20 +59,20 @@ typedef struct tagParticle
   float p_color[3];
 
   int p_state;
+};
 
-} Particle, *ParticlePtr;
+using ParticlePtr = Particle*;
 
-//
 // Particle List
-//
-typedef struct tagParticleList
+class ParticleList
 {
+ public:
   Particle particles[MAX_PARTICLES];
   float x;
   float y;
   int life;
   int state;
-} ParticleList;
+};
 
 void SetExplosion(float x, float y);
 void AnimateExplosions(void);

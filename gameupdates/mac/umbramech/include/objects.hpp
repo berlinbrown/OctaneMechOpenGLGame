@@ -32,13 +32,10 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // objects.h
 // driver for object source
-//
 
 #pragma once
 
@@ -60,11 +57,10 @@
 
 extern GLUquadricObj* quadric;  // main Quadric Object
 
-//
 // major struct for driver objects
-//
-typedef struct tagDriverObjects
+class DriverObjects
 {
+ public:
   void (*init)(int list_id);
   void (*compile)(void);
   void (*draw)(void);    // used with compile
@@ -72,8 +68,7 @@ typedef struct tagDriverObjects
 
   int call_id;  // id used to compile object
   int visible;
-
-} DriverObjects;
+};
 
 void InitObjects(void);
 void DeleteObjects(void);
@@ -86,9 +81,7 @@ void RenderBounds(float x, float y, float width);
 
 void Bot_Triangle(float x, float y);
 
-//
 // set of the objects
-//
 extern DriverObjects colorcube;
 extern DriverObjects grid;
 extern DriverObjects ant;

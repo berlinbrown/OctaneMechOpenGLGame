@@ -31,12 +31,9 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // objects.cpp
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -64,20 +61,16 @@ static GLfloat ilow_shininess[] = {5.0f};
 static GLfloat ihigh_shininess[] = {100.0f};
 static GLfloat imat_emission[] = {0.15f, 0.1f, 0.1f, 0.0f};
 
-//
 // Array of driver objects
-//
 DriverObjects* driver_objects[MAX_OBJECTS] = {
     &colorcube,  // cube object
     &grid,      &ant, &walls, &wirebox, &norm_cube, &pheromone, &plane, &fireant, &pyramid, &stars,
 };
 
-//
 // For the art of saving from adding another object
 // file, I decided to place the plane object in this
 // source code
 // PLANE OBJECT
-//---------------------------------------------------------
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT plane
@@ -90,11 +83,9 @@ static void draw_plane(void);
 
 static void draw_hex(void);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_plane,     // init, must be called first
     compile_plane,  // compile
@@ -103,9 +94,7 @@ DriverObjects CURRENT_OBJECT = {
     0               // loaded by INIT
 };
 
-//
 // Actually draw to the scene
-//
 void RenderPlane(void)
 {
   glEnable(GL_LIGHTING);
@@ -121,11 +110,9 @@ void RenderPlane(void)
 
   END_BOT;
 
-}  // end of the function
+}
 
-//
 // Actually draw to the scene
-//
 void Bot_Triangle(float x, float y)
 {
   float v[3][3] = {0};
@@ -173,11 +160,9 @@ void Bot_Triangle(float x, float y)
 
   glEnable(GL_LIGHTING);
 
-}  // end of the function
+}
 
-//
 // draw_hexplane
-//
 void draw_hexplane(float x_1, float x_2, float y_1, float size)
 {
   float h_2;
@@ -278,15 +263,11 @@ void draw_hexplane(float x_1, float x_2, float y_1, float size)
     glVertex3fv(v[1]);
     glVertex3fv(v[2]);  // triangle left bottom front
 
-  }  // end of the for
+  }
 }
 
-//=========================================================
-//
 // Instead of a texured plane,
 // draw a hexagon based grid
-//
-//=========================================================
 static void draw_hex(void)
 {
   float size = HEX_SIZE;
@@ -318,44 +299,32 @@ static void draw_hex(void)
     {
       offset = 0.0f;
       s_flag = true;
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   glEnd();
 }
 
-//=========================================================
-//=========================================================
 static void draw_plane(void)
 {
   float size = 3000.0f;
   float bottom = -0.1f;
-  float texsize = 20.0f;
 
-  // Bind name texture
-  glBindTexture(GL_TEXTURE_2D, GetFunkyTexture());
+  glDisable(GL_TEXTURE_2D);
 
   glBegin(GL_QUADS);
-  glTexCoord2f(-texsize, -texsize);  // Texture Coord (Bottom Left)
-  glVertex3f(-size, bottom, -size);  // Vertex Coord (Bottom Left)
-
-  glTexCoord2f(texsize, -texsize);  // Texture Coord (Bottom Right)
-  glVertex3f(size, bottom, -size);  // Vertex Coord (Bottom Right)
-
-  glTexCoord2f(texsize, texsize);  // Texture Coord (Top Right)
-  glVertex3f(size, bottom, size);  // Vertex Coord (Top Right)
-
-  glTexCoord2f(-texsize, texsize);  // Texture Coord (Top Left)
-  glVertex3f(-size, bottom, size);  // Vertex Coord (Top Left)
+  glColor3f(0.2f, 0.25f, 0.3f);
+  glVertex3f(-size, bottom, -size);
+  glVertex3f(size, bottom, -size);
+  glVertex3f(size, bottom, size);
+  glVertex3f(-size, bottom, size);
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_plane(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -364,11 +333,9 @@ static void init_plane(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_plane(void)
 {
   // glPushMatrix();
@@ -378,9 +345,7 @@ static void render_plane(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_plane(void)
 {
   int id;
@@ -398,11 +363,8 @@ static void compile_plane(void)
   glEndList();
 }
 
-//---------------------------------------------------------
 
-//
 // RenderGrid
-//
 void RenderGrid(void)
 {
   glDisable(GL_LIGHTING);
@@ -410,7 +372,6 @@ void RenderGrid(void)
   glEnable(GL_LIGHTING);
 }
 
-//
 // For Simple Bounding box tests
 //	2D
 void RenderBounds(float x, float y, float width)
@@ -438,18 +399,14 @@ void RenderBounds(float x, float y, float width)
   glEnable(GL_LIGHTING);
 }
 
-//
 // RenderWalls
-//
 void RenderWalls(void)
 {
   glDisable(GL_TEXTURE_2D);
   driver_objects[WORLD_OBJECT]->render();
 }
 
-//
 // RenderObjects
-//
 void RenderObjects(void)
 {
   int index = 0;
@@ -457,13 +414,11 @@ void RenderObjects(void)
   for (index = 0; index < MAX_OBJECTS; index++)
   {
     driver_objects[index]->render();
-  }  // end of the function
+  }
 }
 
-//
 // Init Objects
 // - call this to load the objects in InitGL
-//
 void InitObjects(void)
 {
   int index;
@@ -479,16 +434,14 @@ void InitObjects(void)
     j++;
     if (j >= MAX_OBJECTS) break;
 
-  }  // end of the for
+  }
 
   // go ahead and compile the objects
   CompileObjects();
 
-}  // end of the function
+}
 
-//
 // CompileObjects
-//
 static void CompileObjects(void)
 {
   int index = 0;
@@ -498,13 +451,11 @@ static void CompileObjects(void)
     // get the functions from the object driver
     driver_objects[index]->compile();
 
-  }  // end of the for
+  }
 }
 
-//=========================================================
 // delete objects
 // - place in shutdown gl
-//---------------------------------------------------------
 void DeleteObjects(void)
 {
   // get rid of list

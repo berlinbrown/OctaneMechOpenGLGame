@@ -32,10 +32,8 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // ant.cpp
 //  - the ant object
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -52,11 +50,9 @@ static void draw_norm_cube(void);
 static void render_norm_cube(void);
 static void draw_norm_cube(void);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_norm_cube,     // init, must be called first
     compile_norm_cube,  // compile
@@ -65,13 +61,9 @@ DriverObjects CURRENT_OBJECT = {
     0                   // loaded by INIT
 };
 
-//=========================================================
-//=========================================================
-//=========================================================
 // draw cube with normals turned on
 // Note: have to use triangles, (dope!)
 // - also no particular order when drawing triangles
-//=========================================================
 static void draw_norm_cube(void)
 {
   float v[3][3] = {0};
@@ -132,7 +124,6 @@ static void draw_norm_cube(void)
   glVertex3fv(v[2]);  // triangle left bottom front
 
   // Draw the back triangle
-  //-----------------------------
   v[0][0] = -size;
   v[0][1] = 0.0f;
   v[0][2] = -size;
@@ -348,11 +339,9 @@ static void draw_norm_cube(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_norm_cube(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -361,11 +350,9 @@ static void init_norm_cube(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_norm_cube(void)
 {
   // glPushMatrix();
@@ -375,9 +362,7 @@ static void render_norm_cube(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_norm_cube(void)
 {
   int id;

@@ -32,10 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // pheromone.cpp
-//
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -55,7 +52,6 @@
 #undef CURRENT_BOT
 #define CURRENT_BOT trail_set
 
-//=====================================
 static void init_pheromone(int list_id);
 static void compile_pheromone(void);
 static void draw_pheromone(void);
@@ -71,11 +67,9 @@ static void Draw_Pheromones(void);
 static void Generate_Pheromones(void);
 static void Shutdown_Pheromones(void);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_pheromone,     // init, must be called first
     compile_pheromone,  // compile
@@ -102,20 +96,17 @@ DriverSentinel CURRENT_BOT = {
     0      // this value is faulty! MAX_PHEROMONES
 };
 
-//
 // ActivatePheromone
-//
 // Note: this is a cpu hog, it will find an open
 // slot searching to the max possibly
 // implement a better method like some sort cache
-//
 void ActivatePheromone(float x, float y, float dir)
 {
   int i = 0;
   for (i = 0; i < MAX_PHEROMONES; i++)
   {
     if (CURRENT_BOT.objects[i]->state == DEAD_STATE) break;
-  }  // end of the for
+  }
 
   if (i >= MAX_PHEROMONES) return;
 
@@ -129,9 +120,7 @@ void ActivatePheromone(float x, float y, float dir)
   CURRENT_BOT.objects[i]->delete_flag = false;
 }
 
-//
 // Generate Nests
-//
 static void Generate_Pheromones(void)
 {
   int index = 0;
@@ -149,12 +138,10 @@ static void Generate_Pheromones(void)
     // allocate an array of bot pointers, duh for nest
     CURRENT_BOT.objects[index] = CURRENT_BOT.create(index);
 
-  }  // end of the for
+  }
 }
 
-//
 // Shutdown Nests
-//
 static void Shutdown_Pheromones(void)
 {
   int index = 0;
@@ -163,16 +150,14 @@ static void Shutdown_Pheromones(void)
   {
     CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 
   // Shrug, free the ptr-to-ptrs
   // free(CURRENT_BOT.objects);
   RELEASE_OBJECT(CURRENT_BOT.objects);
 }
 
-//
 // Draw Nests
-//
 static void Draw_Pheromones(void)
 {
   int index = 0;
@@ -183,12 +168,10 @@ static void Draw_Pheromones(void)
 
     CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // Process Events
-//
 static void ProcessPheromone(CURRENT_PTR b)
 {
   b->food--;
@@ -197,12 +180,10 @@ static void ProcessPheromone(CURRENT_PTR b)
     b->food = 0;
     b->state = DEAD_STATE;  // pheromone is dead
 
-  }  // end of the if
+  }
 }
 
-//
 // Create bot
-//
 static CURRENT_PTR CreatePheromone(int bot_id)
 {
   CURRENT_PTR bot;
@@ -238,14 +219,10 @@ static CURRENT_PTR CreatePheromone(int bot_id)
   return bot;
 }
 
-//
 // DestroyBot
-//
-static void DestroyPheromone(CURRENT_PTR b) { free(b); }  // end of the function
+static void DestroyPheromone(CURRENT_PTR b) { free(b); }
 
-//
 // RenderBot
-//
 static void RenderPheromone(CURRENT_PTR boid)
 {
   if (boid->state == DEAD_STATE) return;
@@ -276,10 +253,7 @@ static void RenderPheromone(CURRENT_PTR boid)
   glEnable(GL_LIGHTING);
 }
 
-//---------------------------------------------------------
 
-//=========================================================
-//=========================================================
 static void draw_pheromone(void)
 {
   float h;
@@ -297,11 +271,9 @@ static void draw_pheromone(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_pheromone(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -310,11 +282,9 @@ static void init_pheromone(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_pheromone(void)
 {
   // glPushMatrix();
@@ -324,9 +294,7 @@ static void render_pheromone(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_pheromone(void)
 {
   int id;

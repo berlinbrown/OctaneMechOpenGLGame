@@ -32,18 +32,13 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // bot.cpp
-//
 // - This really should be called
 // objects but it was taken up already
-//
 // basically bots have attributes and
 // use objects for drawing
-//
 // - This is the meat and potatoes of the
 // artificial control
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -53,26 +48,36 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "bot.hpp"
+#include "collision.hpp"
+#include "globals.hpp"
+#include "gldrawlib.hpp"
+#include "objects.hpp"
+#include "plist.hpp"
+
 void ProcessBotEvent(DriverBotPtr bot);
+
+void ResetBot(DriverBotPtr bot_ptr);
+void GetAntFood(DriverBotPtr bot);
+int BruteCheckFood(DriverBotPtr bot);
+void DropFood(DriverBotPtr bot, int id, float food_rate);
+void AddAnts(int ants);
+int GetAnts(void);
+void SetNestFood(float d);
 
 static DriverBotPtr* bot_cluster;
 
 // created with the bots
 PtrList* trail_stack;
 
-//
 // Super_LoadBots
 // - if this is not loaded
 // we have major problems
-//
 void Super_LoadBots(void) { bot_cluster = (DriverBotPtr*)malloc(MAX_BOTS * sizeof(DriverBotPtr)); }
 
-//
 // Super_KillBots(
-//
 void Super_KillBots(void) { RELEASE_OBJECT(bot_cluster); }
 
-//
 // Create So many ants
 // - you can use a constant or
 // some form of percentage based on the total
@@ -81,7 +86,6 @@ void Super_KillBots(void) { RELEASE_OBJECT(bot_cluster); }
 // die off quicker, if you use a percentage
 // then the ants will respawn at random points
 // default is 5%, constant is 10,000
-//
 void CreateAnts(int food)
 {
   int i = 0;
@@ -89,7 +93,8 @@ void CreateAnts(int food)
   int food_tol = 0;
   float perct = 0;
 
-  food_tol = FOOD_RESPAWN perct = 0.05f * (float)GetAnts();
+  food_tol = FOOD_RESPAWN;
+  perct = 0.05f * (float)GetAnts();
 
   if (perct > 1)
   {
@@ -99,7 +104,7 @@ void CreateAnts(int food)
   {
     return;  // cant create any ants at the time
 
-  }  // end of if-else
+  }
 
   if (food >= food_tol)
   {
@@ -122,19 +127,17 @@ void CreateAnts(int food)
         tmp += INITIAL_ANT_FOOD;
         if (tmp >= food_tol) break;
 
-      }  // end of the if
+      }
 
-    }  // end of the for
+    }
 
-  }  // end of the if
+  }
 
-}  // end of the function
+}
 
-//
 // Find Angle
 //  - FindAngle between two points with -z = -y, x=x
 // (depending on the bots direction)
-//
 float FindAngle(float dir, float x1, float y1, float x2, float y2)
 {
   float dx;
@@ -190,10 +193,8 @@ float FindAngle(float dir, float x1, float y1, float x2, float y2)
   return 0;
 }
 
-//
 // Method to draw food on the ant
 // - semi-simple
-//
 void RenderFood(DriverBotPtr bot)
 {
   if (bot->foodstore > 0)
@@ -209,13 +210,11 @@ void RenderFood(DriverBotPtr bot)
 
     END_BOT;
 
-  }  // end of the if
+  }
 }
 
-//
 // GetAntFood
 // - intially
-//
 void GetAntFood(DriverBotPtr bot)
 {
   float food;
@@ -238,9 +237,9 @@ void GetAntFood(DriverBotPtr bot)
       bot->food = 0;
 
       return;
-    }  // end of if
+    }
 
-  }  // end of the if
+  }
 
   bot->food += food;
 
@@ -248,10 +247,8 @@ void GetAntFood(DriverBotPtr bot)
   nest.objects[0]->food -= food;
 }
 
-//
 // Once the ant can carry food he should be able
 // to eat it on his way back to the nest
-//
 void EatFood(DriverBotPtr bot, float food_rate)
 {
   float food_amt;
@@ -272,21 +269,19 @@ void EatFood(DriverBotPtr bot, float food_rate)
 
       return;
 
-    }  // end of the if
+    }
 
     // add the food store to edible food
     bot->foodstore -= food_amt;
     bot->food += food_amt;
 
-  }  // end of the if
+  }
   else
     bot->foodstore = 0;
 }
 
-//
 // Metabolize
 // - burn food
-//
 void Metabolize(DriverBotPtr bot, float food_rate)
 {
   // no point subtracting when dead
@@ -300,35 +295,31 @@ void Metabolize(DriverBotPtr bot, float food_rate)
     bot->alive = DEAD_STATE;
 
     SubtractAnts(1);
-  }  // end of the if
+  }
 }
 
-//
 // I really like the idea of a simple state machine for
 // the ants, a central processing, queue thing
 // a little better device than using a bunch of ifs
 // - see state.h
-//
 
-//
 // ChangeDirection
 // - should only be called every once in a while
-//
 void ChangeDirection(DriverBotPtr bot)
 {
   if (bot->go_home == true)
   {
     bot->turn_rand = 3;
 
-    bot->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
+    bot->straightSteps = (rand() % MAX_STRAIGHT_STEPS_2) + MIN_STRAIGHT_STEPS_2;
   }
   else
   {
     bot->turn_rand = 30;
 
     // remove if you dont like calling rand
-    bot->straightSteps = (rand() % __straight_steps) + MIN_STRAIGHT_STEPS;
-  }  // end of the if
+    bot->straightSteps = (rand() % MAX_STRAIGHT_STEPS) + MIN_STRAIGHT_STEPS;
+  }
 
   bot->target_dir = bot->heading;
 
@@ -340,9 +331,7 @@ void ChangeDirection(DriverBotPtr bot)
   bot->state = TURN_STATE;
 }
 
-//
 // Turn
-//
 void TurnBot(DriverBotPtr bot)
 {
   float tol;
@@ -366,16 +355,14 @@ void TurnBot(DriverBotPtr bot)
     bot->state = MOVE_STATE;
 
     return;
-  }  // end of the if
+  }
 
   bot->state = TURN_STATE;
 
   return;
 }
 
-//
 // MoveBot
-//
 void MoveBot(DriverBotPtr bot)
 {
   int id = 0;
@@ -401,9 +388,9 @@ void MoveBot(DriverBotPtr bot)
       bot->state = TURN_STATE;
 
       return;
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   // check if we are ok to deposit food
   if (bot->foodstore > 0)
@@ -419,7 +406,6 @@ void MoveBot(DriverBotPtr bot)
       // Since the bot found food
       // add the direction so that other bots
       // can use it
-      //
       // Note: test code, may not use in final
       // implementation
 
@@ -433,9 +419,9 @@ void MoveBot(DriverBotPtr bot)
       CreateAnts(NEST_FOOD_OBJECT);
       SetNestFood(NEST_FOOD_OBJECT);
 
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   bot->numSteps++;
 
@@ -446,7 +432,7 @@ void MoveBot(DriverBotPtr bot)
 
     return;  // process state else where
 
-  }  // end of the if
+  }
 
   // Also We need to drop pheromones on the way home
   // Note: pretty slow algo
@@ -455,9 +441,9 @@ void MoveBot(DriverBotPtr bot)
     if ((bot->numSteps % PHEROMONE_DROP) == 0)
     {
       ActivatePheromone(bot->x, bot->y, bot->heading);
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   // If we have a new heading change direction
   if (last_heading)
@@ -471,13 +457,13 @@ void MoveBot(DriverBotPtr bot)
     bot->target_dir = tmp_heading;
     bot->turn_rand = 15;
 
-    bot->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
+    bot->straightSteps = (rand() % MAX_STRAIGHT_STEPS_2) + MIN_STRAIGHT_STEPS_2;
 
     bot->state = TURN_STATE;
 
     return;
 
-  }  // end of the if
+  }
 
   bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
   bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
@@ -486,11 +472,9 @@ void MoveBot(DriverBotPtr bot)
   return;
 }
 
-//
 // ProcessBotEvent
 // - to keep everything in sync,
 // process all bot actions in one fell swoop
-//
 void ProcessBotEvent(DriverBotPtr bot)
 {
   // Eat food first then metabolize
@@ -521,10 +505,8 @@ void ProcessBotEvent(DriverBotPtr bot)
   };  // end switch
 }
 
-//
 // LoadBotParms
 // - used by create and reset
-//
 void LoadBotParms(DriverBotPtr bot_ptr)
 {
   ZeroMemory((DriverBotPtr)bot_ptr, sizeof(DriverBots));
@@ -545,7 +527,7 @@ void LoadBotParms(DriverBotPtr bot_ptr)
   bot_ptr->turning_speed = ((float)(rand() % 1000) / 2000.0f) + MIN_TURN_SPEED;
 
   bot_ptr->numSteps = 0;
-  bot_ptr->straightSteps = (rand() % __straight_steps) + MIN_STRAIGHT_STEPS;
+  bot_ptr->straightSteps = (rand() % MAX_STRAIGHT_STEPS) + MIN_STRAIGHT_STEPS;
 
   bot_ptr->state = MOVE_STATE;
   bot_ptr->alive = ALIVE_STATE;
@@ -566,20 +548,15 @@ void LoadBotParms(DriverBotPtr bot_ptr)
 
   bot_ptr->kills = 0;
 
-  //
   // Crosshair object
-  //
   // the crosshairs expand from 1.0f
   // to some value when alive
-  //
   bot_ptr->crosshair_state = DEAD_STATE;
   bot_ptr->crosshair_scale = 1.0f;
 }
 
-//
 // CreateBot
 // - allocate memory for bot
-//
 DriverBotPtr CreateBot(int bot_id)
 {
   DriverBotPtr bot_ptr;
@@ -593,13 +570,9 @@ DriverBotPtr CreateBot(int bot_id)
   return bot_ptr;
 }
 
-//
 // ResetBot
-//
-//
 // ResetBot
 // - allocate memory for bot
-//
 void ResetBot(DriverBotPtr bot_ptr)
 {
   float* last_heading = NULL;
@@ -628,19 +601,15 @@ void ResetBot(DriverBotPtr bot_ptr)
     bot_ptr->heading = tmp_heading;
     bot_ptr->turn_rand = 15;
 
-    bot_ptr->straightSteps = (rand() % __go_home_steps_2) + MIN_STRAIGHT_STEPS_2;
+    bot_ptr->straightSteps = (rand() % MAX_STRAIGHT_STEPS_2) + MIN_STRAIGHT_STEPS_2;
 
-  }  // end of the if
+  }
 }
 
-//
 // DestroyBot
-//
-void DestroyBot(DriverBotPtr b) { RELEASE_OBJECT(b); }  // end of the function
+void DestroyBot(DriverBotPtr b) { RELEASE_OBJECT(b); }
 
-//
 // RenderBot
-//
 void RenderBot(DriverBotPtr boid)
 {
   if (boid->alive == ALIVE_STATE)
@@ -667,12 +636,10 @@ void RenderBot(DriverBotPtr boid)
 
     END_BOT;
 
-  }  // end of the if
+  }
 }
 
-//
 // GenerateBots
-//
 void GenerateBots(void)
 {
   int index = 0;
@@ -681,16 +648,14 @@ void GenerateBots(void)
   {
     bot_cluster[index] = CreateBot(index);
 
-  }  // end of the for
+  }
 
   // create a stack for adding pheromone trails
   trail_stack = CREATE_STACK;
 }
 
-//
 // InitFood
 // - called after the nest has been loaded
-//
 void InitFood(void)
 {
   int index = 0;
@@ -699,12 +664,10 @@ void InitFood(void)
   {
     GetAntFood(bot_cluster[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // ShutdownBots
-//
 void ShutdownBots(void)
 {
   int index = 0;
@@ -712,15 +675,13 @@ void ShutdownBots(void)
   for (index = 0; index < MAX_BOTS; index++)
   {
     DestroyBot(bot_cluster[index]);
-  }  // end of the for
+  }
 
   // destroy the pheromone trail stack
   DESTROY_STACK(trail_stack);
 }
 
-//
 // Draw Bots
-//
 void DrawBots(void)
 {
   int index = 0;

@@ -32,18 +32,13 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
 // static.cpp
-//
 // - This really should be called
 // objects but it was taken up already
-//
 // basically bots have attributes and
 // use objects for drawing
-//
 // - This is the meat and potatoes of the
 // artificial control
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -99,13 +94,10 @@ DriverSentinel CURRENT_BOT = {
     0      // max_items
 };
 
-//
 // each ant gets 1000 food pieces
 #define INITIAL_NEST_FOOD (MAX_BOTS * INITIAL_ANT_FOOD)
 
-//
 // Generate Nests
-//
 static void GenerateNests(void)
 {
   int index = 0;
@@ -121,7 +113,7 @@ static void GenerateNests(void)
     // allocate an array of bot pointers, duh for nest
     CURRENT_BOT.objects[index] = CURRENT_BOT.create(index);
 
-  }  // end of the for
+  }
 
   // Since I know first hand that there
   // is only one nest, create initial food offering
@@ -129,9 +121,7 @@ static void GenerateNests(void)
   nest.objects[0]->food = INITIAL_NEST_FOOD;
 }
 
-//
 // Shutdown Nests
-//
 static void ShutdownNests(void)
 {
   int index = 0;
@@ -140,12 +130,10 @@ static void ShutdownNests(void)
   {
     CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // Draw Nests
-//
 static void DrawNests(void)
 {
   int index = 0;
@@ -156,12 +144,10 @@ static void DrawNests(void)
 
     CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // Process Events
-//
 static void ProcessNest(CURRENT_PTR b)
 {
   // just rotate
@@ -169,9 +155,7 @@ static void ProcessNest(CURRENT_PTR b)
   if (b->rotation[1] >= 360) b->rotation[1] -= 360;
 }
 
-//
 // Create bot
-//
 static CURRENT_PTR CreateSentinel(int bot_id)
 {
   CURRENT_PTR bot;
@@ -200,14 +184,10 @@ static CURRENT_PTR CreateSentinel(int bot_id)
   return bot;
 }
 
-//
 // DestroyBot
-//
-static void DestroySentinel(CURRENT_PTR b) { free(b); }  // end of the function
+static void DestroySentinel(CURRENT_PTR b) { free(b); }
 
-//
 // RenderBot
-//
 static void RenderSentinel(CURRENT_PTR boid)
 {
   BEGIN_BOT;

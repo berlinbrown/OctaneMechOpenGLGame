@@ -32,7 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // ant.cpp
 //  - the ant object
 #include <GLUT/glut.h>   // GLUT for window/context
@@ -61,11 +60,9 @@ GLfloat xlow_shininess[] = {5.0f};
 GLfloat xhigh_shininess[] = {100.0f};
 GLfloat xmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_ant,     // init, must be called first
     compile_ant,  // compile
@@ -74,8 +71,6 @@ DriverObjects CURRENT_OBJECT = {
     0             // loaded by INIT
 };
 
-//=========================================================
-//=========================================================
 static void draw_ant(void)
 {
   float v[3][3];
@@ -268,11 +263,9 @@ static void draw_ant(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_ant(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -281,11 +274,9 @@ static void init_ant(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_ant(void)
 {
   // glPushMatrix();
@@ -295,9 +286,7 @@ static void render_ant(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_ant(void)
 {
   int id;

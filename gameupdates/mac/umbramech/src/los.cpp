@@ -32,13 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // los.cpp
-//
 // - line of sight algorithm for the fire ant AI
-//
 // it is simple, returns a value of 1 or 2
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -55,10 +51,8 @@
 // if the point is within that triangle, return a one
 // otherwise return a zero
 
-//
 // Draw Line of Sight
 // where y is actually the z
-//
 void DrawLineOfSight(float x1, float y1, float x2, float y2)
 {
   float height = 0.1f;
@@ -80,12 +74,10 @@ void DrawLineOfSight(float x1, float y1, float x2, float y2)
   glEnable(GL_LIGHTING);
 }
 
-//
 // The algo just checks the y=mx+b of the line
 // and depending on the location of the vertex, etc
 // it is in the triangle or not
 // - no clipping
-//
 bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
 {
   float rad;
@@ -153,7 +145,7 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
   else if ((a2 - a1) == 0)
   {
     AB_vert = true;
-  }  // end of the if-else
+  }
 
   // y = mx + b
   if ((a3 - a2) != 0)
@@ -164,7 +156,7 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
   else if ((a3 - a2) == 0)
   {
     BC_vert = true;
-  }  // end of if-else
+  }
 
   // y = mx + b
   if ((a1 - a3) != 0)
@@ -175,7 +167,7 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
   else if ((a3 - a2) == 0)
   {
     CA_vert = true;
-  }  // end of the if-else
+  }
 
   center_x = (a1 + a2 + a3) / 3.0f;
   center_y = (b1 + b2 + b3) / 3.0f;
@@ -202,9 +194,9 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
     else if (direction == DOWN)
     {
       if (b4 >= ((m1 * a4) + bb1)) inside++;
-    }  // end of if-else
+    }
 
-  }  // end of the if - else
+  }
 
   // b->c
   if (((m2 * center_x) + bb2) >= center_y)
@@ -229,9 +221,9 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
     {
       if (b4 >= ((m2 * a4) + bb2)) inside++;
 
-    }  // end of the if-else
+    }
 
-  }  // end of the if-else
+  }
 
   // c->a
   if (((m3 * center_x) + bb3) >= center_y)
@@ -255,9 +247,9 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
     else if (direction == DOWN)
     {
       if (b4 >= ((m3 * a4) + bb3)) inside++;
-    }  // end of the if-else
+    }
 
-  }  // end of the if-else
+  }
 
   // DrawLineOfSight(bot->x, bot->y, tmp_x, tmp_y);
   DrawLineOfSight(tmp_x2, tmp_y2, tmp_x3, tmp_y3);
@@ -272,5 +264,5 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
   else
   {
     return false;
-  }  // end of if-else
+  }
 }

@@ -32,14 +32,10 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // grid.cpp
-//
 // - draw a simple grid in the background
-//
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -54,11 +50,9 @@ static void compile_grid(void);
 static void render_grid(void);
 static void init_grid(int list_id);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects grid = {
     init_grid,     // init, must be called first
     compile_grid,  // compile
@@ -67,13 +61,9 @@ DriverObjects grid = {
     0              // loaded by INIT
 };
 
-//---------------------------------------------------------
 // Note: these functions are misc objects
 // draw background
-//---------------------------------------------------------
-//=========================================================
 // draw the backdrops
-//=========================================================
 static void drawbackxy(float gridsize, float sections)
 {
   float i = 0.0f;
@@ -85,7 +75,7 @@ static void drawbackxy(float gridsize, float sections)
     glVertex3f(i, 0.0f, -gridsize);
     glVertex3f(i, gridsize, -gridsize);
     glEnd();
-  }  // end of the for
+  }
 
   // now draw the other lines --
   for (j = 0.0f; j <= gridsize; j += sections)
@@ -94,13 +84,11 @@ static void drawbackxy(float gridsize, float sections)
     glVertex3f(-gridsize, j, -gridsize);
     glVertex3f(gridsize, j, -gridsize);
     glEnd();
-  }  // end of the function
+  }
 
-}  // end of function
+}
 
-//=========================================================
 // draw back drop yz
-//=========================================================
 static void drawbackyz(float gridsize, float sections)
 {
   float i = 0.0f;
@@ -112,7 +100,7 @@ static void drawbackyz(float gridsize, float sections)
     glVertex3f(gridsize, 0.0f, i);
     glVertex3f(gridsize, gridsize, i);
     glEnd();
-  }  // end of the for
+  }
 
   // now draw the other lines --
   for (j = 0.0f; j <= gridsize; j += sections)
@@ -121,15 +109,13 @@ static void drawbackyz(float gridsize, float sections)
     glVertex3f(gridsize, j, -gridsize);
     glVertex3f(gridsize, j, gridsize);
     glEnd();
-  }  // end of the function
+  }
 
-}  // end of the functin
+}
 
-//=========================================================
 // draw grid
 // - draw grid are the points on the plane
 // that show the ground
-//=========================================================
 static void drawbackxz(float gridsize, float sections)
 {
   float i = 0.0f;
@@ -141,7 +127,7 @@ static void drawbackxz(float gridsize, float sections)
     glVertex3f(i, 0.0f, -gridsize);
     glVertex3f(i, 0.0f, gridsize);
     glEnd();
-  }  // end of the for
+  }
 
   // now draw the other lines
   for (j = -gridsize; j <= gridsize; j += sections)
@@ -150,35 +136,29 @@ static void drawbackxz(float gridsize, float sections)
     glVertex3f(-gridsize, 0.0f, j);
     glVertex3f(gridsize, 0.0f, j);
     glEnd();
-  }  // end of the function
+  }
 }
 
-//=========================================================
 // drawbackground
 // - grids in the back for testing
-//=========================================================
 static void draw_grid(void)
 {
   drawbackxy(GRID_SIZE, 1.0f);
   drawbackyz(GRID_SIZE, 1.0f);
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_grid(int list_id)
 {
   // store the id through the function
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_grid(void)
 {
   glPushMatrix();
@@ -191,9 +171,7 @@ static void render_grid(void)
   glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_grid(void)
 {
   int id;

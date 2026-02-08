@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // world.h
-//
 #pragma once
 
 #define WORLD_HEIGHT 6.0f
@@ -44,11 +42,11 @@
 #define WORLD_COLOR_2 \
   glColor3f(world_ptr->color[0] - 0.2f, world_ptr->color[1] - 0.2f, world_ptr->color[2] - 0.2f);
 
-//
 // world object
 // - think 2d, x = x, y = z
-typedef struct tagDriverWorld
+class DriverWorld
 {
+ public:
   float x_min;
   float y_min;
   float x_max;
@@ -57,8 +55,9 @@ typedef struct tagDriverWorld
   float height;
 
   float color[3];
+};
 
-} DriverWorld, *DriverWorldPtr;
+using DriverWorldPtr = DriverWorld*;
 
 // place in initgl
 void CreateWorld(void);

@@ -32,26 +32,18 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // glAnt.cpp
-//
 // http://glants.sourceforge.net
-//
 // originally designed for Windows
 // look for linux version soon
-//
 // - GL init calls based on nehe's opengl library
 //		http://nehe.gamedev.net/
-//
 // my asus probe temperature monitor has my CPU
 // running at 52C, during heavy rendering
 // this should mean nothing you, however
-//
 // - Initial version: (sat)Aug 3, 2002
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -68,11 +60,9 @@ void Cmd_Keys(KeySym key);
 // use False or True here	--
 #define FULLSCREEN_MODE False
 
-//
 // Begin in fullscreen - flag
 #define FULL_SCREEN_F 0
 
-//
 // Try 32/16
 #define INIT_BIT_RATE 32
 
@@ -94,9 +84,7 @@ static bool done = false;  // Bool Variable To Exit Loop
 
 int mSuper_Loaded = LOADED_FALSE;
 
-//
 // frames per second variables
-//
 #define FRAME_RATE_SAMPLES 60
 int frames = 0;
 float framerate = 0;
@@ -104,10 +92,7 @@ clock_t last_time = 0;
 
 void LoadKeyCodes(void);
 
-//
-//=====================================
 // GLWINDOW struct
-//
 typedef struct
 {
   Display* dpy;
@@ -130,13 +115,9 @@ static int attrListDbl[] = {
 
 GLWindow GLWin;
 
-//
 // END LINUX GRAPHICS ROUTINES
-//
 
-//
 // get frames per second
-//
 void GetFramesPerSecond(void)
 {
   clock_t now;
@@ -154,13 +135,11 @@ void GetFramesPerSecond(void)
     framerate = FRAME_RATE_SAMPLES / delta;
 
     frames = 0;
-  }  // end of the if
+  }
 
-}  // end of the function
+}
 
-//
 // PrintText --
-//
 void PrintText(const char* fmt, ...)  // Custom GL "Print" Routine
 {
   char text[256];  // Holds Our String
@@ -180,9 +159,7 @@ void PrintText(const char* fmt, ...)  // Custom GL "Print" Routine
 }
 s
 
-    //
     // Handle_Esc
-    //
     static void Handle_Esc(void)
 {
   if (active)
@@ -201,7 +178,7 @@ s
 
       }  // end if -else
 
-    }  // end of theif
+    }
     else if (ant_globals->menu_mode == MENU_HELP_MODE)
     {
       ant_globals->paused = 1;
@@ -222,15 +199,13 @@ s
       ant_globals->menu_mode = MENU_TITLE_MODE;
 
       // showcursor
-    }  // end of if-else
+    }
 
-  }  // end of the if
+  }
 
-}  // end of thefunction
+}
 
-//
 // keyPressed
-//
 void keyPressed(KeySym key)
 {
   switch (key)
@@ -258,16 +233,16 @@ void keyPressed(KeySym key)
         done = true;
 
         return;
-      }  // end of the if
+      }
 
       if (ant_globals->menu_mode == MENU_HELP_MODE)
       {
         // ShowCursor
-      }  // end of the if
+      }
       else if (ant_globals->menu_mode == MENU_RUN_MODE)
       {
         // Show Cursor
-      }  // end of if -else
+      }
 
       break;
 
@@ -284,7 +259,7 @@ void keyPressed(KeySym key)
       if (ant_globals->menu_mode == MENU_RUN_MODE)
       {
         TogglePaused();
-      }  // end of the if
+      }
 
       break;
 
@@ -301,9 +276,7 @@ void keyPressed(KeySym key)
   };
 }
 
-//
 // Cmd_KeyPress
-//
 static void Cmd_KeyPress(KeySym key)
 {
   switch (key)
@@ -327,11 +300,9 @@ static void Cmd_KeyPress(KeySym key)
       break;
   };
 
-}  // end of teh function
+}
 
-//
 // LoadKeyCodes
-//
 void LoadKeyCodes(void)
 {
   keyCodes[0] = XKeysymToKeycode(GLWin.dpy, XK_Escape);
@@ -359,9 +330,7 @@ void LoadKeyCodes(void)
   keyCodes[16] = XKeysymToKeycode(GLWin.dpy, XK_space);
 }
 
-//
 // Draw Hud
-//
 void DrawHUD(void)
 {
   glLoadIdentity();
@@ -385,9 +354,7 @@ void DrawHUD(void)
   GetFramesPerSecond();  // get frames
 }
 
-//
 // Resize gl scene
-//
 GLvoid ResizeGLScene(GLsizei width,
                      GLsizei height)  // Resize And Initialize The GL Window
 {
@@ -408,9 +375,7 @@ GLvoid ResizeGLScene(GLsizei width,
   glLoadIdentity();            // Reset The Modelview Matrix
 }
 
-//
 // Init GL
-//
 int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
 {
   // seed rand generator
@@ -428,7 +393,6 @@ int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
   Create_Col_List();
   Create_Wall_List();
 
-  //
   // loading sound library
   printf("Loading sound library, make sure 'music apps' are closed\n");
   Load_Audio();
@@ -475,9 +439,7 @@ int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
 
   CreateWalls();
 
-  //
   // Load the collsion test for the walll
-  //
 
   // front wall
   InsertColSegment(world_ptr->x_min, world_ptr->y_max, world_ptr->x_max, world_ptr->y_max);
@@ -491,18 +453,14 @@ int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
   // left wall
   InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_min, world_ptr->y_max);
 
-  //
   // for the network save
   // the number of bots incase it is changed
   MAX_SAVED_BOTS = MAX_FIRE_ANTS;
 
-  // end of insertion
 
   Super_InitNetwork();
 
-  //
   // begin in paused mode
-  //
   Super_BeginPaused();
 
   mSuper_Loaded = LOADED_TRUE;
@@ -510,10 +468,8 @@ int InitGL(GLvoid)  // All Setup For OpenGL Goes Here
   return true;  // Initialization Went OK
 }
 
-//
 // AnimateScene
 // - do all the processing outside of drawing
-//
 void AnimateScene(void)
 {
   if (CHECK_NET_CLIENT)
@@ -533,9 +489,7 @@ void AnimateScene(void)
   AnimateExplosions();
 }
 
-//
 // Draw The Scene
-//
 void DrawGLScene(GLvoid)  // Here's Where We Do All The Drawing
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear Screen And Depth Buffer
@@ -566,7 +520,6 @@ void DrawGLScene(GLvoid)  // Here's Where We Do All The Drawing
   DrawHUD();
 }
 
-//
 // Run_Anim
 // - combine animation and draw scene
 void Run_Anim(void)
@@ -578,7 +531,7 @@ void Run_Anim(void)
     // play music
     // Play_Music();
 
-  }  // end of the fi
+  }
 
   DrawGLScene();  // render to window
 
@@ -586,10 +539,8 @@ void Run_Anim(void)
   glXSwapBuffers(GLWin.dpy, GLWin.win);
 }
 
-//
 // ShutdownGL
 // - place all memory releases and stuff here
-//
 void ShutdownGL(void)
 {
   DeleteObjects();
@@ -620,9 +571,7 @@ void ShutdownGL(void)
   DestroyGlobals();
 }
 
-//
 // KILLGLWINDOW
-//
 static GLvoid KillGLWindow(GLvoid)  // Properly Kill The Window
 {
   if (GLWin.ctx)
@@ -630,19 +579,19 @@ static GLvoid KillGLWindow(GLvoid)  // Properly Kill The Window
     if (!glXMakeCurrent(GLWin.dpy, None, NULL))
     {
       printf("released failed\n");
-    }  // end of teh if
+    }
 
     glXDestroyContext(GLWin.dpy, GLWin.ctx);
     GLWin.ctx = NULL;
 
-  }  // end of the if
+  }
 
   // switch back to original resolution
   if (GLWin.fs)
   {
     XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
     XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-  }  // end of the if
+  }
 
   XCloseDisplay(GLWin.dpy);
 
@@ -765,9 +714,7 @@ bool CreateGLWindow(char* title, int width, int height, int bits, bool fullscree
   return True;
 }
 
-//
 // main
-//
 int main(int argc, char** argv)
 {
   int i;
@@ -843,7 +790,7 @@ int main(int argc, char** argv)
             keyPressed(key);
             keys[event.xkey.keycode] = true;
 
-          }  // end of the if
+          }
 
           break;
 
@@ -856,7 +803,7 @@ int main(int argc, char** argv)
           {
             keys[event.xkey.keycode] = false;
 
-          }  // end of the - if
+          }
 
           break;
 
@@ -882,4 +829,4 @@ int main(int argc, char** argv)
 
   return 0;
 
-}  // end of main //
+}

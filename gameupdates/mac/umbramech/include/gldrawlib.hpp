@@ -32,28 +32,40 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
-//
 
 #pragma once
 
-#define ENABLE_CONSOLE 0;
-#define USE_SMALL_SCREEN 1;
+#include <cstring>
 
-#define MAX_TEXTURES 20;
+#define ENABLE_CONSOLE 0
+#define USE_SMALL_SCREEN 1
 
-#define M_PI 3.14159265358f;
+#define MAX_TEXTURES 20
 
-#define SCREEN_WIDTH 800;
-#define SCREEN_HEIGHT 600;
+#ifndef M_PI
+#define M_PI 3.14159265358f
+#endif
+
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+
+#ifndef RAD_TO_DEG
+#define RAD_TO_DEG 57.2957795f
+#endif
+
+#ifndef ABS
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+#endif
+
+#ifndef ZeroMemory
+#define ZeroMemory(ptr, size) std::memset((ptr), 0, (size))
+#endif
 
 unsigned long getclock(void);
 
-//
 // Bitmap
 // title functions
-//
 void Load_Titles(void);
 void Draw_Title(void);
 
@@ -66,7 +78,7 @@ void PrintText(const char* fmt, ...);
 
 void SetFunkyTexture(void);
 int GetFunkyTexture(void);
-void LoadTexture(char* filename);
+void LoadTexture(const char* filename);
 void NextTexture(void);
 
 void DrawLineOfSight(float x1, float y1, float x2, float y2);

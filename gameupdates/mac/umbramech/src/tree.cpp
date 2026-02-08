@@ -32,17 +32,13 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // tree.cpp
-//
 // if any memory leaks check here first
 // havent had time to make sure everything
 // is released properly
-//
 // - the goal the tree struct is to create a
 // balanced tree at the beginning of the simulation
 // kind of hybrid bsp/octree
-//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,16 +61,14 @@ bool TestFuncA(int val, TreeNode* current)
 
 #define TestFuncB(val, data) ((val < data) ? 1 : 0)
 
-//
 // InsertNode
-//
 void InsertTree(TreeNode** node_ptr, TreeNode* current)
 {
   if (*node_ptr == NULL)
   {
     *node_ptr = current;
 
-  }  // end of the if
+  }
   else
   {
     if (current->data < (*node_ptr)->data)
@@ -86,21 +80,19 @@ void InsertTree(TreeNode** node_ptr, TreeNode* current)
     {
       if (current->data > (*node_ptr)->data) InsertTree(&((*node_ptr)->right), current);
 
-    }  // end of if-else
+    }
 
-  }  // end of the if - else
+  }
 }
 
-//
 // Test Similar functionality
-//
 void InsertTest(TreeNode** node_ptr, TreeNode* current)
 {
   if (*node_ptr == NULL)
   {
     *node_ptr = current;
 
-  }  // end of the if
+  }
   else
   {
     if (TestFuncB(current->data, current->data))
@@ -112,14 +104,12 @@ void InsertTest(TreeNode** node_ptr, TreeNode* current)
     {
       if (!TestFuncB(current->data, current->data)) InsertTest(&((*node_ptr)->right), current);
 
-    }  // end of if-else
+    }
 
-  }  // end of the if - else
+  }
 }
 
-//
 // SearchNode
-//
 bool SearchTree(TreeNode** node_ptr, TreeNode* current)
 {
   tree_searches++;  // keep a tally
@@ -128,7 +118,7 @@ bool SearchTree(TreeNode** node_ptr, TreeNode* current)
   {
     return false;  // is empty
 
-  }  // end of the if
+  }
   else
   {
     // printf(" (%d) ", (*node_ptr)->data);
@@ -145,16 +135,14 @@ bool SearchTree(TreeNode** node_ptr, TreeNode* current)
     {
       if (current->data > (*node_ptr)->data) SearchTree(&((*node_ptr)->right), current);
 
-    }  // end of if-else
+    }
 
-  }  // end of the if - else
+  }
 
   return true;
 }
 
-//
 // SearchNode
-//
 int SearchTest(TreeNode** node_ptr, TreeNode* current)
 {
   tree_searches++;  // keep a tally
@@ -163,7 +151,7 @@ int SearchTest(TreeNode** node_ptr, TreeNode* current)
   {
     return 0;  // is empty
 
-  }  // end of the if
+  }
   else
   {
     // check if we found the data
@@ -182,16 +170,14 @@ int SearchTest(TreeNode** node_ptr, TreeNode* current)
 
       if (!TestFuncB(current->data, current->data)) SearchTest(&((*node_ptr)->right), current);
 
-    }  // end of if-else
+    }
 
-  }  // end of the if - else
+  }
 
   return current->data;
 }
 
-//
 // PreOrder
-//
 void PreOrder(TreeNode* ptr)
 {
   if (ptr != 0)
@@ -200,15 +186,13 @@ void PreOrder(TreeNode* ptr)
     PreOrder(ptr->left);
     PreOrder(ptr->right);
 
-  }  // end of the if
+  }
 }
 
 int removed = 0;
-//
 // DeleteTree
 // - danger written all over this one
 // when the nodes in the tree are malloc-ed
-//
 void DeleteTree(Tree* tree)
 {
   TreeNode* node;
@@ -231,18 +215,16 @@ void DeleteTree(Tree* tree)
       next = node->left;
       node->left = next->right;
       next->right = node;
-    }  // end of the if
+    }
 
     node = next;
 
-  }  // end of the while
+  }
 
   free(tree);
 }
 
-//
 // CreateTree
-//
 Tree* CreateTree(void)
 {
   Tree* tree;
@@ -254,9 +236,7 @@ Tree* CreateTree(void)
   return tree;
 }
 
-//
 // CreateTreeNode
-//
 TreeNode* CreateTreeNode(int data)
 {
   TreeNode* current;
@@ -269,11 +249,9 @@ TreeNode* CreateTreeNode(int data)
 
   return current;
 
-}  // end of teh function
+}
 
-//
 // TreeTest
-//
 void TreeFuncTest(void)
 {
   Tree* tree;
@@ -307,7 +285,7 @@ void TreeFuncTest(void)
 
     InsertTest(&tree->root, current);
 
-  }  // end of the for
+  }
 
   search = CreateTreeNode(targets);
 
@@ -324,12 +302,10 @@ void TreeFuncTest(void)
   DeleteTree(tree);
 }
 
-//
 // TreeTest
 // - test a linked list versus
 // a binary tree
 // which one will, I cant wait to see what happens
-//
 void TreeTest(void)
 {
   Tree* tree;
@@ -355,7 +331,7 @@ void TreeTest(void)
 
     InsertTree(&tree->root, current);
 
-  }  // end of the for
+  }
 
   search = CreateTreeNode(target);
 

@@ -32,12 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // pyramid.cpp
-//
 // - note: at present pyramid is not really a pyramid
 // but a box
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -62,11 +59,9 @@ GLfloat dlow_shininess[] = {5.0f};
 GLfloat dhigh_shininess[] = {100.0f};
 GLfloat dmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
-//
 // here is the level
 // 14 walls, 5 cols
 // 60.0f is a good height
-//
 #define LEVEL_MAX_WALLS 10
 static float level_0[LEVEL_MAX_WALLS][5] = {
     {-200.0f, 260.0f, 100.0f, 30.0f, 70.0f},  // 1
@@ -82,11 +77,9 @@ static float level_0[LEVEL_MAX_WALLS][5] = {
 
 };
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_pyramid,     // init, must be called first
     compile_pyramid,  // compile
@@ -97,11 +90,8 @@ DriverObjects CURRENT_OBJECT = {
 
 static CollisionList* wall_list;
 
-//
 // WALLSOBJECTS GO HERE
-//=========================================================
 
-//
 static void SetupWall(CollisionObj** ptr)
 {
   (*ptr) = CreateCollisionObj();
@@ -111,9 +101,7 @@ static void SetupWall(CollisionObj** ptr)
   InsertColFront(wall_list, *ptr);
 }
 
-//
 // InsertWall
-//
 void InsertWall(float x, float y, float width, float height, float height_2)
 {
   float x_min, x_max, y_min, y_max;
@@ -147,11 +135,9 @@ void InsertWall(float x, float y, float width, float height, float height_2)
   y_min = y - (height / 2.0f);
   y_max = y + (height / 2.0f);
 
-  //
   // In order to insert a wall of the box
   // we need the xmins and maxes and the normals
   // 4 differnt walls
-  //
 
   // front wall
   InsertColSegment(x_min, y_max, x_max, y_max);
@@ -166,9 +152,7 @@ void InsertWall(float x, float y, float width, float height, float height_2)
   InsertColSegment(x_min, y_min, x_min, y_max);
 }
 
-//
 // Create Walls
-//
 void CreateWalls(void)
 {
   int i = 0;
@@ -177,13 +161,11 @@ void CreateWalls(void)
   for (i = 0; i < LEVEL_MAX_WALLS; i++)
   {
     InsertWall(level_0[i][0], level_0[i][1], level_0[i][2], level_0[i][3], level_0[i][4]);
-  }  // end of the for
+  }
 
-}  // end of teh fucntion
+}
 
-//
 // PrintList
-//
 void Draw_Walls(CollisionList* list)
 {
   CollisionObj* current_ptr;
@@ -207,32 +189,22 @@ void Draw_Walls(CollisionList* list)
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 }
 
-//
 // Create wall list
-//
 void Create_Wall_List(void) { wall_list = CreateCollisionList(); }
 
-//
 // Delelet Col List
-//
 void Delete_Wall_List(void) { DestroyColList(wall_list); }
 
-//
 // Print_Col_List
-//
 void Print_Wall_List(void) { PrintCollisionList(wall_list); }
 
-//
 // Draw_Wall_List
-//
-void Draw_Wall_List(void) { Draw_Walls(wall_list); }  // end of the function
+void Draw_Wall_List(void) { Draw_Walls(wall_list); }
 
-//
 // END WALLOBJECTS
-//=========================================================
 static void draw_pyramid(void)
 {
   float v[3][3] = {0};
@@ -296,7 +268,6 @@ static void draw_pyramid(void)
   glVertex3fv(v[2]);  // triangle left bottom front
 
   // Draw the back triangle
-  //-----------------------------
   v[0][0] = -size;
   v[0][1] = 0.0f;
   v[0][2] = -size;
@@ -510,11 +481,9 @@ static void draw_pyramid(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_pyramid(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -523,11 +492,9 @@ static void init_pyramid(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_pyramid(void)
 {
   // glPushMatrix();
@@ -537,9 +504,7 @@ static void render_pyramid(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_pyramid(void)
 {
   int id;

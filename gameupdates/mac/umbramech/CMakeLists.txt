@@ -14,6 +14,10 @@ file(GLOB_RECURSE SRC_FILES
     src/network/*.cpp
 )
 
+# Exclude legacy/unused source that doesn't compile in current build.
+list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/DriverBots.cpp")
+list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/umbramain.cpp")
+
 # Header files (optional to list)
 include_directories(
     include
@@ -31,6 +35,8 @@ add_compile_options(-Wno-deprecated-declarations)
 
 # Add executable
 add_executable(umbramech ${SRC_FILES})
+
+target_precompile_headers(umbramech PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/precompiled.hpp)
 
 # Link libraries
 target_link_libraries(umbramech

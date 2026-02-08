@@ -32,23 +32,15 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // fireants.h
-//
 // constants that deal with the
 // enemy char
-//
 #pragma once
-
-namespace fireants
-{
 
 constexpr int PLAYER_0 = 0;
 
-//
 // the drawing size
 // in x/z
-//
 constexpr float FIRE_ANT_SIZE = 1.5f;
 
 // length of the vision
@@ -63,9 +55,7 @@ constexpr int DRAW_LINE_SIGHT = 1;
 constexpr float LIGHT_HEIGHT_0 = 100.0f;
 constexpr float LIGHT_HEIGHT_1 = 180.0f;
 
-//
 // max distance a bullet can travel
-//
 constexpr float MAX_BULLET_TRAVEL = 600.0f;
 
 // bullet height
@@ -74,7 +64,6 @@ constexpr float BULLET_H2 = 2.3f;
 
 constexpr float BULLET_LEN = 6.0f;
 
-//
 // For the hex grid
 constexpr float HEX_SIZE = 12.0f;
 
@@ -108,5 +97,3 @@ void Prepare_DemoMode(void);
 void Run_NetworkBots(void);
 
 extern int keyCodes[20];
-
-}  // namespace fireants

@@ -32,12 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // commands.cpp
-//
 // The command interface
 // to have a LaunchCommand
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -46,9 +43,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//
+void ProcessBotEvent(DriverBotPtr bot);
+
+void Attack_Command(DriverBotPtr bot) { ProcessBotEvent(bot); }
+void Wander_Command(DriverBotPtr bot) { ProcessBotEvent(bot); }
+void Move_Command(DriverBotPtr bot) { ProcessBotEvent(bot); }
+
 // GetStartCommand
-//
 int GetStartState(int cmd)
 {
   switch (cmd)
@@ -72,10 +73,7 @@ int GetStartState(int cmd)
   return MOVE_STATE;
 }
 
-//
 // GenerateCommand
-//
-//
 void Generate_Command(DriverBotPtr bot, int cmd)
 {
   switch (cmd)

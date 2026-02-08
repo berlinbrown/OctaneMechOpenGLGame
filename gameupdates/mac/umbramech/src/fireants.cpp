@@ -32,22 +32,14 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // fireants.cpp
-//
 // - These ants filter out other ants that arent
-//
 // carrying any food for a long time
-//
 // - may also incorporate some messaging techniques
-//
-//
 // The code for the ai is also here hidden
 // amongst the other stuff
-//
 // ant.cpp
 //  - the ant object
-//
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -66,9 +58,7 @@ static void draw_fireant(void);
 static void render_fireant(void);
 static void draw_fireant(void);
 
-//
 // For the bot
-//
 GLfloat red_ambient[] = {0.6f, 0.6f, 0.6f, 1.0f};
 GLfloat red_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 GLfloat red_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -77,9 +67,7 @@ GLfloat rlow_shininess[] = {5.0f};
 GLfloat rhigh_shininess[] = {100.0f};
 GLfloat rmat_emission[] = {0.3f, 0.3f, 0.3f, 0.0f};
 
-//
 // For the nme bot
-//
 GLfloat blue_ambient[] = {0.0f, 0.0f, 0.7f, 1.0f};
 GLfloat blue_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 GLfloat blue_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -88,9 +76,7 @@ GLfloat blow_shininess[] = {5.0f};
 GLfloat bhigh_shininess[] = {100.0f};
 GLfloat bmat_emission[] = {0.0f, 0.1f, 0.3f, 0.0f};
 
-//
 // For the cannon
-//
 GLfloat color_ambient[] = {0.4f, 0.4f, 0.4f, 1.0f};
 GLfloat color_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 GLfloat color_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -114,16 +100,12 @@ float rand_bot_pos[MAX_RAND_POS][4] = {{60, -110, (WORLD_X_MAX + 177), 177},  //
                                        {-150, 120, 104, 200},                 // 2
                                        {130, 180, 320, 160}};                 // 3
 
-//
 // Create a fire ant struct
-//
 static DriverBotPtr* fire_cluster;
 
-//
 // - used with networking,
 // the network bots need some kind of conversion tool
 // to convert from a network id to a local id
-//
 // Convert_SetID
 void Convert_SetID(int val) { net_bot_ids[net_bot_index++] = val; }
 
@@ -136,24 +118,21 @@ int Convert_GetID(int msg_id)
     if (msg_id == net_bot_ids[i])
     {
       return i;
-    }  // end of the if
+    }
 
   }  // en dof the fo r
 
   return 0;  // cheating!
 }
 
-//
 // Note: if this code doesnt work
 // the next best thing is to test against
 // the objects at the beginning to
 // see if a bot landed in any of them
 // this way is more complete
-//
 // We want to keep the bots
 // in a specified region in order to keep
 // the bots from being placed in buildings
-//
 void BotPlacement(DriverBotPtr bot, float x, float y, float width, float height)
 {
   float x_min;
@@ -182,9 +161,7 @@ void BotPlacement(DriverBotPtr bot, float x, float y, float width, float height)
   res = (float)(rand() % rand_num) / 1000.0f;
   bot->y = y_min + res;
 
-  //
   // code to fix boundary issues
-  //
   tmp = WORLD_X_MAX * 0.08f;
 
   // get new value --
@@ -200,13 +177,11 @@ void BotPlacement(DriverBotPtr bot, float x, float y, float width, float height)
     bot->x = ((rand() % rand_arg) / rand_arg_1) - rand_arg_2;
     bot->y = ((rand() % rand_arg) / rand_arg_1) - rand_arg_2;
 
-  }  // end of the if
+  }
 }
 
-//
 // PositionBot
 // - set the bots initial position
-//
 void PositionBot(DriverBotPtr bot)
 {
   int rand_no;
@@ -217,26 +192,20 @@ void PositionBot(DriverBotPtr bot)
                rand_bot_pos[rand_no][3]);
 }
 
-//
 // Supers
-//
 void Super_FireAnts(void)
 {
   fire_cluster = (DriverBotPtr*)malloc(MAX_FIRE_ANTS * sizeof(DriverBotPtr));
 }
 
-//
 // Super_KillFires
-//
 void Super_KillFires(void)
 {
   // ifree(fire_cluster);
   RELEASE_OBJECT(fire_cluster);
 }
 
-//
 // Render_ShootLine
-//
 void Render_ShootLine(float x_1, float y_1, float x_2, float y_2)
 {
   float height = 2.0f;
@@ -255,11 +224,9 @@ void Render_ShootLine(float x_1, float y_1, float x_2, float y_2)
   glEnable(GL_LIGHTING);
 }
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_fireant,     // init, must be called first
     compile_fireant,  // compile
@@ -268,28 +235,25 @@ DriverObjects CURRENT_OBJECT = {
     0                 // loaded by INIT
 };
 
-//
-//
 void Player_Control(bool* keys)
 {
   // cant move when dead
   if (fire_cluster[0]->alive == DEAD_STATE) return;
 
-  //
   // Rotate the camera according to
   // 'S' and 'F'
   if ((keys[keyCodes[VK_f]]) || (keys[keyCodes[VK_F]]))
   {
     AngleCamera(0.0f, 2.0f, 0.0f);
 
-  }  // end of the if
+  }
 
   // s
   if ((keys[keyCodes[VK_S]]) || (keys[keyCodes[VK_s]]))
   {
     AngleCamera(0.0f, -2.0f, 0.0f);
 
-  }  // end of the if
+  }
 
   // R  to reset
   if ((keys[keyCodes[VK_R]]) || (keys[keyCodes[VK_r]]))
@@ -297,18 +261,16 @@ void Player_Control(bool* keys)
     // cheap trick --
     CAMERA->rotation[1] = OFFSET_ROTATION;
 
-  }  // end of the if
+  }
 
-  //
   //  Control the robot
-  //
   if (keys[keyCodes[VK_UP]])
   {
     MoveFire0(1, 0);
 
     // keys[keyCodes[VK_UP]] = false;
 
-  }  // end of the if
+  }
 
   if (keys[keyCodes[VK_DOWN]])
   {
@@ -316,7 +278,7 @@ void Player_Control(bool* keys)
 
     // keys[keyCodes[VK_DOWN]] = false;
 
-  }  // end of the if
+  }
 
   if (keys[keyCodes[VK_LEFT]])
   {
@@ -324,28 +286,26 @@ void Player_Control(bool* keys)
 
     // keys[keyCodes[VK_LEFT]] = false;
 
-  }  // end of the if
+  }
 
   if (keys[keyCodes[VK_RIGHT]])
   {
     MoveFire0(0, -1);
 
     // keys[keyCodes[VK_RIGHT]] = false;
-  }  // end of the if
+  }
 
   if (keys[keyCodes[VK_SPACE]])
   {
     Player_Shoot(fire_cluster[0]);
 
     // keys[keyCodes[VK_SPACE]] = false;
-  }  // end of the if
+  }
 }
 
-//
 // Handle_Player
 // - do any other processing
 // like handle explosions
-//
 void Handle_Player(DriverBotPtr bot)
 {
   float rad;
@@ -380,9 +340,9 @@ void Handle_Player(DriverBotPtr bot)
 
       Reset_DeadText();
 
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   if ((bot->alive == DEAD_STATE) && (bot->state == GO_WANDER_COMMAND))
   {
@@ -393,23 +353,20 @@ void Handle_Player(DriverBotPtr bot)
 
       if (fire_cluster[i]->alive == ALIVE_STATE) break;
 
-    }  // end of the for
+    }
 
-  }  // end of the if
+  }
 
   if (bot->alive == DEAD_STATE) return;
 
   // draw a player indicator
-  //
   Bot_Triangle(bot->x, bot->y);
 
   if (bot->view_mode == THIRD_PERSON_MODE)
   {
     // nOTE: // THIRD PERSON MODE!!!
 
-    //
     // calculate the lookat point
-    //
     ang = CAMERA->rotation[1] + bot->heading;
 
     // now the next point of the triangle
@@ -479,7 +436,6 @@ void Handle_Player(DriverBotPtr bot)
     rad = tmp_heading / RAD_TO_DEG;
 
     // get that first person look
-    //
     tmp_x = -FIRST_PERSON_Z * (float)cos(rad);
     tmp_y = -FIRST_PERSON_Z * (float)sin(rad);
 
@@ -491,7 +447,7 @@ void Handle_Player(DriverBotPtr bot)
 
     // end first person mode
 
-  }  // end of if else
+  }
 
   switch (bot->state)
   {
@@ -509,12 +465,9 @@ void Handle_Player(DriverBotPtr bot)
   };
 }
 
-//
 // - handle the net player
-//
 // the only big difference, is the client
 // will send packets to the server
-//
 void Net_Player(DriverBotPtr bot)
 {
   float rad;
@@ -549,9 +502,9 @@ void Net_Player(DriverBotPtr bot)
 
       Reset_DeadText();
 
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   if ((bot->alive == DEAD_STATE) && (bot->state == GO_WANDER_COMMAND))
   {
@@ -562,23 +515,20 @@ void Net_Player(DriverBotPtr bot)
 
       if (fire_cluster[i]->alive == ALIVE_STATE) break;
 
-    }  // end of the for
+    }
 
-  }  // end of the if
+  }
 
   if (bot->alive == DEAD_STATE) return;
 
   // draw a player indicator
-  //
   Bot_Triangle(bot->x, bot->y);
 
   if (bot->view_mode == THIRD_PERSON_MODE)
   {
     // nOTE: // THIRD PERSON MODE!!!
 
-    //
     // calculate the lookat point
-    //
     ang = CAMERA->rotation[1] + bot->heading;
 
     // now the next point of the triangle
@@ -648,7 +598,6 @@ void Net_Player(DriverBotPtr bot)
     rad = tmp_heading / RAD_TO_DEG;
 
     // get that first person look
-    //
     tmp_x = -FIRST_PERSON_Z * (float)cos(rad);
     tmp_y = -FIRST_PERSON_Z * (float)sin(rad);
 
@@ -660,7 +609,7 @@ void Net_Player(DriverBotPtr bot)
 
     // end first person mode
 
-  }  // end of if else
+  }
 
   switch (bot->state)
   {
@@ -678,10 +627,8 @@ void Net_Player(DriverBotPtr bot)
   };
 }
 
-//
 // Reset_CrossHairs
 // - reset the crosshairs on fire
-//
 void Reset_CrossHairs(DriverBotPtr bot)
 {
   // can only change when the hairs are dead
@@ -692,17 +639,13 @@ void Reset_CrossHairs(DriverBotPtr bot)
     bot->crosshair_state = ALIVE_STATE;
     bot->crosshair_scale = 1.0f;
 
-  }  // end of if - else
+  }
 }
 
-//
 // We need to use the Bot driver structure in order
 // to create, render and destroy the fire ants
-//=========================================================
 
-//
 // DeductHit
-//
 static bool DeductHit(DriverBotPtr bot, float hit)
 {
   bot->food -= hit;
@@ -713,19 +656,17 @@ static bool DeductHit(DriverBotPtr bot, float hit)
     bot->state = EXPLODE_STATE;
 
     return true;
-  }  // end of the if
+  }
 
   // set an explostion at this point
 
   return false;
 }
 
-//
 // Check Collisions
 // - This needs improvement,
 // brute force for checking the collions on the other
 // bots
-//
 void CheckCollisions(StaticBotPtr boid)
 {
   int index = 0;
@@ -778,7 +719,6 @@ void CheckCollisions(StaticBotPtr boid)
       // deduct the hit from the bot
       b_res = DeductHit(col_ptr->bot_ptr, boid->food);
 
-      //**
       // This is probably the most
       // immediate way to send a I got
       // hit command
@@ -796,14 +736,13 @@ void CheckCollisions(StaticBotPtr boid)
 
         // got a kill
         fire_cluster[boid->owner]->kills++;
-      }  // end of the if
+      }
 
       fire_cluster[boid->owner]->score += score;
 
       // switch to new command
       if (col_ptr->bot_ptr->command == WANDER_COMMAND)
         Generate_Command(col_ptr->bot_ptr, MOVE_COMMAND);
-      //**
 
       x = col_ptr->collision_x;
       y = col_ptr->collision_y;
@@ -821,14 +760,12 @@ void CheckCollisions(StaticBotPtr boid)
 
       return;
 
-    }  // end of the if
+    }
 
-  }  // end of if
+  }
 }
 
-//
 // MoveBullets
-//
 void MoveBullets(StaticBotPtr boid)
 {
   float x, y;
@@ -858,7 +795,6 @@ void MoveBullets(StaticBotPtr boid)
   // boid->travel+=boid->linearv;
   boid->travel += boid->linearv;
 
-  //
   // by default kill the bullet in case somebody
   // else doesnt turn it off
   if (boid->travel > MAX_BULLET_TRAVEL) boid->state = DEAD_STATE;
@@ -866,11 +802,10 @@ void MoveBullets(StaticBotPtr boid)
   if (boid->max_dist == 0)
   {
     boid->max_dist = 0.000001f;
-  }  // end of the if
+  }
 
   v = boid->travel / boid->max_dist;
 
-  //
   // select different values for
   // the percent traveled
   // in the end, it really doenst matter
@@ -883,12 +818,10 @@ void MoveBullets(StaticBotPtr boid)
     boid->old_x = boid->final_x;
     boid->old_y = boid->final_y;
 
-  }  // end of the if
+  }
 }
 
-//
 // ResetBullets
-//
 void ResetBullets(DriverBotPtr bot)
 {
   int index = 0;
@@ -903,12 +836,10 @@ void ResetBullets(DriverBotPtr bot)
     bot->bullets[index].position[0] = bot->x;
     bot->bullets[index].position[2] = bot->y;
 
-  }  // end of the for
+  }
 }
 
-//
 // FireBullets for the player
-//
 void Player_Shoot(DriverBotPtr bot)
 {
   CollisionPtr col_ptr = NULL;
@@ -923,7 +854,7 @@ void Player_Shoot(DriverBotPtr bot)
   {
     bot->gun_reset = 0;
 
-  }  // end of the if
+  }
 
   if (bot->gun_reset != 0) return;
 
@@ -967,9 +898,9 @@ void Player_Shoot(DriverBotPtr bot)
 
       bot->bullets[gun_index].max_dist = col_ptr->dist;
 
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   // keep track of bullets fired
   bot->gun_index++;
@@ -977,12 +908,10 @@ void Player_Shoot(DriverBotPtr bot)
   {
     bot->gun_index = 0;
 
-  }  // end of the if
+  }
 }
 
-//
 // FireBullets
-//
 void FireBullets(DriverBotPtr bot, int next_state)
 {
   int gun_index = bot->gun_index;
@@ -997,7 +926,7 @@ void FireBullets(DriverBotPtr bot, int next_state)
   {
     bot->gun_reset = 0;
 
-  }  // end of the if
+  }
 
   if (bot->gun_reset != 0) return;
 
@@ -1040,9 +969,9 @@ void FireBullets(DriverBotPtr bot, int next_state)
 
       bot->bullets[gun_index].max_dist = col_ptr->dist;
 
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   // keep track of bullets fired
   bot->gun_index++;
@@ -1050,7 +979,7 @@ void FireBullets(DriverBotPtr bot, int next_state)
   {
     bot->gun_index = 0;
 
-  }  // end of the if
+  }
 
   // fire 2 shots and then return to normal
   if ((bot->gun_index % 2) == 0)
@@ -1059,12 +988,10 @@ void FireBullets(DriverBotPtr bot, int next_state)
     // we are if Attack state
     bot->state = next_state;
 
-  }  // end of the if
+  }
 }
 
-//
 // Render_LineStrip
-//
 void Render_LineStrip(float x_1, float y_1, float x_2, float y_2, float height1, float height2)
 {
   float v[3][3] = {0};
@@ -1107,11 +1034,9 @@ void Render_LineStrip(float x_1, float y_1, float x_2, float y_2, float height1,
 
   glEnd();
 
-}  // end of the function
+}
 
-//
 // DrawBullets
-//
 void DrawBullets(StaticBotPtr boid)
 {
   MoveBullets(boid);
@@ -1132,9 +1057,7 @@ void DrawBullets(StaticBotPtr boid)
   END_BOT;
 }
 
-//
 // RenderBullets, DrawBullets, MoveBullets, LoadBullets
-//
 void RenderBullets(DriverBotPtr bot)
 {
   int index = 0;
@@ -1145,7 +1068,7 @@ void RenderBullets(DriverBotPtr bot)
     {
       DrawBullets(&bot->bullets[index]);
 
-    }  // end of the if
+    }
 
     // now check for ready state
     // in order to reset
@@ -1156,15 +1079,13 @@ void RenderBullets(DriverBotPtr bot)
       bot->bullets[index].position[0] = bot->x;
       bot->bullets[index].position[2] = bot->y;
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 }
 
-//
 // ChangeDirection
 // - should only be called every once in a while
-//
 static void ChangeFireDir(DriverBotPtr bot)
 {
   bot->target_dir = bot->heading;
@@ -1177,10 +1098,8 @@ static void ChangeFireDir(DriverBotPtr bot)
   bot->state = SET_TURN_STATE;
 }
 
-//
 // Turn
 //  and Move at the same time
-//
 static void TurnAndMove(DriverBotPtr bot, int old_state, int new_state)
 {
   float tol;
@@ -1205,7 +1124,7 @@ static void TurnAndMove(DriverBotPtr bot, int old_state, int new_state)
 
     if (bot->heading < 0) bot->heading += 360.0f;
 
-  }  // end of the if-else
+  }
 
   // move and turn at same time --
   if (bot->move_back)
@@ -1217,7 +1136,7 @@ static void TurnAndMove(DriverBotPtr bot, int old_state, int new_state)
   {
     bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
     bot->y -= (float)cos(bot->heading * PI_180) * bot->linearv;
-  }  // end of the if=else
+  }
 
   // perform collision test using driver
   col_flag = CheckCollisionBot((DriverBotPtr)bot);
@@ -1239,7 +1158,7 @@ static void TurnAndMove(DriverBotPtr bot, int old_state, int new_state)
 
     return;
 
-  }  // end of the if
+  }
 
   // end move code --
 
@@ -1253,18 +1172,16 @@ static void TurnAndMove(DriverBotPtr bot, int old_state, int new_state)
     bot->state = new_state;
 
     return;
-  }  // end of the if
+  }
 
   bot->state = old_state;
 
   return;
 }
 
-//
 // Turn
 // - same as turn fire ant
 // except that you can change the state
-//
 static void TurnAntState(DriverBotPtr bot, int old_state, int new_state)
 {
   float tol;
@@ -1287,7 +1204,7 @@ static void TurnAntState(DriverBotPtr bot, int old_state, int new_state)
 
     if (bot->heading < 0) bot->heading += 360.0f;
 
-  }  // end of the if-else
+  }
 
   tmp = ABS(bot->heading);
   target_tmp = ABS(bot->target_dir);
@@ -1299,18 +1216,16 @@ static void TurnAntState(DriverBotPtr bot, int old_state, int new_state)
     bot->state = new_state;
 
     return;
-  }  // end of the if
+  }
 
   bot->state = old_state;
 
   return;
 }
 
-//
 // SetTurnDirection
 // - select the direction to turn
 // left or right
-//
 static void SetTurnDirection(DriverBotPtr bot, int state)
 {
   float dist;
@@ -1326,7 +1241,7 @@ static void SetTurnDirection(DriverBotPtr bot, int state)
   {
     bot->move_back = true;
 
-  }  // end of the if
+  }
 
   dist = bot->target_dir - bot->heading;
 
@@ -1349,7 +1264,6 @@ static void SetTurnDirection(DriverBotPtr bot, int state)
   bot->state = state;
 }
 
-//
 // MoveFire0
 // - for testing
 void MoveFire0(int dir, int turn)
@@ -1379,7 +1293,7 @@ void MoveFire0(int dir, int turn)
 
     move_type = move_type | MOVE_BACKWARD;
 
-  }  // end of if-else
+  }
 
   if (turn > 0)
   {
@@ -1389,7 +1303,7 @@ void MoveFire0(int dir, int turn)
 
     move_type = move_type | MOVE_TURNLEFT;
 
-  }  // end of if
+  }
   else if (turn < 0)
   {
     fire_cluster[0]->heading -= fire_cluster[0]->turning_speed;
@@ -1398,7 +1312,7 @@ void MoveFire0(int dir, int turn)
 
     move_type = move_type | MOVE_TURNRIGHT;
 
-  }  // end of if-else
+  }
 
   // used with collisions
   // perform collision test using driver
@@ -1423,14 +1337,13 @@ void MoveFire0(int dir, int turn)
           (float)cos(fire_cluster[0]->heading * PI_180) * fire_cluster[0]->linearv;
     }  // end if-else
 
-  }  // end of the if
+  }
 
   // send the message if we are in network mode --
   Build_MoveMsg(fire_cluster[0]->x, fire_cluster[0]->y, fire_cluster[0]->heading, move_type);
 
-}  // end of func
+}
 
-//
 // Render_Tri1
 // x-offset
 void Render_Tri1(float size, float offset)
@@ -1459,9 +1372,7 @@ void Render_Tri1(float size, float offset)
   glEnd();
 }
 
-//
 // Render_Tri1
-//
 void Render_Tri2(float size, float offset)
 {
   float v[3][3] = {0};
@@ -1488,9 +1399,7 @@ void Render_Tri2(float size, float offset)
   glEnd();
 }
 
-//
 // Render_Tri3
-//
 void Render_Tri3(float size, float offset)
 {
   float v[3][3] = {0};
@@ -1517,9 +1426,7 @@ void Render_Tri3(float size, float offset)
   glEnd();
 }
 
-//
 // Render_Tri
-//
 void Render_Tri(float size, float offset)
 {
   Render_Tri1(size, offset);
@@ -1528,7 +1435,6 @@ void Render_Tri(float size, float offset)
 }
 
 // RenderFireAnt
-//
 static void RenderFireAnt(DriverBotPtr boid)
 {
   float len = 0;
@@ -1550,7 +1456,6 @@ static void RenderFireAnt(DriverBotPtr boid)
     glColor3f(boid->color[0], boid->color[1], boid->color[2]);
 
     // draw the object to screen
-    //
     // also check the color:
 
     // set the material for this object
@@ -1561,7 +1466,6 @@ static void RenderFireAnt(DriverBotPtr boid)
 
     driver_objects[FIREANT_OBJECT]->render();
 
-    //
     // Create a shooter, aimer object thing
     // - crosshairs
 
@@ -1574,7 +1478,7 @@ static void RenderFireAnt(DriverBotPtr boid)
       {
         boid->crosshair_scale = 1.0f;
         boid->crosshair_state = DEAD_STATE;
-      }  // end of the if
+      }
 
       BEGIN_BOT;
 
@@ -1591,7 +1495,7 @@ static void RenderFireAnt(DriverBotPtr boid)
 
       END_BOT;
 
-    }  // end of the if
+    }
 
     // this is the turret
     BEGIN_BOT;
@@ -1618,12 +1522,10 @@ static void RenderFireAnt(DriverBotPtr boid)
 
     END_BOT;
 
-  }  // end of the if
+  }
 }
 
-//
 // LoadFireAnts_A
-//
 static void LoadFireAnts_A(DriverBotPtr bot)
 {
   int index = 0;
@@ -1642,10 +1544,8 @@ static void LoadFireAnts_A(DriverBotPtr bot)
   // give the bot food
   bot->food = INITIAL_ANT_FOOD;
 
-  //
   // we also need some way to check if the
   // bot winds up in a building
-  //
   tmp = WORLD_X_MAX * 0.10f;
   rand_arg_1 = WORLD_X_MAX - tmp;
   rand_arg_2 = rand_arg_1 / 2.0f;
@@ -1665,7 +1565,6 @@ static void LoadFireAnts_A(DriverBotPtr bot)
 
   bot->view_mode = THIRD_PERSON_MODE;
 
-  //
   // Change the size
   bot->size[0] = 3.2f;
   bot->size[1] = 3.2f;
@@ -1685,15 +1584,12 @@ static void LoadFireAnts_A(DriverBotPtr bot)
   ResetBullets(bot);
 
   // command interface --
-  //
   Generate_Command(bot, WANDER_COMMAND);
 }
 
-//
 // Load FireAnts
 //  - fire ants are a little different
 // than the normal bots
-//
 static void LoadFireAnts(DriverBotPtr bot)
 {
   // also allocate bullets
@@ -1704,7 +1600,6 @@ static void LoadFireAnts(DriverBotPtr bot)
 }
 
 // GenerateBots
-//
 void GenerateFireAnts(void)
 {
   int index = 0;
@@ -1719,14 +1614,12 @@ void GenerateFireAnts(void)
     // InsertColListA(fire_cluster[index]);
     Insert_MovingObj(fire_cluster[index]);
 
-  }  // end of the for
+  }
 
   GetCameraBot(fire_cluster[0]);
 }
 
-//
 // Reset_Fire_Ant
-//
 void Reset_Fire_Ant(DriverBotPtr bot, int id)
 {
   LoadBotParms(bot);
@@ -1742,10 +1635,8 @@ void Reset_Fire_Ant(DriverBotPtr bot, int id)
   LoadFireAnts_A(bot);
 }
 
-//
 // Reset_FireAnts
 // - this will be used to start a new game
-//
 void Reset_FireAnts(void)
 {
   int index = 0;
@@ -1754,15 +1645,13 @@ void Reset_FireAnts(void)
   {
     Reset_Fire_Ant(fire_cluster[index], index);
 
-  }  // end of the for
+  }
 
   GetCameraBot(fire_cluster[0]);
 }
 
-//
 // - Run_NetworkBots
 // - collect the messages as they come in
-//
 void Run_NetworkBots(void)
 {
   int index = 0;
@@ -1776,9 +1665,7 @@ void Run_NetworkBots(void)
   float y;
   float heading;
 
-  //
   // and we also have to set the positions
-  //
   msg_ptr = Get_Messages(&msg_count, &msg_objectid);
 
   if (msg_count < 0) msg_count = 0;
@@ -1799,15 +1686,13 @@ void Run_NetworkBots(void)
     fire_cluster[tmp_id]->y = y;
     fire_cluster[tmp_id]->heading = heading;
 
-  }  // end of for
+  }
 
   // reset the message count
   Reset_MessageCount();
 }
 
-//
 // Reset_NetworkBots
-//
 void Reset_NetworkBots(void)
 {
   int index = 0;
@@ -1825,11 +1710,9 @@ void Reset_NetworkBots(void)
   {
     Reset_Fire_Ant(fire_cluster[index], index);
 
-  }  // end of the for
+  }
 
-  //
   // and we also have to set the positions
-  //
   msg_ptr = Get_Messages(&msg_count, &msg_objectid);
 
   // get the id first
@@ -1839,7 +1722,6 @@ void Reset_NetworkBots(void)
 
   if (msg_count < 0) msg_count = 0;
 
-  //
   // convert ids first
   for (index = (msg_count - 1); index >= 0; index--)
   {
@@ -1849,7 +1731,7 @@ void Reset_NetworkBots(void)
     // add it to the queue
     if (msg_objectid != tmp_id) Convert_SetID(tmp_id);
 
-  }  // end of the for
+  }
 
   // now get the pos, based
   // on what we have from the server
@@ -1865,22 +1747,18 @@ void Reset_NetworkBots(void)
     fire_cluster[tmp_id]->y = y;
     fire_cluster[tmp_id]->heading = heading;
 
-  }  // end of for
+  }
 
   GetCameraBot(fire_cluster[0]);
 
-  //
   // we are done with the messages
   // so reset them
   Reset_MessageCount();
 
-}  // end of the fuction
+}
 
-//
-//
 // Set up demo, mode, everything is
 // reset, but the first bot is dead
-//
 void Prepare_DemoMode(void)
 {
   int index = 0;
@@ -1889,7 +1767,7 @@ void Prepare_DemoMode(void)
   {
     Reset_Fire_Ant(fire_cluster[index], index);
 
-  }  // end of the for
+  }
 
   fire_cluster[0]->food = -1000;
   fire_cluster[0]->alive = DEAD_STATE;
@@ -1897,9 +1775,7 @@ void Prepare_DemoMode(void)
   GetCameraBot(fire_cluster[1]);
 }
 
-//
 // ShutdownBots
-//
 void ShutdownFireAnts(void)
 {
   int index = 0;
@@ -1911,12 +1787,10 @@ void ShutdownFireAnts(void)
 
     DestroyBot(fire_cluster[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // AnimNetworkBots
-//
 void AnimNetworkBots(void)
 {
   int index = 0;
@@ -1925,7 +1799,6 @@ void AnimNetworkBots(void)
   int id = 0;
   int max_id;
 
-  //
   // Check Network snapshots first
   Perform_Snapshots();
 
@@ -1946,7 +1819,7 @@ void AnimNetworkBots(void)
 
       Net_Player(fire_cluster[0]);
 
-    }  // end of if else
+    }
 
     // check if bot is alive for score
     // count
@@ -1955,9 +1828,9 @@ void AnimNetworkBots(void)
     {
       if (index != 0) ant_globals->alive_bots++;
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   // get the top two scores in addition
   // to the main bot
@@ -1983,18 +1856,16 @@ void AnimNetworkBots(void)
 
         id = j;
 
-      }  // end of the if
+      }
 
-    }  // end of the for
+    }
 
     max_id = id;
 
-  }  // end of the for
+  }
 }
 
-//
 // Draw Bots
-//
 void AnimFireAnts(void)
 {
   int index = 0;
@@ -2017,7 +1888,7 @@ void AnimFireAnts(void)
     {
       Handle_Player(fire_cluster[0]);
 
-    }  // end of if else
+    }
 
     // check if bot is alive for score
     // count
@@ -2026,9 +1897,9 @@ void AnimFireAnts(void)
     {
       if (index != 0) ant_globals->alive_bots++;
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   // get the top two scores in addition
   // to the main bot
@@ -2054,18 +1925,16 @@ void AnimFireAnts(void)
 
         id = j;
 
-      }  // end of the if
+      }
 
-    }  // end of the for
+    }
 
     max_id = id;
 
-  }  // end of the for
+  }
 }
 
-//
 // DrawFireAnts
-//
 void DrawFireAnts(void)
 {
   int index = 0;
@@ -2078,7 +1947,7 @@ void DrawFireAnts(void)
   {
     if (fire_cluster[0]->view_mode == THIRD_PERSON_MODE) RenderFireAnt(fire_cluster[0]);
 
-  }  // end of the if-else
+  }
 
   RenderBullets(fire_cluster[0]);
   if ((CHECK_NET_CLIENT) || (CHECK_NET_SERVER))
@@ -2089,7 +1958,7 @@ void DrawFireAnts(void)
       RenderBullets(fire_cluster[index]);
     }
 
-  }  // end of the if
+  }
   else
   {
     for (index = 1; index < MAX_FIRE_ANTS; index++)
@@ -2098,14 +1967,12 @@ void DrawFireAnts(void)
       RenderBullets(fire_cluster[index]);
     }
 
-  }  // end of if
+  }
 }
 
 // INTERFACE END ==========================================
 
-//
 // draw fire ant
-//
 static void draw_fireant(void)
 {
   float v[3][3] = {0};
@@ -2170,7 +2037,6 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  // END OF SECTION --
 
   // build a floor on the bottom of the ship
   // (left-side)
@@ -2213,7 +2079,6 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // BACK WALL
   v[0][0] = -size;
   v[0][1] = 0.0f;
@@ -2294,8 +2159,6 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
-  //
 
   // (left-side)
   v[0][0] = f_size;
@@ -2337,9 +2200,7 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // NOW, build the top part of the ship
-  //
 
   // back
   v[0][0] = -size;
@@ -2381,9 +2242,7 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // On the right
-  //
   v[0][0] = -size;
   v[0][1] = height_2;
   v[0][2] = size;
@@ -2403,7 +2262,6 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // On the right
 
   v[0][0] = size;
@@ -2425,9 +2283,7 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // Place in the front
-  //
   v[0][0] = -f_size;
   v[0][1] = height_2;
   v[0][2] = -size;
@@ -2447,9 +2303,7 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  //
   // On the left
-  //
   v[0][0] = -f_size;
   v[0][1] = height;
   v[0][2] = in_size;
@@ -2471,7 +2325,6 @@ static void draw_fireant(void)
 
   // This is where I get weird
   // semi-anime inspired
-  //
   v[0][0] = -f_size;
   v[0][1] = height_2;
   v[0][2] = -in_size;
@@ -2534,11 +2387,9 @@ static void draw_fireant(void)
   glEnd();
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_fireant(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -2547,11 +2398,9 @@ static void init_fireant(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_fireant(void)
 {
   // glPushMatrix();
@@ -2561,9 +2410,7 @@ static void render_fireant(void)
   // glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_fireant(void)
 {
   int id;

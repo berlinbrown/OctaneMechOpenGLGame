@@ -32,31 +32,21 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // collision.cpp
-//
 // - test a collision against any object
-//
-//
-//
 // At present, everything is based on
 // ray and line intersection
-//
 // For example, once a bullet is fired
 // it generates a ray, and the ray is tested
 // against the lines that make up the wall
-//
 // A moving object for example one of the
 // ships has a
-//
 // There may several different functions
 // to check for collisions
-//
 // There may also be several different
 // ways to insert a segment to perform
 // a collision against
 //		- Berlin Brown
-//
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -73,17 +63,14 @@ static bool CheckLineHit(CollisionPtr ptr, float x_1, float y_1, float x_2, floa
 
 static void Intersect_Lines(float x0, float y0, float x1, float y1, float x2, float y2, float x3,
                             float y3, float* xi, float* yi);
-//
 // insert
 static void InsertFront(CollisionList* list, CollisionObj* col_obj);
 
-//
 // We have a little problem
 // since we doing a lot of line collision algorithms
 // we need to find the closest collision
 // by using a stack and then finding the
 // shortest distance on the stack
-//
 // allocate an array of ptrs
 static CollisionPtr dist_stack[MAX_DIST_STACK];
 static int dist_stack_ctr = 0;
@@ -99,27 +86,20 @@ static float mCol_x = 0, mCol_y = 0;
 #define BOT_LIST moving_list
 
 // main list for collision objects
-//
 CollisionList* collision_list;
 
-//
 // another list for moving objects
-//
 CollisionList* moving_list;
 
 // Note: insert and delete are the two most dangerous
 // functions
 
-//
 // similar to plist.cpp, except uses CollisionObj
-//
 
-//
 // Reset_DistStack(void)
-static void Reset_DistStack(void) { dist_stack_ctr = 0; }  // end of the function
+static void Reset_DistStack(void) { dist_stack_ctr = 0; }
 
 // Insert_DistStack
-//
 static void Insert_DistStack(CollisionPtr ptr)
 {
   dist_stack[dist_stack_ctr] = ptr;
@@ -128,11 +108,9 @@ static void Insert_DistStack(CollisionPtr ptr)
   dist_stack_ctr++;
 }
 
-//
 // Find_DistStack
 // - find the shortest from the given
 // point
-//
 static CollisionPtr Find_DistStack(float x, float y)
 {
   float min = 10000;
@@ -164,16 +142,14 @@ static CollisionPtr Find_DistStack(float x, float y)
       min_id = i;
 
       dist_stack[min_id]->dist = res;
-    }  // end of the if
+    }
   }
 
   return dist_stack[min_id];
 
-}  // end of the function
+}
 
-//
 // IsEmpty
-//
 int IsEmpty(CollisionList* list)
 {
   if (list->front == NULL)
@@ -181,11 +157,9 @@ int IsEmpty(CollisionList* list)
   else
     return 0;
 
-} /* end of the fcuntion */
+}
 
-//
 // Create CollisionList
-//
 CollisionList* CreateCollisionList(void)
 {
   CollisionList* result = (CollisionList*)malloc(sizeof(CollisionList));
@@ -196,9 +170,7 @@ CollisionList* CreateCollisionList(void)
   return result;
 }
 
-//
 // DestroyColList
-//
 void DestroyColList(CollisionList* list)
 {
   CollisionObj *pos, *next;
@@ -213,15 +185,13 @@ void DestroyColList(CollisionList* list)
 
     pos = next;
 
-  }  // end of the while
+  }
 
   RELEASE_OBJECT(list);
 }
 
-//
 // Insert Front
 // - we will assume that you are created the object
-//
 void InsertColFront(CollisionList* list, CollisionObj* col_obj)
 {
   CollisionObj* new_node = NULL;
@@ -242,7 +212,6 @@ void InsertColFront(CollisionList* list, CollisionObj* col_obj)
   list->objects++;
 }
 
-//
 // void InsertCol
 // - normal setup function
 void SetupInsert(CollisionObj** ptr)
@@ -254,12 +223,9 @@ void SetupInsert(CollisionObj** ptr)
   InsertColFront(collision_list, *ptr);
 }
 
-//
 // Note: use this with the moving collision
 // objects list
-//
 // Setup_Moving
-//
 void Setup_Moving(CollisionObj** ptr)
 {
   (*ptr) = CreateCollisionObj();
@@ -269,9 +235,7 @@ void Setup_Moving(CollisionObj** ptr)
   InsertColFront(BOT_LIST, *ptr);
 }
 
-//
 // Insert_MovingObj
-//
 void Insert_MovingObj(DriverBotPtr bot)
 {
   // set up the struct
@@ -284,12 +248,9 @@ void Insert_MovingObj(DriverBotPtr bot)
   ptr->bot_ptr = bot;
 }
 
-//
 // Next Library function
-//
 //  Check_MovingHit
 // - check a moving object against a bullet
-//
 bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
 {
   float orig[2];
@@ -322,7 +283,6 @@ bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
   if (ptr->bot_ptr->alive == DEAD_STATE) return false;
 
   // perform two different tests
-  //
   for (i = 0; i < 2; i++)
   {
     switch (ptr->movement_type)
@@ -351,7 +311,7 @@ bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
           d[0] = ptr->bot_ptr->x + ptr->bot_ptr->x_max;
           d[1] = ptr->bot_ptr->y + ptr->bot_ptr->y_max;
 
-        }  // end of the if
+        }
 
         ptr->pos_0[0] = o[0];
         ptr->pos_0[1] = o[1];
@@ -370,7 +330,7 @@ bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
 
           return true;
 
-        }  // end of the if
+        }
 
         break;
 
@@ -378,15 +338,13 @@ bool Check_MovingHit(CollisionPtr ptr, StaticBotPtr boid)
         break;
     };
 
-  }  // end of the for
+  }
 
   return false;
 }
 
-//
 // CheckCollisionMoving
 // - check for bullets versus moving ships
-//
 CollisionPtr CheckCollisionMoving(StaticBotPtr test_obj)
 {
   CollisionObj* current_ptr;
@@ -403,24 +361,20 @@ CollisionPtr CheckCollisionMoving(StaticBotPtr test_obj)
     {
       return current_ptr;
 
-    }  // end of the if
+    }
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 
   return NULL;
 }
 
-//
 // Insert a Line segment
-//
 // we are working in 2d space pretty much
 // A line segment can be a wall and this
 // function converts that wall into a plane
-//
 // you need to provide the normal
-//
 void InsertColSegment(float x_1, float y_1, float x_2, float y_2)
 {
   // set up the struct
@@ -438,10 +392,8 @@ void InsertColSegment(float x_1, float y_1, float x_2, float y_2)
   ptr->movement_type = PLANE_COL_TYPE;  // does not move
 }
 
-//
 // Test for intersection of the line
 // assuming they intersect
-//
 void Intersect_Lines(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3,
                      float* xi, float* yi)
 {
@@ -479,9 +431,7 @@ void Intersect_Lines(float x0, float y0, float x1, float y1, float x2, float y2,
 
 }  // end Intersect_Lines
 
-//
 // Check for Clock direction
-//
 int CheckClockDir(float pt1[2], float pt2[2], float pt3[2])
 {
   float test = 0;
@@ -507,9 +457,7 @@ int CheckClockDir(float pt1[2], float pt2[2], float pt3[2])
   return -99;
 }
 
-//
 // CheckLineHit
-//
 bool CheckLineHit(CollisionPtr ptr, float x_1, float y_1, float x_2, float y_2)
 {
   int test1_a, test1_b, test2_a, test2_b;
@@ -549,23 +497,19 @@ bool CheckLineHit(CollisionPtr ptr, float x_1, float y_1, float x_2, float y_2)
     if (test2_a != test2_b)
     {
       return true;
-    }  // end of the if
+    }
 
-  }  // end of the if
+  }
 
   return false;
 }
 
-//
 // CheckHitBot
 // - check for a collision with a wall and a bot
-//
 // we assume that the type is a moving bot
-//
 // with this function, we are testing
 // two lines, the lines are a cross over the
 // the bot
-//
 bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
 {
   float orig[2];
@@ -597,7 +541,7 @@ bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
       dest[0] = bot->x + bot->x_max;
       dest[1] = bot->y + bot->y_min;
 
-    }  // end of the if
+    }
 
     switch (ptr->movement_type)
     {
@@ -607,7 +551,7 @@ bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
         {
           return true;
 
-        }  // end of the if
+        }
 
         break;
 
@@ -615,14 +559,12 @@ bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
         break;
     };
 
-  }  // end of the for
+  }
 
   return false;
 }
 
-//
 // CheckHitLines
-//
 bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
 {
   StaticBotPtr static_ptr = NULL;
@@ -649,7 +591,7 @@ bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
 
     owner = static_ptr->owner;
 
-  }  // end of the if
+  }
 
   switch (ptr->movement_type)
   {
@@ -658,7 +600,6 @@ bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
       if (CheckLineHit(ptr, orig[0], orig[1], dest[0], dest[1]))
       {
         // find the point of intersection
-        //
         Intersect_Lines(ptr->pos_0[0], ptr->pos_0[1], ptr->pos_1[0], ptr->pos_1[1], orig[0],
                         orig[1], dest[0], dest[1], &res_x, &res_y);
 
@@ -667,7 +608,7 @@ bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
 
         return true;
 
-      }  // end of the if
+      }
 
       break;
 
@@ -678,14 +619,11 @@ bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
   return false;
 }
 
-//
 // CheckCollisionList
 // - the meat and potatoes of the function
 // - check for a collision with our list
-//
 // returns: NULL means no collision
 // - cpu intensive function
-//
 CollisionPtr CheckCollisionList(void* test_obj, int type)
 {
   CollisionObj* current_ptr;
@@ -707,11 +645,11 @@ CollisionPtr CheckCollisionList(void* test_obj, int type)
       // we have a hit, abandon ship
       Insert_DistStack(current_ptr);
 
-    }  // end of the if
+    }
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 
   // NULL means no collision
   if (dist_stack_ctr == 0) return NULL;
@@ -725,19 +663,15 @@ CollisionPtr CheckCollisionList(void* test_obj, int type)
     x = static_ptr->virt_x;
     y = static_ptr->virt_y;
 
-  }  // end of the if
+  }
 
   current_ptr = Find_DistStack(x, y);
 
   return current_ptr;
 }
 
-//
-//**
 // Next Collision Test
 // for bot with walls
-//**
-//
 bool CheckCollisionBot(DriverBotPtr test_obj)
 {
   CollisionObj* current_ptr;
@@ -754,18 +688,16 @@ bool CheckCollisionBot(DriverBotPtr test_obj)
     {
       return true;
 
-    }  // end of the if
+    }
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 
   return false;
 }
 
-//
 // Remove Front
-//
 void RemoveFront(CollisionList* list)
 {
   CollisionObj* temp_ptr = NULL;
@@ -786,12 +718,10 @@ void RemoveFront(CollisionList* list)
 
     list->objects--;
 
-  }  // end of the if-else
+  }
 }
 
-//
 // PrintList
-//
 void PrintCollisionList(CollisionList* list)
 {
   CollisionObj* current_ptr;
@@ -811,12 +741,10 @@ void PrintCollisionList(CollisionList* list)
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 }
 
-//
 // CreateCollisionObj
-//
 CollisionPtr CreateCollisionObj(void)
 {
   CollisionPtr ptr = NULL;
@@ -833,14 +761,10 @@ CollisionPtr CreateCollisionObj(void)
   return ptr;
 }
 
-//
 // DeleteCollisionObj
-//
 void DeleteCollisionObj(CollisionObj* ptr) { RELEASE_OBJECT(ptr); }
 
-//
 // WRAPPER FUNCTIONS
-//
 void Create_Col_List(void)
 {
   collision_list = CreateCollisionList();
@@ -849,9 +773,7 @@ void Create_Col_List(void)
   moving_list = CreateCollisionList();
 }  // end
 
-//
 // Delelet Col List
-//
 void Delete_Col_List(void)
 {
   DestroyColList(collision_list);
@@ -859,7 +781,5 @@ void Delete_Col_List(void)
   DestroyColList(moving_list);
 }
 
-//
 // Print_Col_List
-//
 void Print_Col_List(void) { PrintCollisionList(collision_list); }

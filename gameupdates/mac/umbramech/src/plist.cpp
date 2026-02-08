@@ -32,15 +32,13 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // similar to plist.cpp, except uses
-//
 // Note: the direction, trail stack is defined in bot.cpp
 
 #include <stdio.h>
 #include <stdlib.h>
 
-static int isempty(PtrList* list)
+int isempty(PtrList* list)
 {
   if (list->head == NULL)
     return 1; /* first pointer null, list is empty */
@@ -48,9 +46,7 @@ static int isempty(PtrList* list)
     return 0;
 }
 
-//
 // CreatePtrNode
-//
 PtrNode* CreatePtrNode(void* data)
 {
   PtrNode* h = (PtrNode*)malloc(sizeof(PtrNode));
@@ -61,14 +57,10 @@ PtrNode* CreatePtrNode(void* data)
   return h;
 }
 
-//
 // DestroyPtrNode
-//
-void DestroyPtrNode(PtrNode* node) { free(node); }  // end of the function
+void DestroyPtrNode(PtrNode* node) { free(node); }
 
-//
 // Create PtrList
-//
 PtrList* CreatePtrList()
 {
   PtrList* result = (PtrList*)malloc(sizeof(PtrList));
@@ -79,9 +71,7 @@ PtrList* CreatePtrList()
   return result;
 }
 
-//
 // DestroyPtrList
-//
 void DestroyPtrList(PtrList* list)
 {
   PtrNode *pos, *next;
@@ -94,14 +84,12 @@ void DestroyPtrList(PtrList* list)
     free(pos);
 
     pos = next;
-  }  // end of the while
+  }
 
   free(list);
 }
 
-//
 // Delete Ptr
-//
 void DeletePtrNode(PtrList* list, void* val)
 {
   PtrNode* current = list->head;
@@ -120,19 +108,18 @@ void DeletePtrNode(PtrList* list, void* val)
       {
         previous->next = current->next;
 
-      }  // end of the if
+      }
 
       list->items--;
 
       free(current);
       break;
 
-    }  // end of the if - else
+    }
 
-  }  // end of the while
+  }
 }
 
-//
 // Insert Front
 void InsertFront(PtrList* list, void* data)
 {
@@ -154,10 +141,8 @@ void InsertFront(PtrList* list, void* data)
   list->items++;
 }
 
-//
 // Remove Front
-//
-static void* RemoveFront(PtrList* list)
+void* RemoveFront(PtrList* list)
 {
   PtrNode* temp_ptr = NULL;
   void* res = NULL;
@@ -179,14 +164,12 @@ static void* RemoveFront(PtrList* list)
 
     return res;
 
-  }  // end of the if-else
+  }
 
   return NULL;  // we should never get here
 }
 
-//
 // PrintTest
-//
 void PrintPtrList(PtrList* list)
 {
   PtrNode* current_ptr;
@@ -203,12 +186,10 @@ void PrintPtrList(PtrList* list)
 
     printf("<%d>\n", *x);
     current_ptr = current_ptr->next;
-  }  // end of while
+  }
 }
 
-//
 // PrintList
-//
 void PrintPtrListf(PtrList* list)
 {
   PtrNode* current_ptr;
@@ -225,12 +206,10 @@ void PrintPtrListf(PtrList* list)
 
     printf("<%0.2f>\n", *x);
     current_ptr = current_ptr->next;
-  }  // end of while
+  }
 }
 
-//
 // PtrListTest
-//
 void PtrLinkTest(void)
 {
   PtrList* list;

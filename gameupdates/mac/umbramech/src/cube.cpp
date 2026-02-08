@@ -32,12 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
-//
 // cube.cpp
-//
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -60,11 +57,9 @@ DriverObjects colorcube = {
     0             // loaded by INIT
 };
 
-//
 // init cube
 // - load anything special about the cube
 // one important function
-//
 static void init_cube(int list_id)
 {
   CURRENT_OBJECT.visible = 0;
@@ -73,13 +68,11 @@ static void init_cube(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // draw cube with normals turned on
 // Note: have to use triangles, (dope!)
 // - also no particular order when drawing triangles
-//=========================================================
 static void drawcube(void)
 {
   float v[3][3] = {0};
@@ -128,7 +121,6 @@ static void drawcube(void)
   glVertex3fv(v[2]);  // triangle left bottom front
 
   // Draw the back triangle
-  //-----------------------------
   v[0][0] = -size;
   v[0][1] = 0.0f;
   v[0][2] = -size;
@@ -319,9 +311,7 @@ static void drawcube(void)
   glEnd();
 }
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void rendercube(void)
 {
   static float x = 0.0f;
@@ -334,12 +324,10 @@ static void rendercube(void)
     glCallList(colorcube.call_id);
     x += 2.1f;
     glPopMatrix();
-  }  // end of the if
+  }
 }
 
-//=========================================================
 // compile cube
-//=========================================================
 static void compilecube(void)
 {
   int cube_id;

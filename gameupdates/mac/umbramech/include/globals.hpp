@@ -32,8 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // global.h
+
+#pragma once
 
 #define LOADED_TRUE 1
 #define LOADED_FALSE 0
@@ -49,7 +50,6 @@
 #define HUD_SCORE 1
 #define HUD_POS 0
 
-//
 // the number of scores to display
 // if we have 100 scores it wouldnt
 // make much since to display all of them
@@ -57,9 +57,7 @@
 
 #define MAX_ERRORS 33
 
-//
 // config variables --
-//
 #define LINE_OF_SIGHT ant_globals->line_of_sight
 #define ATTACK_RADIUS ant_globals->attack_radius
 #define BULLET_DAMAGE ant_globals->bullet_damage
@@ -94,11 +92,9 @@
 #define FOOD_RATE ant_globals->food_rate
 #define MAX_SAVED_BOTS ant_globals->saved_bots
 
-//
 // Use this for the number of network bots on the field
 #define MAX_NETWORK_BOTS ant_globals->network_bots
 
-//
 // Network globals ----
 #define _NETWORK_STATE_ ant_globals->network_mode
 #define _NETWORK_OFF_ 1
@@ -112,7 +108,6 @@
 #define SET_NET_SERVER _NETWORK_STATE_ = _NETWORK_SERVER_
 #define SET_NET_OFF _NETWORK_STATE_ = _NETWORK_OFF_
 
-//
 // config defines
 // keep a track of everything
 // then write to file
@@ -167,19 +162,18 @@
 #define _TEXT_START_ 24
 #define _TEXT_SHUTDOWN_ 25
 
-//
 // a score container
-//
-typedef struct tagScoreObj
+class ScoreObj
 {
+ public:
   int name;
   int kills;
   float score;
-} ScoreObj;
+};
 
-//
-typedef struct tagAntGlobals
+class AntGlobals
 {
+ public:
   int alive_ants;
   float seconds;
   float time_t;
@@ -198,12 +192,11 @@ typedef struct tagAntGlobals
 
   int network_mode;
 
-  //
   // variables for
   // the scores
   // - we need to allocate
   // a new array however
-  struct tagScoreObj* score_obj;
+  ScoreObj* score_obj;
 
   // config file variables
   float line_of_sight;
@@ -239,11 +232,11 @@ typedef struct tagAntGlobals
   float move_food_rate;
   float food_rate;
 
-} AntGlobals, *AntGlobalsPtr;
+};
 
-//
+using AntGlobalsPtr = AntGlobals*;
+
 // Text Library
-//
 void Super_MainText(void);
 void Super_DrawText(void);
 void Super_KillText(void);
@@ -251,9 +244,7 @@ void Super_KillText(void);
 void Super_BeginPaused(void);
 void Draw_HelpScreen(void);
 void Draw_IntroScreen(void);
-//
 // User super_printf for debug code
-//
 void Super_Printf(char* fmt, ...);
 void Print_Score(void);
 

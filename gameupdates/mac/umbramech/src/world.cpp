@@ -32,11 +32,9 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // world.cpp
 // the environment
 // in which the bots live
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -54,22 +52,18 @@ static void render_ant(void);
 static void draw_ant(void);
 
 // Walls needs a reference from
-//
 static void init_walls(int list_id);
 static void compile_walls(void);
 static void draw_walls(void);
 static void render_walls(void);
 
-//
 // something simple for once
 // because we only need one world?
 DriverWorldPtr world_ptr;
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_walls,     // init, must be called first
     compile_walls,  // compile
@@ -78,9 +72,7 @@ DriverObjects CURRENT_OBJECT = {
     0               // loaded by INIT
 };
 
-//
 // InitWorld
-//
 DriverWorldPtr InitWorld(void)
 {
   DriverWorldPtr world;
@@ -104,30 +96,23 @@ DriverWorldPtr InitWorld(void)
   return world;
 }
 
-//
 // DestroyWorld
-//
 void DestroyWorld(DriverWorldPtr world)
 {
   // free((DriverWorldPtr)world);
   RELEASE_OBJECT(world);
 }
 
-//
 // wrapper functions(kind of hidden isnt it)
 void CreateWorld(void) { world_ptr = InitWorld(); }
 
-void ShutdownWorld(void) {}  // end of if
+void ShutdownWorld(void) {}
 
-//=========================================================
-//=========================================================
 static void draw_walls(void) {}
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_walls(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -137,9 +122,7 @@ static void init_walls(int list_id)
   CURRENT_OBJECT.call_id = list_id;
 }
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_walls(void)
 {
   glPushMatrix();
@@ -149,9 +132,7 @@ static void render_walls(void)
   glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_walls(void)
 {
   int id;
