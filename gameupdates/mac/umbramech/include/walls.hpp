@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // walls.h
-//
 #pragma once
 
 #define WALL_HEIGHT 12.0f

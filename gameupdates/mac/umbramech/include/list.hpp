@@ -32,20 +32,21 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // list.h
 #pragma once
 
-typedef struct tagNode
+class Node
 {
+ public:
   int data;
 
-  struct tagNode* next;
-} Node;
+  Node* next;
+};
 
-typedef struct tagList
+class List
 {
+ public:
   Node* head;
-} List;
+};
 
 void LinkTest(void);

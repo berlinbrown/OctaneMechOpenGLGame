@@ -32,10 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // lights.cpp
-//
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -54,11 +51,9 @@ static GLfloat low_shininess[] = {5.0f};
 static GLfloat high_shininess[] = {100.0f};
 static GLfloat mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
-static struct tagDriverLights* light_ptrs[MAX_LIGHTS] = {NULL};
+static DriverLights* light_ptrs[MAX_LIGHTS] = {NULL};
 
-//
 // Materials
-//
 void setmaterial(float amb[], float diff[], float spec[], float shine[], float emiss[])
 {
   glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
@@ -68,26 +63,22 @@ void setmaterial(float amb[], float diff[], float spec[], float shine[], float e
   glMaterialfv(GL_FRONT, GL_EMISSION, emiss);
 }
 
-//
 // Material
-//
 void InitMaterial(void)
 {
   // Change the main properities for all objects
   setmaterial(no_mat, mat_diffuse, mat_specular, low_shininess, no_mat);
 }
 
-//
 // CreateBot
 // - allocate memory for bot
-//
-struct tagDriverLights* CreateLight(int id)
+DriverLights* CreateLight(int id)
 {
-  struct tagDriverLights* light;
+  DriverLights* light;
 
-  light = malloc(sizeof(struct tagDriverLights));
+  light = (DriverLights*)malloc(sizeof(DriverLights));
 
-  ZeroMemory((struct tagDriverLights*)light, sizeof(struct tagDriverLights));
+  ZeroMemory((DriverLights*)light, sizeof(DriverLights));
 
   light->index_id = id;
   light->light_id = GL_LIGHT0 + id;
@@ -102,19 +93,15 @@ struct tagDriverLights* CreateLight(int id)
   return light;
 }
 
-//
 // DestroyLight
-//
 void DestroyLight(DriverLightsPtr b)
 {
   // free(b);
   RELEASE_OBJECT(b);
 
-}  // end of the function
+}
 
-//
 // RenderWirebox
-//
 void RenderWirebox(DriverLightsPtr b)
 {
   BEGIN_BOT;
@@ -127,13 +114,10 @@ void RenderWirebox(DriverLightsPtr b)
   END_BOT;
 }
 
-//
 // SetLight
-//
 void set_Light(DriverLightsPtr bulb)
 {
   // Now Prepare for opengl drawing
-  //....................................
 
   // Enablelighting
   glEnable(GL_LIGHTING);
@@ -152,16 +136,14 @@ void set_Light(DriverLightsPtr bulb)
 
     glEnable(GL_LIGHTING);
 
-  }  // end of the if
+  }
   else
   {
     glDisable(bulb->light_id);
-  }  // end of if-else
+  }
 }
 
-//
 // GenerateBots
-//
 void GenerateLights(void)
 {
   int index = 0;
@@ -170,7 +152,7 @@ void GenerateLights(void)
   {
     light_ptrs[index] = CreateLight(index);
 
-  }  // END of the for
+  }
 
   // for now only set the first one
   light_ptrs[0]->state = ALIVE_STATE;
@@ -182,9 +164,7 @@ void GenerateLights(void)
   light_ptrs[1]->position[2] = 12.0f;
 }
 
-//
 // ShutdownBots
-//
 void ShutdownLights(void)
 {
   int index = 0;
@@ -192,11 +172,9 @@ void ShutdownLights(void)
   for (index = 0; index < MAX_LIGHTS; index++)
   {
     DestroyLight(light_ptrs[index]);
-  }  // end of the for
+  }
 }
-//
 // Set
-//
 void SetLights(void)
 {
   int index = 0;
@@ -205,5 +183,5 @@ void SetLights(void)
   {
     set_Light(light_ptrs[index]);
 
-  }  // end of the for
+  }
 }

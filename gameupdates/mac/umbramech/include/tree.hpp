@@ -32,28 +32,26 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // tree.h
-//
 
 #pragma once
 
 // class for binary tree
 
-typedef struct tagTreeNode
+class TreeNode
 {
+ public:
   int data;
 
-  struct tagTreeNode* left;
-  struct tagTreeNode* right;
+  TreeNode* left;
+  TreeNode* right;
+};
 
-} TreeNode;
-
-typedef struct tagTree
+class Tree
 {
+ public:
   TreeNode* root;
-
-} Tree;
+};
 
 void TreeTest(void);
 void TreeFuncTest(void);

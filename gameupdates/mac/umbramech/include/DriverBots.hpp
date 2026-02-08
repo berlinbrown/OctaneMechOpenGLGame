@@ -31,9 +31,9 @@
 #pragma once
 
 // static bot
-//
-typedef struct tagStaticBot
+class StaticBot
 {
+ public:
   int list_id;
   float position[3];
   float rotation[3];
@@ -48,16 +48,12 @@ typedef struct tagStaticBot
   float heading;  // you can use rotation or heading
   float linearv;
 
-  //
   // for the collision
-  //
   float travel;  // distance traveled
   float final_x;
   float final_y;
   float max_dist;
 
-  //
-  //
   float old_x;
   float old_y;  // for drawing a line strip
 
@@ -67,13 +63,15 @@ typedef struct tagStaticBot
   float virt_heading;
   int owner;  // owner of this bullet
 
-  struct tagStaticBot* next;
+  StaticBot* next;
+};
 
-} StaticBot, *StaticBotPtr;
+using StaticBotPtr = StaticBot*;
 
 // functions for static bot
-typedef struct tagDriverSentinel
+class DriverSentinel
 {
+ public:
   StaticBotPtr (*create)(int bot_id);
   void (*destroy)(StaticBotPtr b);
   void (*render)(StaticBotPtr boid);
@@ -86,12 +84,12 @@ typedef struct tagDriverSentinel
   StaticBot** objects;
 
   int max_items;
+};
 
-} DriverSentinel, *DriverSentinelPtr;
+using DriverSentinelPtr = DriverSentinel*;
 
-typedef struct tagDriverBots
-{
-} DriverBots, *DriverBotPtr;
+class DriverBots;
+using DriverBotPtr = DriverBots*;
 
 /**
  * @class DriverBots
@@ -121,7 +119,16 @@ class DriverBots
 
   void PositionBot();
 
- private:
+  void moveFireAnt();
+  bool SearchEvent(DriverBotPtr bot);
+  void FindCameraPos(DriverBotPtr bot);
+  void GenerateMove(DriverBotPtr bot, int next_state);
+  void GenerateBoxMove(DriverBotPtr bot, int next_state);
+  void assaultMove(DriverBotPtr bot, int next_state);
+  void generateTurn(DriverBotPtr bot);
+  void Reach_Target(DriverBotPtr bot);
+
+ public:
   float x;
   float y;
   float linearv;     // speed
@@ -159,7 +166,6 @@ class DriverBots
   float score;
   int kills;
 
-  //
   // the rectangle of the bot
   // Note: you have to add
   // the x,y to this value, but dont
@@ -169,9 +175,7 @@ class DriverBots
   float y_min;
   float y_max;
 
-  //
   // crosshair object
-  //
   int crosshair_state;
   float crosshair_scale;
 
@@ -180,7 +184,7 @@ class DriverBots
   StaticBot* bullets;
 
   // Command interface
-  void (*run)(struct tagDriverBots* bot);
+  void (*run)(DriverBots* bot);
 
   int last_command;
   int command;

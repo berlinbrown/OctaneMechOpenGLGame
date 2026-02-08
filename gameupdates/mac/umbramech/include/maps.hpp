@@ -32,23 +32,22 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // maps.h
 // - see maps.cpp
-//
 
 #pragma once
 
-#define MAX_MAPS 120;
+#define MAX_MAPS 120
 
-#define MAP_WIDTH 7.2f;
-#define MAP_HEIGHT 7.2f;
+#define MAP_WIDTH 7.2f
+#define MAP_HEIGHT 7.2f
 
-#define MAP_MIN -30.0f;
-#define MAP_MAX 30.0f;
+#define MAP_MIN -30.0f
+#define MAP_MAX 30.0f
 
-typedef struct tagMap
+class Map
 {
+ public:
   int id;
 
   float x_min;
@@ -57,8 +56,7 @@ typedef struct tagMap
   float y_max;
 
   PtrList* list;
-
-} Map;
+};
 
 void BuildMap(void);
 

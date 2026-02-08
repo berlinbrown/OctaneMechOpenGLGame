@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // list.cpp
-//
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,9 +44,7 @@ static int isempty(List* list)
     return 0;
 }
 
-//
 // CreateNode
-//
 Node* CreateNode(int data)
 {
   Node* h = (Node*)malloc(sizeof(Node));
@@ -59,14 +55,10 @@ Node* CreateNode(int data)
   return h;
 }
 
-//
 // DestroyNode
-//
-void DestroyNode(Node* node) { RELEASE_OBJECT(node); }  // end of the function
+void DestroyNode(Node* node) { RELEASE_OBJECT(node); }
 
-//
 // Create List
-//
 List* CreateList()
 {
   List* result = (List*)malloc(sizeof(List));
@@ -94,20 +86,18 @@ void DeleteNode(List* list, int val)
       {
         previous->next = current->next;
 
-      }  // end of the if
+      }
 
       // free(current);
       RELEASE_OBJECT(current);
       break;
 
-    }  // end of the if - else
+    }
 
-  }  // end of the while
+  }
 }
 
-//
 // DestroyList
-//
 void DestroyList(List* list)
 {
   Node *pos, *next;
@@ -120,12 +110,11 @@ void DestroyList(List* list)
     RELEASE_OBJECT(pos);
 
     pos = next;
-  }  // end of the while
+  }
 
   free(list);
 }
 
-//
 // Insert Front
 static void InsertFront(List* list, int data)
 {
@@ -145,9 +134,7 @@ static void InsertFront(List* list, int data)
   }  // end if
 }
 
-//
 // PrintTest
-//
 void PrintList(List* list)
 {
   Node* current_ptr;
@@ -160,12 +147,10 @@ void PrintList(List* list)
   {
     printf("<%d>\n", current_ptr->data);
     current_ptr = current_ptr->next;
-  }  // end of while
+  }
 }
 
-//
 // ListTest
-//
 void LinkTest(void)
 {
   List* list;

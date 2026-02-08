@@ -32,14 +32,11 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
 // glDrawLib.cpp
-//
 // a couple of drawing routines
 // opengl library
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -95,9 +92,7 @@ void Calc_Normal(float v[3][3], float out[3])
   ReduceToUnit(out);
 }
 
-//
 // Normalize
-//
 void Normalize(float p[3])
 {
   float length;
@@ -118,9 +113,7 @@ void Normalize(float p[3])
   }
 }
 
-//
 // calcnormal
-//
 void CalcNormal(float p[3], float p1[3], float p2[3], float n[3])
 {
   float pa[3];
@@ -141,9 +134,7 @@ void CalcNormal(float p[3], float p1[3], float p2[3], float n[3])
   Normalize(n);
 }
 
-//
 // get clock
-//
 unsigned long getclock(void)
 {
   // this function returns the current tick count
@@ -154,9 +145,7 @@ unsigned long getclock(void)
 
 }  // end Get_Clock
 
-//
 // Draw Objects
-//
 void DrawObjects(void)
 {
   glLoadIdentity();                  // Reset The Current Modelview Matrix
@@ -229,4 +218,4 @@ void DrawObjects(void)
   glVertex3f(1.0f, -1.0f, -1.0f);   // Bottom Right Of The Quad (Right)
   glEnd();                          // Done Drawing The Quad
 
-}  // end of the function
+}

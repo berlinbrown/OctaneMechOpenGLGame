@@ -32,33 +32,30 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // Berlin Brown - berlin _dot_ brown __at __ gmail
-//
 
 #pragma once
 
-#define MAX_ZOOM 45.2f;
+#define MAX_ZOOM 45.2f
 
-#define OFFSET_ROTATION 8.0f;
+#define OFFSET_ROTATION 8.0f
 
-#define PI_1 3.141592654f;
+#define PI_1 3.141592654f
 
-#define PI 3.14159265358f;
-#define PI_180 999999.0f;
+#define PI 3.14159265358f
+#define PI_180 999999.0f
 
 typedef float Vector[3];
 
-#define MAX_CAMERAS 4;
+#define MAX_CAMERAS 4
 
-#define CAMERA_STATIC 0;
-#define CAMERA_WALKING 1;
+#define CAMERA_STATIC 0
+#define CAMERA_WALKING 1
 
-//----------------------------------
 // define a camera struct
-//..................................
-typedef struct tagCamera
+class DriverCamera
 {
+ public:
   float position[3];  // current location
   float angle[3];     // angle camera is pointing
   float rotation[3];  // rotation around the world
@@ -75,8 +72,7 @@ typedef struct tagCamera
 
   int id;    // id number for camera
   int type;  // camera TYPE
-
-} DriverCamera;
+};
 
 void Vector_Normalize(Vector a, Vector res);
 void HandleCameraKeys(bool* keys);
@@ -109,5 +105,8 @@ void SpringDamp(Vector currPos,
 
 extern DriverCamera* driver_camera[MAX_CAMERAS];
 extern int current_camera;
+
+#define CAMERA (driver_camera[current_camera])
+#define SELECT_CAMERA(idx) (current_camera = (idx))
 
 void ToggleViewMode(void);

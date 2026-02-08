@@ -32,14 +32,12 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // globals.cpp
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
-#include <malloc.h>
+#include <cstdlib>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -94,9 +92,7 @@ char error_str[MAX_ERRORS][40] = {"NULL",
                                   "MOVE_FOOD_RATE",
                                   "FOOD_RATE"};
 
-//
 // Config msgs
-//
 #define MAX_TXT_MSGS 40
 char text_msg[MAX_TXT_MSGS][80] = {
     "#\n",
@@ -140,9 +136,185 @@ char text_msg[MAX_TXT_MSGS][80] = {
     "# and get the default once the program runs\n",
     "#\n"};
 
-//
+  static const char kEmbeddedConfig[] = R"CONFIG(#
+  # glAnts - original config.ini
+  # file, change at your own risk
+  #
+  # if you remove this file, the program
+  # will create another one with the defaults
+  # so removing this file can be a good thing
+  #
+  #
+  # Also of note, if the system finds an error
+  # it goes with the default variable
+  #
+  # FORMAT has to be [VARIABLE_NAME]=VALUE;
+  # oh yeah, add the 'f' tag for float
+  #
+  # [VARIABLE_NAME]=VALUEf;
+  #
+  # COMMENTS are '#'
+  #
+  # Remove the comments below are your own risk
+  # they basically just define the default values
+  # used, if you remove them then you wont know
+  # what good values will look like
+  #
+  # The only things that really need changing
+  # are:
+  #
+  # USE_ANT_ENGINE: take out the little ants
+  #
+  # MAX_FIRE_ANTS: max fighter ants
+  #
+  # MAX_BOTS: number of worker ants
+  #
+  # INITIAL_ANT_FOOD: the health of the fighter
+  #                    ants and the workers
+  #                    try 10,000 and they will never die
+  #
+  # Also, you may comment one of the variables
+  # and get the default once the program runs
+  #
+
+  [GLANTS CONFIG]
+  # los default is 14.0
+  [LINE_OF_SIGHT]=125.0f;
+
+  # Used with the ai, it attacks at any point given
+  # this radius
+  # default is 4.0
+  [ATTACK_RADIUS]=4.0f;
+
+  # The amount of damage a bullet will inflict
+  # the damage is reduced considerably
+  # at a greater distance and its impact
+  # is great at short distances
+  # try 5000, hehe
+  # default = 280
+  [BULLET_DAMAGE]=420.0f;
+
+  # defaut is 4.90
+  [MIN_BULLET_SPEED]=7.20f;
+
+  # You can get rid of the worker ant
+  # engine and just shoot stuff
+  [USE_ANT_ENGINE]=0;
+
+  # the number of attack ants
+  # default is 4, but that is on a
+  # slow machine, try 50 for a 1ghz machine
+  [MAX_FIRE_ANTS]=14;
+
+  # number of worker ants, default=120
+  [MAX_BOTS]=1;
+
+  # 0 = place food in random spot
+  # 1 = place food in centralized spots
+  [USE_GARDEN_AREA]=1;
+
+  # the max number of pheromones
+  # an ant can leave
+  # default: 300
+  [MAX_TRAIL_STACK]=300;
+
+  # used with AI, if the ant life reaches
+  # this point, the ai goes berzerk
+  # and he will move a little faster
+  # default: 390
+  [DYING_STATE]=390;
+
+  # the number of pheromones
+  # the ants can leave on the grid
+  # default: 200, make sure not more than
+  # max_trail_stack
+  [MAX_PHEROMONES]=200;
+
+  # default: 1000
+  [PHEROMONE_LIFE]=1000;
+
+  # the time before an ant drops a pheromone
+  # default: 40
+  [PHEROMONE_DROP]=40;
+
+  # the number of bullets
+  # the ai has before recycle
+  # this doesnt effect that much
+  # default: 20
+  [MAX_BULLETS]=20;
+
+  # this is reduce rapid-fire effect
+  # slows down the rate for firing speed
+  # default: 10
+  [MAX_FIRE_SPEED]=10;
+
+  # the amount of food that is on the grid
+  # default: 35
+  [MAX_GARDENS]=35;
+
+  # the bot's speed, need I say more
+  # the fire_ants travel at a little
+  # slower speed
+  # default: 0.09
+  [BOT_SPEED]=2.29f;
+
+  # when the bots accelerate
+  # this the top speed
+  # default: 0.14
+  [BOT_MAX_SPEED]=3.04f;
+
+  # default: 1.1
+  [MIN_TURN_SPEED]=1.5f;
+
+  # default: 600
+  [CHECK_RESPAWN]=600;
+
+  # the max amount of food
+  # that can respawn at
+  # any given point in time
+  # default: 15
+  [GARD_RESPAWN_RATE]=15;
+
+  # default: 60
+  [MIN_STRAIGHT_STEPS]=60;
+
+  # default: 200
+  [MAX_STRAIGHT_STEPS]=200;
+
+  # default: 150
+  [MIN_STRAIGHT_STEPS_2]=150;
+
+  # default: 360
+  [MAX_STRAIGHT_STEPS_2]=360;
+
+  #
+  # this is the amount of food
+  # the ants get as well as the fire_ants
+  # default: 1000
+  [INITIAL_ANT_FOOD]=1000;
+
+  # the amount of food inside
+  # a block of food in the garden
+  # default: 7000
+  [INITIAL_GARD_FOOD]=7000;
+
+  # default: 0.3
+  [FOOD_WIDTH]=0.3f;
+
+  # default: 480
+  [INIT_FOOD_RATE]=480;
+
+  # default: 850
+  [MAX_FOOD_RATE]=850;
+
+  # default: 1.7
+  [MOVE_FOOD_RATE]=1.7f;
+
+  # default: 0.4
+  [FOOD_RATE]=0.4f;
+  )CONFIG";
+
 // intro_str
-//
 char intro_str[] = {
     "glAnts is a mech game.\n"
     "It is loosely based on spectreVR.\n"
@@ -155,9 +327,7 @@ char intro_str[] = {
     "yet another critical update.\n"
     "Software Piracy is \nGood for Microsoft\n\n"};
 
-//
 // text used to fill the network window
-//
 char network_str_[26][80] = {"::Player Name: Player1",      // 0
                              "::IP Address: 127.0.0.1",     // 1
                              "::Send Bots Only: false",     // 2
@@ -226,11 +396,9 @@ static clock_t next_Time = 0;
 // The top, left text contains the score
 // the top, right text contains the fps and any
 //	other system specific data --
-//
 // NOTE: use Super_Printf for debug code
 //		- you also have to call drawText to
 //		  actually render to screen
-//
 
 TextBoxPtr main_text = NULL;
 TextBoxPtr score_text = NULL;
@@ -238,21 +406,17 @@ TextBoxPtr help_text = NULL;
 TextBoxPtr intro_text = NULL;
 TextBoxPtr network_text = NULL;
 
-//
 // Set_TitleScreen
 // - put the state in title screen mode
 // - usaully used by the network interface
-//
 void Mode_TitleScreen(void)
 {
   ant_globals->paused = 1;
   ant_globals->menu_mode = MENU_TITLE_MODE;
 }
 
-//
 // Set into running mode
 // play - game
-//
 void Mode_SetRunning(void)
 {
   ant_globals->paused = 0;
@@ -268,9 +432,7 @@ void Mode_SetRunning(void)
   Reset_NetworkBots();
 }
 
-//
 // Super_MainText
-//
 void Super_MainText(void)
 {
   main_text = InitTextBox(10, 200, 400, 480);
@@ -288,9 +450,7 @@ void Super_MainText(void)
   SetTextMode(help_text, TEXT_NONE);
   SetTextColor(help_text, 255, 255, 255);
 
-  //
   // Build the help text here
-  //
   Printf(help_text, "[ESC] - Main Screen\n\n");
   Printf(help_text, "[P] - Pause\n\n");
   Printf(help_text, "[Q] - Quit\n\n");
@@ -300,24 +460,19 @@ void Super_MainText(void)
   Printf(help_text, "[S,F,R MOUSE] - Adjust View\n");
   Printf(help_text, "[F1] - Full Screen\n\n");
 
-  //
   // Intro text
-  //
   intro_text = InitTextBox(340, 630, 340, 430);
   SetTextMode(intro_text, TEXT_NONE);
   SetTextColor(intro_text, 255, 255, 255);
 
   _tmp_str = intro_str;
 
-  //
   // network_text
-  //
   network_text = InitTextBox(340, 630, 340, 430);
   SetTextMode(network_text, TEXT_NONE);
   SetTextColor(network_text, 255, 255, 255);
 }
 
-//
 // Draw_TString
 void Draw_TString(int x, int y, char* str)
 {
@@ -325,20 +480,17 @@ void Draw_TString(int x, int y, char* str)
   DrawString(network_text, x, y, str);
   TextEnd();
 
-}  // end of the func
+}
 
-//
 // Set_Net_Menu(int
 // - setup the horizontal or vertical positions
 // and draw the text --
-//
 static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
 {
   int i;
   float horz_pos;
   float vert_pos;
 
-  //
   // set the text changes before the code below
 
   switch (h_type)
@@ -395,7 +547,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
         DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 5]);
         TextEnd();
 
-      }  // end of the
+      }
       else
       {
         horz_pos = TEXT_HORZ_START;
@@ -426,7 +578,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
         DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 3]);
         TextEnd();
 
-      }  // end of the if-else
+      }
 
       break;
 
@@ -445,7 +597,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
 
         vert_pos = vert_pos + TEXT_VERT_HEIGHT;
 
-      }  // end of the for
+      }
 
       break;
 
@@ -468,9 +620,7 @@ static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
   };
 }
 
-//
 // Draw_NetworkScreen
-//
 void Draw_NetworkScreen(void)
 {
   const float box_x_min = 50.0f;
@@ -559,11 +709,9 @@ void Draw_NetworkScreen(void)
   // print connections if there are any
   printConnections();
 
-}  // end of the function
+}
 
-//
 // Draw_HelpScreen
-//
 void Draw_IntroScreen(void)
 {
   glDisable(GL_TEXTURE_2D);
@@ -611,14 +759,12 @@ void Draw_IntroScreen(void)
     // update the char
     if (*(++_tmp_str) == '\0') _tmp_str = intro_str;
 
-  }  // end of the if
+  }
 
   DrawText(intro_text);
 }
 
-//
 // Draw_HelpScreen
-//
 void Draw_HelpScreen(void)
 {
   glDisable(GL_TEXTURE_2D);
@@ -654,10 +800,8 @@ void Draw_HelpScreen(void)
   DrawText(help_text);
 }
 
-//
 // Super_Printf
 // - print the debug text screen
-//
 void Super_Printf(char* fmt, ...)
 {
   va_list vlist;
@@ -672,9 +816,7 @@ void Super_Printf(char* fmt, ...)
   va_end(vlist);
 }
 
-//
 // Score
-//
 void Score_Printf(char* fmt, ...)
 {
   va_list vlist;
@@ -689,15 +831,11 @@ void Score_Printf(char* fmt, ...)
   va_end(vlist);
 }
 
-//
 // Super_BeginPaused
 //  - once the game is started, begin in paused mode
-//
-void Super_BeginPaused(void) { ant_globals->paused = 1; }  // end of the fuction
+void Super_BeginPaused(void) { ant_globals->paused = 1; }
 
-//
 // Print_Score
-//
 void Print_Score(void)
 {
   int i = 0;
@@ -715,7 +853,7 @@ void Print_Score(void)
     DrawString(score_text, 10, 4 + (i * 10), buffer);
     TextEnd();
 
-  }  // end of the for
+  }
 
   // Also, print frames per second
   sprintf(buffer, "FPS: %0.2f", framerate);
@@ -756,12 +894,10 @@ void Print_Score(void)
     DrawString(score_text, x + 8, y + 10, buffer);
     TextEnd();
 
-  }  // end of the if
+  }
 }
 
-//
 // Draw Text
-//
 void Super_DrawText(void)
 {
   DrawText(main_text);
@@ -773,9 +909,7 @@ void Super_DrawText(void)
   Print_Score();
 }
 
-//
 // Destroy_MainText(void)
-//
 void Super_KillText(void)
 {
   DestroyTextBox(main_text);
@@ -786,9 +920,7 @@ void Super_KillText(void)
   DestroyTextBox(network_text);
 }
 
-//
 // Super
-//
 void Super_LoadGlobals(void)
 {
   ant_globals = (AntGlobals*)malloc(sizeof(AntGlobals));
@@ -796,9 +928,7 @@ void Super_LoadGlobals(void)
   ZeroMemory((AntGlobals*)ant_globals, sizeof(AntGlobals));
 }
 
-//
 // Super
-//
 void Super_KillGlobals(void)
 {
   // free the other allocated
@@ -811,9 +941,7 @@ void Super_KillGlobals(void)
   RELEASE_OBJECT(ant_globals);
 }
 
-//
 // Init Globals
-//
 void InitGlobals(void)
 {
   ant_globals->alive_ants = MAX_FIRE_ANTS;
@@ -830,15 +958,13 @@ void InitGlobals(void)
 
   SET_NET_OFF;  // turn network interface off
 
-  ant_globals->score_obj = (struct tagScoreObj*)malloc(MAX_FIRE_ANTS * sizeof(struct tagScoreObj));
+  ant_globals->score_obj = (ScoreObj*)malloc(MAX_FIRE_ANTS * sizeof(ScoreObj));
 
   // load with zeros
   ZeroMemory(ant_globals->score_obj, MAX_FIRE_ANTS * sizeof(ScoreObj));
 }
 
-//
 // TogglePaused
-//
 void TogglePaused(void)
 {
   if (ant_globals->paused)
@@ -848,21 +974,17 @@ void TogglePaused(void)
   else
   {
     ant_globals->paused = 1;
-  }  // end of if-else
+  }
 
-}  // end of the ufnctio
+}
 
-//
 // DestroyGlobals
-//
 void DestroyGlobals(void)
 {
   // nada?
 }
 
-//
 // Load_Score
-//
 void Load_Score(float score, float kills, int id, int i)
 {
   ant_globals->score_obj[i].score = score;
@@ -870,75 +992,51 @@ void Load_Score(float score, float kills, int id, int i)
   ant_globals->score_obj[i].name = id;
 }
 
-//
 // SubtractAnts
-//
 void SubtractAnts(int ants)
 {
   if (ant_globals->alive_ants <= 0)
   {
     ant_globals->alive_ants = 0;
     return;
-  }  // end of if
+  }
 
   ant_globals->alive_ants -= ants;
 }
 
-//
 // AddAnts
-//
 void AddAnts(int ants) { ant_globals->alive_ants += ants; }
 
-//
 // GetAnts
-//
-int GetAnts(void) { return ant_globals->alive_ants; }  // end of the function
+int GetAnts(void) { return ant_globals->alive_ants; }
 
-//
 // AddSeconds
-//
 void AddSeconds(float delta) { ant_globals->seconds += delta; }
 
-//
 // Add Time
-//
 // - time to render each frames
-//
 void AddTime(float delta) { ant_globals->time_t = delta; }
 
-//
 // Set GardenSize
-//
-void SetGardenSize(int v) { ant_globals->garden += v; }  // end of func
+void SetGardenSize(int v) { ant_globals->garden += v; }
 
-//
 // GetGarden
-//
-int GetGardenSize(void) { return ant_globals->garden; }  // end of func
+int GetGardenSize(void) { return ant_globals->garden; }
 
-//
 // SetNestfood
-//
-void SetNestFood(float d) { ant_globals->nest_food = d; }  // end of function
+void SetNestFood(float d) { ant_globals->nest_food = d; }
 
-//
 // SetNestfood
-//
-void SetPlayerHealth(float d) { ant_globals->player_health = d; }  // end of function
+void SetPlayerHealth(float d) { ant_globals->player_health = d; }
 
-//
 // AddTick
 // - number of ticks in the game
 void GameTick(void) { ant_globals->ticks += 1; }
 
-//
 // GetGameTick
-//
-DWORD GetGameTick(void) { return ant_globals->ticks; }  // end of the function
+DWORD GetGameTick(void) { return ant_globals->ticks; }
 
-//
 // PrintGlobals
-//
 void PrintGlobals(void)
 {
   int i = 0;
@@ -966,23 +1064,17 @@ void PrintGlobals(void)
   PrintText("LIFE: %0.2f", ant_globals->player_health);
 }
 
-//
 // CONFIG LOADING FUNCTIONS
-//
 
-//
 // SetErrorLog
 // - call before Load configfile
 // or place it in load configfile, whatever
-//
 // hopefully, run-time errors will not occur
-//
 void Set_ErrorLog(void)
 {
   int i;
 
   // false means no error
-  //
   // we will assume that there were errors
   // except for the file open
   for (i = 0; i < MAX_ERRORS; i++) config_errors[i] = true;
@@ -996,10 +1088,8 @@ void Set_ErrorLog(void)
   fclose(f_errorlog);
 }
 
-//
 // Add_ErrorLog
 // - add an entry to the error log
-//
 void Add_ErrorStr(char* str)
 {
   f_errorlog = NULL;
@@ -1010,12 +1100,10 @@ void Add_ErrorStr(char* str)
 
   fclose(f_errorlog);
 
-}  // end of the function
+}
 
-//
 // Add_ErrorLog
 // - add an entry to the error log
-//
 void Add_ErrorLog(const int error_id)
 {
   f_errorlog = NULL;
@@ -1166,11 +1254,9 @@ void Add_ErrorLog(const int error_id)
   fclose(f_errorlog);
 }
 
-//
 // Set_Variable
 // - set one of the variables
 // based on the incoming buffer
-//
 void Set_Variable(int id, char* val, int f_flag)
 {
   float f_val = 0;
@@ -1178,7 +1264,6 @@ void Set_Variable(int id, char* val, int f_flag)
 
   if (id < 0) return;  // no negatives
 
-  //
   // also go ahead and set the error
   // should probably set below
   // but that would take more effort
@@ -1424,11 +1509,8 @@ void Set_Variable(int id, char* val, int f_flag)
 }
 
 #define V_TRUE *f_flag = 1
-//
-//
 // Get ConfValue
 // Note: this file allocates memory
-//
 void* Get_ConfValue(int id, int* f_flag)
 {
   float* f_val = NULL;
@@ -1702,12 +1784,9 @@ void* Get_ConfValue(int id, int* f_flag)
   return NULL;
 }
 
-//
-//
 // RESET_VALUE
 // - if the config file is messed up
 // set the appropriate variable
-//
 void Reset_Value(int id)
 {
   if (id < 0) return;  // no negatives
@@ -1880,9 +1959,7 @@ void Reset_Value(int id)
   };
 }
 
-//
 // Process_ConfigFile
-//
 int Process_ConfigFile(char* buffer)
 {
   int i;
@@ -1897,21 +1974,18 @@ int Process_ConfigFile(char* buffer)
     if (res == 0)
     {
       return i;
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   return -1;
 }
 
-//
 // void Read_ConfigFile
 // -
-//
 // if the error tally comes up
 // with any errors it will have
 // to create a default variable, sorry
-//
 void Read_ConfigFile(FILE* f)
 {
   char c;
@@ -1938,7 +2012,7 @@ void Read_ConfigFile(FILE* f)
 
           if (c == '\n') break;
 
-        }  // end of the while
+        }
 
         break;
 
@@ -1959,9 +2033,9 @@ void Read_ConfigFile(FILE* f)
           {
             lines_read++;
             break;
-          }  // end of if
+          }
 
-        }  // end of the while
+        }
 
         // null terminate the command
         buffer[c_index] = '\0';
@@ -1969,7 +2043,6 @@ void Read_ConfigFile(FILE* f)
         res = Process_ConfigFile(buffer);
 
         // now add the variable with the value
-        //
         c = fgetc(f);
 
         // get the equals
@@ -1985,7 +2058,7 @@ void Read_ConfigFile(FILE* f)
           {
             float_flag = 1;
             break;
-          }  // end of the if
+          }
 
           // break on a ';'
           if (c == ';') break;
@@ -1995,7 +2068,7 @@ void Read_ConfigFile(FILE* f)
 
           if (c == '\n') break;
 
-        }  // end of the while
+        }
 
         var[c_index] = '\0';
 
@@ -2010,15 +2083,100 @@ void Read_ConfigFile(FILE* f)
 
     };  // end switch
 
-  }  // end of the while
+  }
 }
 
-//
-//
+static void Read_ConfigBuffer(const char* data)
+{
+  char c;
+
+  char buffer[256];
+  int c_index = 0;
+  int res = 0;
+  char var[80];
+  int float_flag = 0;
+
+  int lines_read = 0;
+  size_t i = 0;
+
+  while ((c = data[i]) != '\0')
+  {
+    i++;
+
+    switch (c)
+    {
+      case '#':
+
+        while (data[i] != '\0' && data[i] != '\n')
+        {
+          i++;
+        }
+
+        break;
+
+      case '[':
+
+        c_index = 0;
+
+        while ((c = data[i]) != '\0')
+        {
+          i++;
+
+          if (c == ']') break;
+
+          buffer[c_index] = c;
+          c_index++;
+
+          if (c == '\n')
+          {
+            lines_read++;
+            break;
+          }
+
+        }
+
+        buffer[c_index] = '\0';
+
+        res = Process_ConfigFile(buffer);
+
+        c_index = 0;
+        float_flag = 0;
+
+        while ((c = data[i]) != '\0')
+        {
+          i++;
+
+          if (c == 'f')
+          {
+            float_flag = 1;
+            break;
+          }
+
+          if (c == ';') break;
+
+          var[c_index] = c;
+          c_index++;
+
+          if (c == '\n') break;
+
+        }
+
+        var[c_index] = '\0';
+
+        Set_Variable(res, var, float_flag);
+
+        break;
+
+      default:
+        break;
+
+    };
+
+  }
+}
+
 // Rewrite File
-//
 // if the file doesnt exist
-//
 void Rewrite_File(void)
 {
   int i = 0;
@@ -2034,7 +2192,7 @@ void Rewrite_File(void)
   for (i = 0; i < MAX_TXT_MSGS; i++)
   {
     fprintf(f_newfile, "%s", text_msg[i]);
-  }  // end of the for
+  }
 
   for (i = 0; i < MAX_ERRORS; i++)
   {
@@ -2057,25 +2215,23 @@ void Rewrite_File(void)
     {
       tmp_i = (int*)tmp;
       fprintf(f_newfile, "%d;\n", *tmp_i);
-    }  // end of if-else
+    }
 
     // free(tmp);
     RELEASE_OBJECT(tmp);
     tmp = NULL;
 
-  }  // end of the for
+  }
 
   fprintf(f_newfile, "\n\n");
 
   fclose(f_newfile);
 }
 
-//
 // Check_Errors
 // - the config file is messed up somehow
 // we need to make sure we have value
 // stored for that variable
-//
 void Check_Errors(void)
 {
   int index = 0;
@@ -2092,50 +2248,17 @@ void Check_Errors(void)
       // now get the variable
       Reset_Value(index);
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 }
 
-//
 // load
-//
 void Load_ConfigFile(void)
 {
   Set_ErrorLog();  // set up the error log
 
-  f_config = fopen(CONFIG_FILE_NAME, "r");
-
-  if (f_config == NULL)
-  {
-    Add_ErrorLog(ID_FILE_NOT_FOUND);
-
-    // create a new file config.ini
-    Rewrite_File();
-
-    // Read_ConfigFile(f_newfile);
-
-    // Note: I left the comment above
-    // because you may need it later
-    // right now, the code writes a file
-    // based on the default values
-    // then closes the new file
-    //
-    // Another approach might be to write
-    // the new file and then reread the new
-    // file and check the variables
-    // it is really a matter of
-    // "if there are bugs then check here"
-    //
-
-    Check_Errors();
-
-    return;
-  }
-
-  Read_ConfigFile(f_config);
-
-  fclose(f_config);
+  Read_ConfigBuffer(kEmbeddedConfig);
 
   Check_Errors();
 }

@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // collision.h
-//
 
 #pragma once
 
@@ -48,42 +46,33 @@
 #define LINE_NO_INTERSECTION 1
 #define LINE_INTERSECTION 2
 
-//
 // max number of line segments for testing
-//
 #define MAX_DIST_STACK 250
 
-//
 // The bullet has to stop somewhere, so
 // create some insane value for the desination
 #define MAX_BULLET_DEST 2000.0f
 
-//
 // collisionobj
 // - for now only handle
 // objects with a width and position
-//
-typedef struct tagCollisionObj
+class CollisionObj
 {
+ public:
   int id;
 
   // used for a line segment
-  //
   float pos_0[2];
   float pos_1[2];
 
-  //
   // collision x,y
   // the predicted positions
   float collision_x;
   float collision_y;
   float dist;  // distance of collision
 
-  //
-  //
   int movement_type;
 
-  //
   // drawing plane object
   float box_x;
   float box_y;
@@ -95,24 +84,22 @@ typedef struct tagCollisionObj
   DriverBotPtr bot_ptr;
 
   // we need to stop using static arrays
-  struct tagCollisionObj* next;
+  CollisionObj* next;
+};
 
-} CollisionObj, *CollisionPtr;
+using CollisionPtr = CollisionObj*;
 
 void Build_DistStack(void);
 
-//
 // CollisionList
-//
-typedef struct tagCollisionList
+class CollisionList
 {
+ public:
   CollisionObj* front;
   int objects;
-} CollisionList;
+};
 
-//
 // Library functions
-//
 CollisionPtr CreateCollisionObj(void);
 void DeleteCollisionObj(CollisionObj* ptr);
 
@@ -121,10 +108,8 @@ void DestroyColList(CollisionList* list);
 void PrintCollisionList(CollisionList* list);
 void InsertColFront(CollisionList* list, CollisionObj* col_obj);
 
-//
 // NOTE: in order to use this collision object
 // only use the following functions
-//
 
 // for outward objects
 void InsertColSegment(float x_1, float y_1, float x_2, float y_2);
@@ -140,8 +125,6 @@ CollisionPtr CheckCollisionList(void* test_obj, int type);
 // another member function for collision test
 bool CheckCollisionBot(DriverBotPtr test_obj);
 
-//
 // For moving objects here is the library
-//
 CollisionPtr CheckCollisionMoving(StaticBotPtr test_obj);
 void Insert_MovingObj(DriverBotPtr bot);

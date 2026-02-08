@@ -31,11 +31,8 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
 // particles.cpp
-//
 // particles or explosion engine
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -47,12 +44,10 @@
 static ParticleList* particle_set[MAX_PARTICLE_SET];
 static int particle_index = 0;
 
-//
 // Create Particle
-//
 ParticleList* CreateParticleList(void)
 {
-  ParticleList* result = malloc(sizeof(ParticleList));
+  ParticleList* result = (ParticleList*)malloc(sizeof(ParticleList));
 
   result->x = 0;
   result->y = 0;
@@ -63,14 +58,10 @@ ParticleList* CreateParticleList(void)
   return result;
 }
 
-//
 // Destroy List
-//
 void DestroyParticleList(ParticleList* list) { RELEASE_OBJECT(list); }
 
-//
 // New_Speed
-//
 static void New_Speed(float d[3], float speed)
 {
   float x, y, z;
@@ -93,10 +84,8 @@ static void New_Speed(float d[3], float speed)
   d[2] = z;
 }
 
-//
 // Set Explosion
 // - just set the position and turn it on
-//
 void Set_Explosion(ParticleList* list, float x, float y)
 {
   int i;
@@ -124,12 +113,10 @@ void Set_Explosion(ParticleList* list, float x, float y)
     // Set the speed
     New_Speed(list->particles[i].p_speed, PARTICLE_SPEED);
 
-  }  // end of the for
+  }
 }
 
-//
 // Draw_Particles
-//
 void Draw_Particles(ParticleList* list)
 {
   int i = 0;
@@ -149,7 +136,7 @@ void Draw_Particles(ParticleList* list)
       glColor3fv(list->particles[i].p_color);
       glVertex3fv(list->particles[i].p_pos);
 
-    }  // end of the for
+    }
 
     glEnd();
 
@@ -157,12 +144,10 @@ void Draw_Particles(ParticleList* list)
 
     glEnable(GL_LIGHTING);
 
-  }  // end of the if
+  }
 }
 
-//
 // Wrapper Functions
-//
 void Build_ParticleSet(void)
 {
   int i;
@@ -170,14 +155,12 @@ void Build_ParticleSet(void)
   for (i = 0; i < MAX_PARTICLE_SET; i++)
   {
     particle_set[i] = CreateParticleList();
-  }  // end of the for
+  }
 
   particle_index = 0;
 }
 
-//
 // Destroy_Particles(void)
-//
 void Destroy_ParticleSet(void)
 {
   int i = 0;
@@ -185,12 +168,10 @@ void Destroy_ParticleSet(void)
   for (i = 0; i < MAX_PARTICLE_SET; i++)
   {
     DestroyParticleList(particle_set[i]);
-  }  // end of the of r
+  }
 }
 
-//
 // SetExplosion
-//
 void SetExplosion(float x, float y)
 {
   Set_Explosion(particle_set[particle_index], x, y);
@@ -199,9 +180,7 @@ void SetExplosion(float x, float y)
   if (particle_index >= MAX_PARTICLE_SET) particle_index = 0;
 }
 
-//
 // AnimateExplisions
-//
 void Anim_Particles(ParticleList* list)
 {
   int i = 0;
@@ -225,9 +204,9 @@ void Anim_Particles(ParticleList* list)
 
         if (list->particles[i].p_color[j] < 0.0f) list->particles[i].p_color[j] = 0.0f;
 
-      }  // end of the for
+      }
 
-    }  // end of the for
+    }
 
     // subtract life
     list->life--;
@@ -237,14 +216,12 @@ void Anim_Particles(ParticleList* list)
       list->life = 0;
       list->state = DEAD_STATE;
 
-    }  // end of the if
+    }
 
-  }  // end of big if
+  }
 }
 
-//
 // AnimateExplosions
-//
 void AnimateExplosions(void)
 {
   int i = 0;
@@ -255,12 +232,10 @@ void AnimateExplosions(void)
 
     Anim_Particles(particle_set[i]);
 
-  }  // end of the function
+  }
 }
 
-//
 // Now draw the entire set
-//
 void DrawExplosions(void)
 {
   int i = 0;
@@ -271,5 +246,5 @@ void DrawExplosions(void)
 
     Draw_Particles(particle_set[i]);
 
-  }  // end of the function
+  }
 }

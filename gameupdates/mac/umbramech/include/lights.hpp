@@ -32,30 +32,28 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // lights.h
-//
+
+#pragma once
 
 #define ENABLE_LIGHTS 1
 
 #define MAX_LIGHTS 2
 
-//
 // simple, I love it
-//
-typedef struct tagDriverLights
+class DriverLights
 {
+ public:
   float position[4];
   float state;
   int index_id;
   int light_id;  // used with GL_LIGHT0, etc
+};
 
-} DriverLights, *DriverLightsPtr;
+using DriverLightsPtr = DriverLights*;
 
 void InitMaterial(void);
-//
 // GenerateBots
-//
 void GenerateLights(void);
 void ShutdownLights(void);
 void SetLights(void);

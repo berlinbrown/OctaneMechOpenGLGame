@@ -31,10 +31,8 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
 // garden.cpp
 // the place where the ants live
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -94,9 +92,7 @@ DriverSentinel CURRENT_BOT = {
     0      // max_items
 };
 
-//
 // GardenRespawn
-//
 void GardenRespawn(void)
 {
   int i = 0;
@@ -118,9 +114,9 @@ void GardenRespawn(void)
       {
         total_respawns = 0;
         break;
-      }  // end of the if
+      }
 
-    }  // end of if
+    }
 
     // randomly check and kill garden
     // to keep a fresh garden
@@ -131,19 +127,17 @@ void GardenRespawn(void)
       {
         CURRENT_BOT.objects[i]->state = DEAD_STATE;
         SetGardenSize(-1);
-      }  // end of the if
+      }
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
-}  // end of the function
+}
 
-//
 // Respawing the garden has to be done here
 // after so many game ticks respawn the garden
 // with so much food
-//
 void CheckRespawn(void)
 {
   if (game_ticks++ >= CHECK_RESPAWN)
@@ -152,19 +146,16 @@ void CheckRespawn(void)
 
     game_ticks = 0;
 
-  }  // end of the if
+  }
 }
 
-//
 // A brute force method for checking whether
 // or not a bot is on some food
 // - we need this test against the optimized version
 // if there will be one
 // calcs involved: MAX_BOTS * MAX_GARDENS: 300 * 15 =4500
-//
 // - returns: index + 1
 // other wise zero
-//
 int BruteCheckFood(DriverBotPtr bot)
 {
   float x_min, x_max;
@@ -193,27 +184,23 @@ int BruteCheckFood(DriverBotPtr bot)
     if ((bot->x > x_min) && (bot->x < x_max) && (bot->y > y_min) && (bot->y < y_max))
     {
       return i + 1;
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   return 0;
 }
 
-//
 // Collect Food
 // - mainly pertains to the ant
-//
 void CollectFood(DriverBotPtr bot, float food_rate)
 {
   // food ant is carrying
   bot->foodstore += food_rate;
 }
 
-//
 // Drop Food
 // - extract the food and then have the bot eat the food
-//
 void DropFood(DriverBotPtr bot, int id, float food_rate)
 {
   float perc;
@@ -234,7 +221,7 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
   {
     CURRENT_BOT.objects[id]->state = DEAD_STATE;
     return;
-  }  // end of the if
+  }
 
   if ((CURRENT_BOT.objects[id]->food - food_amt) < 0)
   {
@@ -246,12 +233,12 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
     CURRENT_BOT.objects[id]->state = DEAD_STATE;
     SetGardenSize(-1);
 
-  }  // end of if
+  }
   else
   {
     CURRENT_BOT.objects[id]->food -= food_amt;
 
-  }  // end of if-else
+  }
 
   // decrease the size of the piece of food
   perc = ((float)INITIAL_GARD_FOOD - food_amt) / (float)INITIAL_GARD_FOOD;
@@ -264,9 +251,7 @@ void DropFood(DriverBotPtr bot, int id, float food_rate)
   CollectFood(bot, food_amt);
 }
 
-//
 // Generate Nests
-//
 static void Generate_Gardens(void)
 {
   int index = 0;
@@ -302,14 +287,12 @@ static void Generate_Gardens(void)
     else
     {
       RandomPlacement(CURRENT_BOT.objects[index]);
-    }  // end of if
+    }
 
-  }  // end of the for
+  }
 }
 
-//
 // Shutdown Nests
-//
 static void Shutdown_Gardens(void)
 {
   int index = 0;
@@ -318,16 +301,14 @@ static void Shutdown_Gardens(void)
   {
     CURRENT_BOT.destroy(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 
   // Shrug, free the ptr-to-ptrs
   // free(CURRENT_BOT.objects);
   RELEASE_OBJECT(CURRENT_BOT.objects);
 }
 
-//
 // Draw Nests
-//
 static void Draw_Gardens(void)
 {
   int index = 0;
@@ -338,12 +319,10 @@ static void Draw_Gardens(void)
 
     CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 
-  }  // end of the for
+  }
 }
 
-//
 // Process Events
-//
 static void ProcessGarden(CURRENT_PTR b)
 {
   // just rotate
@@ -351,11 +330,9 @@ static void ProcessGarden(CURRENT_PTR b)
   if (b->rotation[1] >= 360) b->rotation[1] -= 360;
 }
 
-//
 // - place the garden somewhere in a predefined
 // region
 // - used to test the pheromone collection
-//
 void PlaceGardenArea(CURRENT_PTR bot, float x, float y, float width)
 {
   float x_min;
@@ -382,10 +359,8 @@ void PlaceGardenArea(CURRENT_PTR bot, float x, float y, float width)
   bot->position[2] = y_min + res;
 }
 
-//
 // RandomPlacement
 // - put the garden anywhere
-//
 void RandomPlacement(CURRENT_PTR bot)
 {
   float tmp_x;
@@ -409,9 +384,7 @@ void RandomPlacement(CURRENT_PTR bot)
   bot->position[2] += tmp_y;
 }
 
-//
 // LoadGardParms
-//
 void LoadGardParms(CURRENT_PTR bot)
 {
   ZeroMemory((CURRENT_PTR)bot, sizeof(CURRENT_OBJECT));
@@ -437,9 +410,7 @@ void LoadGardParms(CURRENT_PTR bot)
   bot->food = INITIAL_GARD_FOOD;
 }
 
-//
 // Create bot
-//
 static CURRENT_PTR CreateGarden(int bot_id)
 {
   CURRENT_PTR bot;
@@ -453,10 +424,8 @@ static CURRENT_PTR CreateGarden(int bot_id)
   return bot;
 }
 
-//
 // Reset Garden
 // - similar to above
-//
 void ResetGarden(CURRENT_PTR bot)
 {
   // the only thing we need to save
@@ -488,19 +457,15 @@ void ResetGarden(CURRENT_PTR bot)
   }
 }
 
-//
 // DestroyBot
-//
 static void DestroyGarden(CURRENT_PTR b)
 {
   // free(b);
   RELEASE_OBJECT(b);
 
-}  // end of the function
+}
 
-//
 // RenderBot
-//
 static void RenderGarden(CURRENT_PTR boid)
 {
   if (boid->state == DEAD_STATE) return;

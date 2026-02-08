@@ -32,22 +32,23 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // list.h
 #pragma once
 
-typedef struct tagPtrNode
+class PtrNode
 {
+ public:
   void* ptr;
 
-  struct tagPtrNode* next;
-} PtrNode;
+  PtrNode* next;
+};
 
-typedef struct tagPtrList
+class PtrList
 {
+ public:
   PtrNode* head;
   int items;
-} PtrList;
+};
 
 void InsertFront(PtrList* list, void* data);
 

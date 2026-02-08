@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // menu.h
-//
 
 #pragma once
 

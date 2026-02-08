@@ -31,10 +31,8 @@
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
-//
 // stars.cpp
 //  - the ant object
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -51,11 +49,9 @@ static void draw_stars(void);
 static void render_stars(void);
 static void draw_stars(void);
 
-//
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
-//
 DriverObjects CURRENT_OBJECT = {
     init_stars,     // init, must be called first
     compile_stars,  // compile
@@ -64,8 +60,6 @@ DriverObjects CURRENT_OBJECT = {
     0               // loaded by INIT
 };
 
-//=========================================================
-//=========================================================
 static void draw_stars(void)
 {
   int cnt = MAX_STARS;
@@ -110,11 +104,9 @@ static void draw_stars(void)
   glEnable(GL_LIGHTING);
 }
 
-//
 // init
 // - load anything special about the
 // one important function
-//
 static void init_stars(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
@@ -123,11 +115,9 @@ static void init_stars(int list_id)
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
 
-}  // end of the function
+}
 
-//=========================================================
 // Now the function to actually draw it
-//=========================================================
 static void render_stars(void)
 {
   glPushMatrix();
@@ -137,9 +127,7 @@ static void render_stars(void)
   glPopMatrix();
 }
 
-//=========================================================
 // compile
-//=========================================================
 static void compile_stars(void)
 {
   int id;

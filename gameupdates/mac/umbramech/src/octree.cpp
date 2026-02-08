@@ -32,16 +32,13 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // bsp.cpp
 // This may border on octree but they are similar
-//
 // the goal is to use this code with the pheremones
 // when they are dropped by the ants
 // if an ant drops 100 pheremones on the way to the nest
 // 100 * 500, it would be silly to have to test all of these
 // so some algorithm is needed to save cpu time
-//
 // - the octree is an array of pointers to seperate lists
 // - the lists contains the position of the pheremone
 // - whenever a pheremone is created, it is added to the list
@@ -49,7 +46,6 @@
 // - whenever the bot moves, he searches the list
 // - better than brute force, of course
 // - since we are using a hash function, possibly O(1)
-//
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -60,9 +56,7 @@
 Octree** pheromone_tree;
 Octree** GenerateOctree(void);
 
-//
 // CreateOctree
-//
 Octree* CreateOctree(void)
 {
   Octree* ptr;
@@ -82,22 +76,20 @@ void DeleteOctree(Octree** tree_ptr)
   {
     DestroyPtrList(tree_ptr[i]->list);
 
-  }  // end of the for
+  }
 
   // have to delete every node individually
   for (i = 0; i < max; i++)
   {
     free(tree_ptr[i]);
-  }  // end of the for
+  }
 
   free(tree_ptr);
 }
 
-//
 // GenerateOctree
 //  - struct has xmin,xmax,ymin, ymax
 // and a pointer to a list
-//
 Octree** GenerateOctree(void)
 {
   float i, j;
@@ -114,7 +106,7 @@ Octree** GenerateOctree(void)
     for (j = -30.0f; j < 30.0f; j += width)
     {
       count++;
-    }  // end of the for
+    }
 
   // First we have to create an array of pointers
   tree_ptr = (Octree**)malloc(count * sizeof(Octree*));
@@ -142,17 +134,15 @@ Octree** GenerateOctree(void)
       tree_ptr[z]->max_elements = count;
 
       z++;
-    }  // end of the for
+    }
 
-  }  // end of the for
+  }
 
   return tree_ptr;
 }
 
-//
 // InsertOctree
 // - insert a pheremone into the tree
-//
 void InsertOctree(Octree** tree_ptr, StaticBotPtr bot)
 {
   int i;
@@ -172,15 +162,13 @@ void InsertOctree(Octree** tree_ptr, StaticBotPtr bot)
       // in the area add to list
       InsertFront(tree_ptr[i]->list, (StaticBotPtr)bot);
       return;
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 }
 
-//
 // SearchListBot
 // - search the list for a static bot
-//
 StaticBotPtr SearchListBot(PtrList* list, DriverBotPtr bot)
 {
   PtrNode* current_ptr;
@@ -206,19 +194,17 @@ StaticBotPtr SearchListBot(PtrList* list, DriverBotPtr bot)
     if ((bot->x > x_min) && (bot->x < x_max) && (bot->y > y_min) && (bot->y < y_max))
     {
       return x;
-    }  // end of the if
+    }
 
     current_ptr = current_ptr->next;
 
-  }  // end of while
+  }
 
   return NULL;
 }
 
-//
 // SearchOctree
 // - check if we are in the region
-//
 StaticBotPtr SearchOctree(Octree** tree_ptr, DriverBotPtr bot)
 {
   // find out which bin to search
@@ -242,17 +228,15 @@ StaticBotPtr SearchOctree(Octree** tree_ptr, DriverBotPtr bot)
 
       // Search the list in this region
       return res;
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 
   return NULL;
 }
 
-//
 // DeleteOctree
 // - delete a node from the tree
-//
 void DeleteOctreeNode(Octree** tree_ptr, StaticBotPtr bot)
 {
   // find out which bin to search
@@ -273,32 +257,25 @@ void DeleteOctreeNode(Octree** tree_ptr, StaticBotPtr bot)
       // delete the node
       DeletePtrNode(tree_ptr[i]->list, bot);
 
-    }  // end of the if
+    }
 
-  }  // end of the for
+  }
 }
 
-//
 // Wrapper Functions
 // - you should probably only have to deal
 // with these functions unless you want more
 // trees
 void pheromoneBuild(void) { pheromone_tree = GenerateOctree(); }
 
-//
 // octreeDestroy
 // - make sure this called
-//
 void pheromoneDestroy(void) { DeleteOctree(pheromone_tree); }
 
-//
 // pheromoneInsert(StaticBotPtr bot)
-//
 void pheromoneInsert(StaticBotPtr bot) { InsertOctree(pheromone_tree, bot); }
 
-//
 // pheromoneSearch
-//
 StaticBotPtr pheromoneSearch(DriverBotPtr bot)
 {
   StaticBotPtr ptr;
@@ -307,8 +284,6 @@ StaticBotPtr pheromoneSearch(DriverBotPtr bot)
   return ptr;
 }
 
-//
 // pheromoneDelete
 // - delete a pheromone
-//
 void pheromoneDelete(StaticBotPtr bot) { DeleteOctreeNode(pheromone_tree, bot); }

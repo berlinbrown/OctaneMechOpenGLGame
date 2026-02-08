@@ -42,10 +42,11 @@
 #define TEXT_WRAP_SPACES 0x08
 #define TEXT_DRAW_BACKGROUND 0x01
 
-typedef struct
+class COLOR
 {
+ public:
   unsigned char r, g, b, a;
-} COLOR;
+};
 #define MALLOC malloc
 
 #define SET_COLOR(c, rIn, gIn, bIn, aIn) \
@@ -54,8 +55,9 @@ typedef struct
   c.b = bIn;                             \
   c.a = aIn
 
-typedef struct tagTextBox
+class TextBox
 {
+ public:
   // Bounding Box
   int boxL;
   int boxR;
@@ -75,8 +77,9 @@ typedef struct tagTextBox
   COLOR color;
 
   unsigned int mode;
+};
 
-} TextBox, *TextBoxPtr;
+using TextBoxPtr = TextBox*;
 
 void Paginate(TextBoxPtr text);
 void DrawStr(TextBoxPtr text, int x, int y, int maxFlag, int maxY, char* string);

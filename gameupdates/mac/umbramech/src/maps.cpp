@@ -32,23 +32,18 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-//
 // maps.cpp
 // - this is going to be similar to
 // my octree code but a little bit more
 // refined
-//
 // The codes the map grid into sections
 // and each section has so many bots inside
-//
 // - in the end, the map code will be a linked list
 // of lists
-//
 // Note: of course since we are using this mainly for
 // line of sight algorithms, then the line of sight
 // will extend into several different maps,hmm
 // a bit of a pickle...
-//
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,15 +57,13 @@ int max_maps;
 
 // Note: max_maps and MAX_MAPS should probably not match
 
-//
 // Create Map
 // - only sets everything to zero
-//
 Map* CreateMap(int id_no)
 {
   Map* map;
 
-  map = malloc(sizeof(Map));
+  map = (Map*)malloc(sizeof(Map));
 
   ZeroMemory((Map*)map, sizeof(Map));
 
@@ -85,9 +78,7 @@ Map* CreateMap(int id_no)
   return map;
 }
 
-//
 // Load Map
-//
 void LoadMap(Map* map, float x_min, float x_max, float y_min, float y_max)
 {
   map->x_max = x_max;
@@ -96,9 +87,7 @@ void LoadMap(Map* map, float x_min, float x_max, float y_min, float y_max)
   map->y_min = y_min;
 }
 
-//
 // DeleteMap
-//
 void DeleteMap(Map* map)
 {
   // free(map->list);
@@ -107,9 +96,7 @@ void DeleteMap(Map* map)
   RELEASE_OBJECT(map);
 }
 
-//
 // DestroyMaps
-//
 void DestroyMaps(void)
 {
   int index = 0;
@@ -118,15 +105,13 @@ void DestroyMaps(void)
   {
     DeleteMap(map_ptrs[index]);
 
-  }  // end of the function
+  }
 
   // this might need to go above the for
   DestroyPtrList(map_list);
 }
 
-//
 // PrintList
-//
 void PrintMapList(PtrList* list)
 {
   PtrNode* current_ptr;
@@ -147,12 +132,10 @@ void PrintMapList(PtrList* list)
     printf("xmin: %0.2f xmax: %0.2f\n", x->x_min, x->x_max);
 
     current_ptr = current_ptr->next;
-  }  // end of while
+  }
 }
 
-//
 // Build The map list
-//
 void BuildMap(void)
 {
   float i, j;
@@ -185,9 +168,9 @@ void BuildMap(void)
       index++;  // number of maps
       if (index >= MAX_MAPS) break;
 
-    }  // end of the for
+    }
 
-  }  // end of the for
+  }
 
   max_maps = index;
 

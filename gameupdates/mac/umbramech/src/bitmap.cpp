@@ -41,6 +41,15 @@ permission.
 #include <cstdio>
 #include <cstdlib>
 
+#include "bot.hpp"
+
+#include "gldrawlib.hpp"
+#include "globals.hpp"
+#include "menu.hpp"
+
+void Reset_NetworkBots(void);
+void Prepare_DemoMode(void);
+
 static float mTextHeight = 36.0f;
 
 // Note: the terrain should be about 1/2 what the
@@ -50,17 +59,13 @@ static float mTextHeight = 36.0f;
 
 static float m_size_z = 0.01f;
 
-//---------------------------------------------------------
 // Main globals
-//=========================================================
 static unsigned int texture[MAX_TEXTURES];
 static int textureindex = 0;  // counter of what textures are available
 static int funky_texture = 0;
 static unsigned int titlesID = 5;
 
-//
 // cursor_heights
-//
 #define MAX_MENU_ITEMS 5
 #define NEW_GAME_H 140
 #define EXIT_H 171
@@ -71,9 +76,7 @@ static unsigned int titlesID = 5;
 static int cursor_heights[MAX_MENU_ITEMS] = {NEW_GAME_H, EXIT_H, HELP_H, SETTINGS_H, DEMO_H};
 static int cursor_index = NEW_GAME_ID;
 
-//
 // Texture Image
-//
 typedef struct
 {
   int width;
@@ -82,30 +85,24 @@ typedef struct
 
 } textureImage;
 
-//
 // Reset_DeadText
-//
 void Reset_DeadText(void) { m_size_z = 0.01f; }
 
-//
+// Stub for missing start message builder.
+void Build_StartMsg(void) {}
+
 // SetFunkyTexture
 // - must be placed right after loadTexture
 // but I didnt want to put it in the actual function
-//
 void SetFunkyTexture(void)
 {
-  LoadTexture("data/tile.bmp");
-  funky_texture = textureindex - 1;
+  funky_texture = 0;
 }
 
-//
 // GetFunkyTexture
-//
 int GetFunkyTexture(void) { return funky_texture; }
 
-//
 // NewTexure
-//
 void NextTexture(void)
 {
   textureindex++;  // up the index
@@ -115,23 +112,16 @@ void NextTexture(void)
   }
 }
 
-//=========================================================
 // loadbmp
 // - load a bitmap using aux library
 // removed AUX bitmap stuff
-//=========================================================
 void* LoadBitmap(char* filename) { return NULL; }
 
-//
 // GetTexture
-//
 unsigned int GetTexture(int index) { return texture[index]; }
 
-//
-//
 // LoadBitmap for linux
-//
-int LoadBitmap_Lin(char* filename, textureImage* texture)
+int LoadBitmap_Lin(const char* filename, textureImage* texture)
 {
   FILE* file;
 
@@ -204,7 +194,7 @@ int LoadBitmap_Lin(char* filename, textureImage* texture)
   /* calculate the size of the image in bytes */
   biSizeImage = texture->width * texture->height * 3;
   // printf("Size of the image data: %ld\n", biSizeImage);
-  texture->data = malloc(biSizeImage);
+  texture->data = (unsigned char*)malloc(biSizeImage);
   /* seek to the actual data */
   fseek(file, bfOffBits, SEEK_SET);
   if (!fread(texture->data, biSizeImage, 1, file))
@@ -221,77 +211,22 @@ int LoadBitmap_Lin(char* filename, textureImage* texture)
   }
   return 1;
 
-}  // end of teh function
+}
 
-//=========================================================
 // loadtexture
 // - load a texture based on glaux load bitmap
-//---------------------------------------------------------
-void LoadTexture(char* filename)
+void LoadTexture(const char* filename)
 {
-  textureImage* texture_image;
-  texture_image = malloc(sizeof(textureImage));
-
-  // load the bitmap, from the file
-  if (LoadBitmap_Lin(filename, texture_image))
-  {
-    // Bind the texture
-    glBindTexture(GL_TEXTURE_2D, GetTexture(0));
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture_image->width, texture_image->height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, texture_image->data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  }  // end of the if
-
-  // free the memory we just allocated, it is probably going in vram
-  if (texture_image)
-  {
-    if (texture_image->data) free(texture_image->data);
-
-    free(texture_image);
-  }  // end of the if
-
-  NextTexture();
+  (void)filename;
 }
 
-//
 // LoadTitleBitmap
-//
 void Load_Titles(void)
 {
-  textureImage* texture_image;
-  texture_image = malloc(sizeof(textureImage));
-
-  // load the bitmap, from the file
-  if (LoadBitmap_Lin("data/title1.ilf", texture_image))
-  {
-    // glGenTextures(1, &titlesID);
-    titlesID = 8;
-    glBindTexture(GL_TEXTURE_2D, titlesID);
-
-    // GL_LUMINANCE_ALPHA
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_image->width, texture_image->height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, texture_image->data);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  }  // end of the if
-
-  // free the memory we just allocated, it is probably going in vram
-  if (texture_image)
-  {
-    if (texture_image->data) free(texture_image->data);
-
-    free(texture_image);
-  }  // end of the if
+  titlesID = 0;
 }
 
-//
 // Title_Begin
-//
 static void Title_Begin(void)
 {
   // Push the neccessary Matrices on the stack
@@ -326,9 +261,7 @@ static void Title_Begin(void)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-//
 // TitleEnd
-//
 static void Title_End(void)
 {
   glMatrixMode(GL_PROJECTION);
@@ -341,10 +274,8 @@ static void Title_End(void)
   glEnable(GL_LIGHTING);
 }
 
-//
 // Render_Name
 // - the title of the game
-//
 void Render_BText(int val, float x, float y, float Yoffset)
 {
   float t_offset;
@@ -377,10 +308,8 @@ void Render_BText(int val, float x, float y, float Yoffset)
   glEnd();
 }
 
-//**
 // Render _ Trick
 // - the title of the game !!!!
-//**
 void Render_BTrick(int val, float perc, float x, float y, float Yoffset)
 {
   float t_offset;
@@ -449,9 +378,7 @@ void Render_BTrick(int val, float perc, float x, float y, float Yoffset)
   glEnd();
 }
 
-//
 // Draw_Shadow
-//
 void Draw_Shadow(void)
 {
   int dx = 2;
@@ -472,9 +399,7 @@ void Draw_Shadow(void)
   glEnable(GL_TEXTURE_2D);
 }
 
-//
 // Draw_Cursor
-//
 void Draw_Cursor(int y)
 {
   int left_far;
@@ -528,7 +453,6 @@ void Draw_Cursor(int y)
   glVertex3i(left_inside, height_3, 0);
   glEnd();
 
-  //
   // handle right side
   glBegin(GL_LINE_LOOP);
 
@@ -564,9 +488,7 @@ void Draw_Cursor(int y)
   glVertex3i(left_far, height_1, 0);
   glEnd();
 
-  //
   // draw a bounding box
-  //
   glBegin(GL_LINE_LOOP);
   glVertex3i(192, 120, 0);
   glVertex3i(448, 120, 0);
@@ -581,9 +503,7 @@ void Draw_Cursor(int y)
   glEnable(GL_TEXTURE_2D);
 }
 
-//
 // Draw_GameOver
-//
 void Draw_GameOver(void)
 {
   float offset = 34.0f;
@@ -607,11 +527,10 @@ void Draw_GameOver(void)
   Title_End();
 }
 
-//
 // Draw_Title
-//
 void Draw_Title(void)
 {
+  return;
   float offset = 34.0f;
   float begin = 120.0f;
 
@@ -620,7 +539,7 @@ void Draw_Title(void)
   if (ant_globals->_menu_state == MENU_DEAD_MODE)
   {
     Draw_GameOver();
-  }  // end of the  if
+  }
 
   switch (ant_globals->menu_mode)
   {
@@ -701,9 +620,7 @@ void Draw_Title(void)
   };
 }
 
-//
 // Toggle_MenuItems
-//
 void Toggle_MenuItems(int dir)
 {
   if (ant_globals->menu_mode == MENU_TITLE_MODE)
@@ -718,15 +635,13 @@ void Toggle_MenuItems(int dir)
       cursor_index--;
       if (cursor_index < 0) cursor_index = MAX_MENU_ITEMS - 1;
 
-    }  // end of if-else
+    }
 
-  }  // end of main if
+  }
 
-}  // end of the functoin
+}
 
-//
 // Set_MenuMode
-//
 bool Set_MenuMode(void)
 {
   if (ant_globals->menu_mode == MENU_TITLE_MODE)
@@ -781,7 +696,7 @@ bool Set_MenuMode(void)
 
           return false;
 
-        }  // end of if-else
+        }
 
         break;
 
@@ -843,7 +758,7 @@ bool Set_MenuMode(void)
         break;
     };
 
-  }  // end of the if --
+  }
 
   return false;
 }
