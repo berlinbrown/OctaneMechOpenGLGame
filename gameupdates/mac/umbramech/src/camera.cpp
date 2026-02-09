@@ -621,16 +621,44 @@ static void ThirdPersonMode(bool* keys)
   float x, y;
   float cam_x;
   float cam_y;
+  float ang;
+  float rad;
+  float tmp_heading;
+  float tmp_x;
+  float tmp_y;
+  float zoom;
 
   // process the mouse moves around
   // our axis
   Mouse_Movement();
 
-  x = camera_bot->look_x;
-  y = camera_bot->look_y;
+  ang = CAMERA->rotation[1] + camera_bot->heading;
+  zoom = CAMERA->zoom_factor;
 
-  cam_x = camera_bot->cam_x;
-  cam_y = camera_bot->cam_y;
+  tmp_heading = ang + 90.0f;
+  if (tmp_heading > 360.0f) tmp_heading -= 360.0f;
+  rad = tmp_heading / RAD_TO_DEG;
+
+  tmp_x = LOOKAT_OFFSET * (float)cos(rad) * zoom;
+  tmp_y = LOOKAT_OFFSET * (float)sin(rad) * zoom;
+
+  x = tmp_x + camera_bot->x;
+  y = (-tmp_y) + camera_bot->y;
+
+  tmp_heading = ang + 270.0f;
+  if (tmp_heading > 360.0f) tmp_heading -= 360.0f;
+  rad = tmp_heading / RAD_TO_DEG;
+
+  tmp_x = CAMERA_BOT_OFFSET * (float)cos(rad) * zoom;
+  tmp_y = CAMERA_BOT_OFFSET * (float)sin(rad) * zoom;
+
+  cam_x = tmp_x + camera_bot->x;
+  cam_y = (-tmp_y) + camera_bot->y;
+
+  camera_bot->look_x = x;
+  camera_bot->look_y = y;
+  camera_bot->cam_x = cam_x;
+  camera_bot->cam_y = cam_y;
 
   Pos_Camera(cam_x, (CAMERA_HEIGHT * CAMERA->zoom_factor), cam_y);
 
