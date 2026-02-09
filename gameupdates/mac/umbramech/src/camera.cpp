@@ -44,8 +44,11 @@
 
 static int mouse_x = SCREEN_WIDTH / 2;
 static int mouse_y = SCREEN_HEIGHT / 2;
+static int last_mouse_x = -1;
+static int last_mouse_y = -1;
 
 static float mCameraAng = 0.0f;
+static int sLogCounter = 0;
 
 // Follow this object
 static DriverBotPtr camera_bot;
@@ -196,33 +199,37 @@ static void SetupCamera(void)
 // - handle mouse movement
 void Mouse_Movement(void)
 {
-  // POINT mouse_pos;
-  float ang_z = 0.0f;
+  if (last_mouse_x < 0 || last_mouse_y < 0)
+  {
+    last_mouse_x = mouse_x;
+    last_mouse_y = mouse_y;
+    return;
+  }
 
-  mouse_x = SCREEN_WIDTH / 2;
-  mouse_y = SCREEN_HEIGHT / 2;
+  const int dx = mouse_x - last_mouse_x;
+  const int dy = mouse_y - last_mouse_y;
 
-  // Get the mouse's current X,Y position
-  // GetCursorPos(&mouse_pos);
+  last_mouse_x = mouse_x;
+  last_mouse_y = mouse_y;
 
-  // If our cursor is still in the middle, we never moved... so don't update the
-  // screen
-  // if((mouse_pos.x == mouse_x) && (mouse_pos.y == mouse_y))
-  //	return;
+  if (dx == 0 && dy == 0) return;
 
-  // Set the mouse position to the middle of our window
-  // SetCursorPos(mouse_x, mouse_y);
+  const float yaw_sensitivity = 0.3f;
+  const float zoom_sensitivity = 0.02f;
 
-  // ang_z = (float)((mouse_y - mouse_pos.y)) / 50.0f;
+  AngleCamera(0.0f, dx * yaw_sensitivity, 0.0f);
 
-  // The Angle camera is a little flaky
-  // AngleCamera(0.0f, ang_y, 0.0f);
+  CAMERA->zoom_factor += dy * zoom_sensitivity;
 
-  // increase the zoom also
-  CAMERA->zoom_factor -= ang_z;
+  if (CAMERA->zoom_factor < 3.0f) CAMERA->zoom_factor = 3.0f;
+  if (CAMERA->zoom_factor > MAX_ZOOM) CAMERA->zoom_factor = MAX_ZOOM;
 
-  if (CAMERA->zoom_factor < 3.0) CAMERA->zoom_factor = 3.0f;
+}
 
+void SetMousePosition(int x, int y)
+{
+  mouse_x = x;
+  mouse_y = y;
 }
 
 // Load Cameras
@@ -514,11 +521,14 @@ void MoveRight(void)
 // - not really, but at least I tried
 void Paused_Camera(void)
 {
+  if (!camera_bot) return;
+
   float ang;
   float rad;
   float tmp_heading;
   float tmp_x;
   float tmp_y;
+  float zoom;
 
   float lookat_x;
   float lookat_y;
@@ -537,8 +547,9 @@ void Paused_Camera(void)
   rad = tmp_heading / RAD_TO_DEG;
 
   // also include the zoom
-  tmp_x = LOOKAT_OFFSET * (float)cos(rad) * CAMERA->zoom_factor;
-  tmp_y = LOOKAT_OFFSET * (float)sin(rad) * CAMERA->zoom_factor;
+  zoom = CAMERA->zoom_factor;
+  tmp_x = LOOKAT_OFFSET * (float)cos(rad) * zoom;
+  tmp_y = LOOKAT_OFFSET * (float)sin(rad) * zoom;
 
   tmp_x = tmp_x + camera_bot->x;
   tmp_y = (-tmp_y) + camera_bot->y;
@@ -553,8 +564,8 @@ void Paused_Camera(void)
 
   rad = tmp_heading / RAD_TO_DEG;
 
-  tmp_x = CAMERA_BOT_OFFSET * (float)cos(rad) * CAMERA->zoom_factor;
-  tmp_y = CAMERA_BOT_OFFSET * (float)sin(rad) * CAMERA->zoom_factor;
+  tmp_x = CAMERA_BOT_OFFSET * (float)cos(rad) * zoom;
+  tmp_y = CAMERA_BOT_OFFSET * (float)sin(rad) * zoom;
 
   cam_x = tmp_x + camera_bot->x;
   cam_y = (-tmp_y) + camera_bot->y;
@@ -566,7 +577,7 @@ void Paused_Camera(void)
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(cam_x, (CAMERA_HEIGHT * CAMERA->zoom_factor), cam_y, x, 0.0f, y, 0.0f, 1.0f, 0.0f);
+  gluLookAt(cam_x, (CAMERA_HEIGHT * zoom), cam_y, x, 0.0f, y, 0.0f, 1.0f, 0.0f);
 
   // Rotate the paused camera a bot
   // based on the frame rate
@@ -625,8 +636,8 @@ static void ThirdPersonMode(bool* keys)
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, 0.0f, y, 0.0f, 1.0f,
-            0.0f);
+  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, FIRST_HEIGHT, y,
+            0.0f, 1.0f, 0.0f);
 
   // player control, strange place I know
   Player_Control(keys);
@@ -664,6 +675,24 @@ void ToggleViewMode(void)
 // Also handles the following camera
 void HandleCameraKeys(bool* keys)
 {
+  if (!camera_bot)
+  {
+    if ((sLogCounter++ % 120) == 0)
+    {
+      printf("[camera] camera_bot=null paused=%d\n", ant_globals ? ant_globals->paused : -1);
+    }
+    return;
+  }
+
+  if ((sLogCounter++ % 60) == 0)
+  {
+    printf("[camera] pos=(%.2f,%.2f,%.2f) rot=(%.2f,%.2f,%.2f) zoom=%.2f bot=(%.2f,%.2f) view=%d mouse=(%d,%d) paused=%d\n",
+           CAMERA->position[0], CAMERA->position[1], CAMERA->position[2],
+           CAMERA->rotation[0], CAMERA->rotation[1], CAMERA->rotation[2],
+           CAMERA->zoom_factor, camera_bot->x, camera_bot->y, camera_bot->view_mode,
+           mouse_x, mouse_y, ant_globals ? ant_globals->paused : -1);
+  }
+
   if (ant_globals->paused == 0)
   {
     if (camera_bot->view_mode == THIRD_PERSON_MODE)

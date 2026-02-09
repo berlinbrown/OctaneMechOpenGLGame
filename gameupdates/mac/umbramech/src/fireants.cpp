@@ -1439,6 +1439,8 @@ static void RenderFireAnt(DriverBotPtr boid)
 {
   float len = 0;
 
+  if (boid == NULL) return;
+
   if (boid->alive == ALIVE_STATE)
   {
     BEGIN_BOT;
@@ -1871,18 +1873,23 @@ void AnimFireAnts(void)
   int index = 0;
   int j = 0;
   float max = -10000;
-  int id = 0;
-  int max_id;
+  int id = -1;
+  int max_id = -1;
+
+  if (fire_cluster == NULL) return;
+  if (ant_globals == NULL) return;
 
   ant_globals->alive_bots = 0;  // reset
 
   for (index = 0; index < MAX_FIRE_ANTS; index++)
   {
+    if (fire_cluster[index] == NULL) continue;
     // run the command library
     // unless the robot is robot zero
     if (index > 0)
     {
-      if (fire_cluster[index]->alive == ALIVE_STATE) fire_cluster[index]->run(fire_cluster[index]);
+      if (fire_cluster[index]->alive == ALIVE_STATE && fire_cluster[index]->run)
+        fire_cluster[index]->run(fire_cluster[index]);
     }
     else if (index == 0)
     {
@@ -1903,7 +1910,10 @@ void AnimFireAnts(void)
 
   // get the top two scores in addition
   // to the main bot
-  Load_Score(fire_cluster[0]->score, fire_cluster[0]->kills, 0, 0);
+  if (fire_cluster[0] != NULL)
+  {
+    Load_Score(fire_cluster[0]->score, fire_cluster[0]->kills, 0, 0);
+  }
 
   // now the next 2
   for (index = 1; index < MAX_SCORE_DISPLAY; index++)
@@ -1915,6 +1925,7 @@ void AnimFireAnts(void)
       // skip the already highest
       if (j == max_id) continue;
 
+      if (fire_cluster[j] == NULL) continue;
       if (fire_cluster[j]->alive == DEAD_STATE) continue;
 
       // get the next highest score
@@ -1929,7 +1940,7 @@ void AnimFireAnts(void)
 
     }
 
-    max_id = id;
+    if (id >= 0) max_id = id;
 
   }
 }
@@ -1938,6 +1949,9 @@ void AnimFireAnts(void)
 void DrawFireAnts(void)
 {
   int index = 0;
+
+  if (fire_cluster == NULL) return;
+  if (fire_cluster[0] == NULL) return;
 
   if (ant_globals->paused == 1)
   {
@@ -1954,6 +1968,7 @@ void DrawFireAnts(void)
   {
     for (index = 1; index < MAX_NETWORK_BOTS; index++)
     {
+      if (fire_cluster[index] == NULL) continue;
       RenderFireAnt(fire_cluster[index]);
       RenderBullets(fire_cluster[index]);
     }
@@ -1963,6 +1978,7 @@ void DrawFireAnts(void)
   {
     for (index = 1; index < MAX_FIRE_ANTS; index++)
     {
+      if (fire_cluster[index] == NULL) continue;
       RenderFireAnt(fire_cluster[index]);
       RenderBullets(fire_cluster[index]);
     }

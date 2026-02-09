@@ -76,6 +76,7 @@ class DriverCamera
 
 void Vector_Normalize(Vector a, Vector res);
 void HandleCameraKeys(bool* keys);
+void SetMousePosition(int x, int y);
 
 float GetBotX(void);
 float GetBotY(void);
