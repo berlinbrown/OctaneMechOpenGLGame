@@ -155,6 +155,11 @@ static void InitGame(void)
   CreateWorld();
   LoadCameras();
 
+  for (int i = 0; i < MAX_CAMERAS; i++)
+  {
+    driver_camera[i]->zoom_factor = 6.0f;
+  }
+
   InitObjects();
   GenerateLights();
   InitGlobals();
@@ -177,7 +182,9 @@ static void InitGame(void)
   InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_max, world_ptr->y_min);
   InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_min, world_ptr->y_max);
 
-  Super_BeginPaused();
+  ant_globals->paused = 0;
+  ant_globals->menu_mode = MENU_RUN_MODE;
+  ant_globals->_menu_state = FIRST_TIME_FALSE;
   gGameReady = true;
 }
 
@@ -196,8 +203,15 @@ static void DrawGLScene(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
 
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0.0f, 180.0f, 220.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f);
+
   BEGIN_BOT;
 
+  RenderGrid();
   RenderWalls();
   RenderPlane();
 
@@ -207,6 +221,10 @@ static void DrawGLScene(void)
   Draw_Wall_List();
   DrawExplosions();
   DrawFireAnts();
+  DrawBots();
+  nest.drawall();
+  garden.drawall();
+  trail_set.drawall();
 
   END_BOT;
 
@@ -221,6 +239,13 @@ static void DisplayGL(void)
   {
     InitGame();
   }
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(45.0f, (GLfloat)gWindowWidth / (GLfloat)gWindowHeight, 0.1f, PERSPECTIVE_Z);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 
   HandleCameraKeys(gKeys);
   AnimateScene();
@@ -240,7 +265,7 @@ static void ResizeGL(int width, int height)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+  gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, PERSPECTIVE_Z);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -340,6 +365,8 @@ static void SpecialKeyDown(int key, int, int)
 
 static void SpecialKeyUp(int key, int, int) { gKeys[kSpecialKeyBase + key] = false; }
 
+static void MouseMove(int x, int y) { SetMousePosition(x, y); }
+
 static void IdleGL(void) { glutPostRedisplay(); }
 
 int main(int argc, char** argv)
@@ -355,6 +382,8 @@ int main(int argc, char** argv)
   glutKeyboardUpFunc(KeyUp);
   glutSpecialFunc(SpecialKeyDown);
   glutSpecialUpFunc(SpecialKeyUp);
+  glutPassiveMotionFunc(MouseMove);
+  glutMotionFunc(MouseMove);
   glutIdleFunc(IdleGL);
 
   glutMainLoop();
