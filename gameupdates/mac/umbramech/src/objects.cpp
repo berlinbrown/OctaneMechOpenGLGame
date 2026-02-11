@@ -41,6 +41,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
+#include <lights.hpp>
+#include <bot.hpp>
+#include <legacy_stubs.hpp>
+#include <fireants.hpp>
 
 #define SQRT_75 0.8660254038f
 
@@ -155,9 +160,7 @@ void Bot_Triangle(float x, float y)
   glVertex3fv(v[2]);  // triangle left bottom front
 
   glEnd();
-
   END_BOT;
-
   glEnable(GL_LIGHTING);
 
 }

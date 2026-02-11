@@ -32,6 +32,9 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <camera.hpp>
+#include <bot.hpp>
+#include <cmath>
 
 DriverBots::DriverBots() {}
 

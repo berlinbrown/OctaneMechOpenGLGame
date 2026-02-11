@@ -40,6 +40,7 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
 
 static void compilecube(void);
 static void drawcube(void);

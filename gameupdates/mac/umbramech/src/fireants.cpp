@@ -38,8 +38,7 @@
 // - may also incorporate some messaging techniques
 // The code for the ai is also here hidden
 // amongst the other stuff
-// ant.cpp
-//  - the ant object
+// ant.cpp - the ant object
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library

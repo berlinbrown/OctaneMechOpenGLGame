@@ -42,6 +42,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <gldrawlib.hpp>
 
 #define UP 1
 #define DOWN 2

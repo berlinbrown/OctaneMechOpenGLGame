@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <tree.hpp>
 
 #define TEST_VALUES 10
 

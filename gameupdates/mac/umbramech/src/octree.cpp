@@ -52,6 +52,9 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <octree.hpp>
+#include <plist.hpp>
+#include <DriverBots.hpp>
 
 Octree** pheromone_tree;
 Octree** GenerateOctree(void);

@@ -41,6 +41,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <gldrawlib.hpp>
+#include <DriverBots.hpp>
 
 static int mouse_x = SCREEN_WIDTH / 2;
 static int mouse_y = SCREEN_HEIGHT / 2;

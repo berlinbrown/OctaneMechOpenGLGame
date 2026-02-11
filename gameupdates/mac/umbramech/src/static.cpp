@@ -47,6 +47,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <DriverBots.hpp>
+#include <gldrawlib.hpp>
+#include <bot.hpp>
+#include <lights.hpp>
+#include <objects.hpp>
 
 #undef CURRENT_PTR
 #define CURRENT_PTR StaticBotPtr

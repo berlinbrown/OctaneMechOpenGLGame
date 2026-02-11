@@ -32,12 +32,6 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-// Berlin Brown
-// berlin _dot__ brown  __at_ g_mail _ dot_ com
-// glDrawLib.cpp
-// a couple of drawing routines
-// opengl library
-
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library

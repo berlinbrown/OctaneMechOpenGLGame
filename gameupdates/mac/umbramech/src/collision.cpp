@@ -32,21 +32,17 @@
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-// collision.cpp
-// - test a collision against any object
+// collision.cpp - test a collision against any object
 // At present, everything is based on
-// ray and line intersection
-// For example, once a bullet is fired
+// ray and line intersection For example, once a bullet is fired
 // it generates a ray, and the ray is tested
 // against the lines that make up the wall
 // A moving object for example one of the
-// ships has a
-// There may several different functions
-// to check for collisions
-// There may also be several different
+// ships has a There may several different functions
+// to check for collisions There may also be several different
 // ways to insert a segment to perform
 // a collision against
-//		- Berlin Brown
+
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -54,6 +50,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <collision.hpp>
 
 static void Reset_DistStack(void);
 static void Insert_DistStack(CollisionPtr ptr);
