@@ -24,6 +24,8 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * Updated: 2026 for Mac, OpenGL
  */
 
 #include <GLUT/glut.h>   // GLUT for window/context
@@ -65,6 +67,10 @@ extern int keyCodes[20];
 
 static int gFrames = 0;
 static clock_t gLastTime = 0;
+
+static float newYPos = 0.0f;
+static float newXPos = 0.0f;
+
 
 static void InitKeyCodes(void)
 {
@@ -209,7 +215,11 @@ static void DrawGLScene(void)
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0f, 180.0f, 120.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+  // Document : gluLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
+  //.  GLdouble centerX, GLdouble centerY, GLdouble centerZ, GLdouble upX, GLdouble upY, GLdouble upZ)
+  gluLookAt(0.0f, (180.0f + newYPos), 120.0f, 
+      0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
   BEGIN_BOT;
 
@@ -244,7 +254,7 @@ static void DisplayGL(void)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45.0f, (GLfloat)gWindowWidth / (GLfloat)gWindowHeight, 0.1f, PERSPECTIVE_Z);
+  gluPerspective((45.0f+newXPos), (GLfloat)gWindowWidth / (GLfloat)gWindowHeight, 0.1f, PERSPECTIVE_Z);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -341,6 +351,24 @@ static void KeyDown(unsigned char key, int, int)
     case 'Q':
       std::exit(0);
       break;
+
+    case 'o':
+    case 'O':
+      newYPos += 10.0f;
+      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
+      break;      
+
+    case 'l':
+    case 'L':
+      newYPos -= 10.0f;
+      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
+      break;            
+
+    case 'k':
+    case 'K':
+      newXPos += 10.0f;
+      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
+      break;        
 
     default:
       break;

@@ -26,8 +26,10 @@ permission.
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// - Sept 18, 2002
-*/
+ * 
+ * - Sept 18, 2002
+ * Updated: 2026 for Mac, OpenGL
+ */
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -54,6 +56,7 @@ static float mTextHeight = 36.0f;
 // Note: the terrain should be about 1/2 what the
 // perspective z view angle is
 // terrain = 10000 then perspective z = 2000
+
 #define TERRAINVIEW 24.0f  // distance from database
 
 static float m_size_z = 0.01f;

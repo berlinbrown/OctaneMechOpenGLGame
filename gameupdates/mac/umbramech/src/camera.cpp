@@ -26,14 +26,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Date: 8/15/2011
+ * Updated: 2026 for Mac, OpenGL
  *
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-// Berlin Brown
-// berlin _dot__ brown  __at_ g_mail _ dot_ com
 // camera.cpp
 
 #include <GLUT/glut.h>   // GLUT for window/context

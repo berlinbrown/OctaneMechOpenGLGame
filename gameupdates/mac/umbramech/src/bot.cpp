@@ -30,6 +30,7 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Updated: 2026 for Mac, OpenGL
  */
 
 // bot.cpp

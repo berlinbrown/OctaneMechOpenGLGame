@@ -26,15 +26,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Date: 8/15/2011
+ * Updated: 2026 for Mac, OpenGL
  *
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-// commands.cpp
-// The command interface
-// to have a LaunchCommand
+// commands.cpp - The command interface to have a LaunchCommand
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
