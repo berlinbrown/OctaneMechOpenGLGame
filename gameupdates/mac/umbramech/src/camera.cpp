@@ -26,23 +26,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Date: 8/15/2011
+ * Updated: 2026 for Mac, OpenGL
  *
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
  */
 
-// Berlin Brown
-// berlin _dot__ brown  __at_ g_mail _ dot_ com
 // camera.cpp
+
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <gldrawlib.hpp>
+
 #include <DriverBots.hpp>
+#include <bot.hpp>
+#include <camera.hpp>
+#include <fireants.hpp>
+#include <gldrawlib.hpp>
+#include <globals.hpp>
 
 static int mouse_x = SCREEN_WIDTH / 2;
 static int mouse_y = SCREEN_HEIGHT / 2;
@@ -133,16 +138,16 @@ void Vector_Multiply(Vector a, Vector res, float b)
   res[2] = a[2] * b;
 }
 
-    // A spring dampening function
-    // for the camera
-    void SpringDamp(Vector currPos,
-                    Vector trgPos,      // Target Position
-                    Vector prevTrgPos,  // Previous Target Position
-                    Vector result,
+// A spring dampening function
+// for the camera
+void SpringDamp(Vector currPos,
+                Vector trgPos,      // Target Position
+                Vector prevTrgPos,  // Previous Target Position
+                Vector result,
 
-                    float springConst,  // Hooke's Constant
-                    float dampConst,    // Damp Constant
-                    float springLen)
+                float springConst,  // Hooke's Constant
+                float dampConst,    // Damp Constant
+                float springLen)
 {
   Vector disp;      // Displacement
   Vector velocity;  // Velocity
@@ -194,7 +199,6 @@ static void SetupCamera(void)
 
   // make sure to reset when done
   SELECT_CAMERA(0);
-
 }
 
 // Mouse_Movement
@@ -225,7 +229,6 @@ void Mouse_Movement(void)
 
   if (CAMERA->zoom_factor < 3.0f) CAMERA->zoom_factor = 3.0f;
   if (CAMERA->zoom_factor > MAX_ZOOM) CAMERA->zoom_factor = MAX_ZOOM;
-
 }
 
 void SetMousePosition(int x, int y)
@@ -261,7 +264,6 @@ void LoadCameras(void)
     driver_camera[index]->centerz = 0.0f;
 
     driver_camera[index]->zoom_factor = 3.2f;
-
   }
 
   // perform camera specific operations
@@ -297,7 +299,6 @@ void SetCamera(void)
   glRotatef(CAMERA->rotation[1], 0.0f, 1.0f, 0.0f);
   glRotatef(CAMERA->rotation[0], 1.0f, 0.0f, 0.0f);
   glRotatef(CAMERA->rotation[2], 0.0f, 0.0f, 1.0f);
-
 }
 
 // movecamera
@@ -328,9 +329,7 @@ void checkangle(void)
     {
       CAMERA->angle[index] -= 360;
     }
-
   }
-
 }
 
 // check rotation
@@ -348,9 +347,7 @@ void checkrotation(void)
     {
       CAMERA->rotation[index] -= 360;
     }
-
   }
-
 }
 
 // angle camera
@@ -364,7 +361,6 @@ void AngleCamera(float x, float y, float z)
   CAMERA->rotation[1] += y;
   CAMERA->rotation[2] += z;
   checkrotation();  // check bounds 0->359
-
 }
 
 // turn camera
@@ -375,7 +371,6 @@ void TurnCamera(float x, float y, float z)
   CAMERA->angle[1] -= y;
   CAMERA->angle[2] += z;
   checkangle();  // check bounds 0->359
-
 }
 
 // put camera
@@ -410,7 +405,6 @@ void SetCameraRot(float x, float y, float z)
   CAMERA->rotation[0] = x;
   CAMERA->rotation[1] = y;
   CAMERA->rotation[2] = z;
-
 }
 
 // set angles of the camera
@@ -445,7 +439,6 @@ void MoveForward(void)
   {
     TranslateCamera(0.0f, 0.0f, camera_speed);
   }
-
 }
 
 // Move Backwards
@@ -473,7 +466,6 @@ void MoveBackward(void)
   {
     TranslateCamera(0.0f, 0.0f, -camera_speed);
   }
-
 }
 
 // MoveLeft
@@ -491,7 +483,6 @@ void MoveLeft(void)
     angle = fTime * camera_speed;
     TranslateCamera(camera_speed, 0.0f, 0.0f);
   }
-
 }
 
 // SyncCamera
@@ -515,7 +506,6 @@ void MoveRight(void)
     angle = fTime * camera_speed;
     TranslateCamera(-angle, 0.0f, 0.0f);
   }
-
 }
 
 // Paused_Camera
@@ -666,8 +656,8 @@ static void ThirdPersonMode(bool* keys)
 
   // Of course you can replace glulookat
   // with your own function
-  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, FIRST_HEIGHT, y,
-            0.0f, 1.0f, 0.0f);
+  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, FIRST_HEIGHT, y, 0.0f,
+            1.0f, 0.0f);
 
   // player control, strange place I know
   Player_Control(keys);
@@ -692,12 +682,10 @@ void ToggleViewMode(void)
       camera_bot->view_mode = FIRST_PERSON_MODE;
     else
       camera_bot->view_mode = THIRD_PERSON_MODE;
-
   }
   else
   {
     camera_bot->view_mode = THIRD_PERSON_MODE;
-
   }
 }
 
@@ -716,11 +704,12 @@ void HandleCameraKeys(bool* keys)
 
   if ((sLogCounter++ % 60) == 0)
   {
-    printf("[camera] pos=(%.2f,%.2f,%.2f) rot=(%.2f,%.2f,%.2f) zoom=%.2f bot=(%.2f,%.2f) view=%d mouse=(%d,%d) paused=%d\n",
-           CAMERA->position[0], CAMERA->position[1], CAMERA->position[2],
-           CAMERA->rotation[0], CAMERA->rotation[1], CAMERA->rotation[2],
-           CAMERA->zoom_factor, camera_bot->x, camera_bot->y, camera_bot->view_mode,
-           mouse_x, mouse_y, ant_globals ? ant_globals->paused : -1);
+    printf(
+        "[camera] pos=(%.2f,%.2f,%.2f) rot=(%.2f,%.2f,%.2f) zoom=%.2f bot=(%.2f,%.2f) view=%d "
+        "mouse=(%d,%d) paused=%d\n",
+        CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], CAMERA->rotation[0],
+        CAMERA->rotation[1], CAMERA->rotation[2], CAMERA->zoom_factor, camera_bot->x, camera_bot->y,
+        camera_bot->view_mode, mouse_x, mouse_y, ant_globals ? ant_globals->paused : -1);
   }
 
   if (ant_globals->paused == 0)
@@ -732,12 +721,10 @@ void HandleCameraKeys(bool* keys)
     else if (camera_bot->view_mode == FIRST_PERSON_MODE)
     {
       FirstPersonMode(keys);
-
     }
   }
   else
   {
     Paused_Camera();
-
   }
 }

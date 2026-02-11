@@ -52,6 +52,9 @@
 #include <fireants.hpp>
 #include <bot.hpp>
 #include <gldrawlib.hpp>
+#include <keys.hpp>
+#include <legacy_stubs.hpp>
+#include <camera.hpp>
 
 #define CONFIG_FILE_NAME "config.ini"
 #define ERROR_FILE_NAME "error.log"

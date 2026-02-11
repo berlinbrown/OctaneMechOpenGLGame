@@ -26,8 +26,10 @@ permission.
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// - Sept 18, 2002
-*/
+ * 
+ * - Sept 18, 2002
+ * Updated: 2026 for Mac, OpenGL
+ */
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -42,7 +44,6 @@ permission.
 #include <cstdlib>
 
 #include "bot.hpp"
-
 #include "gldrawlib.hpp"
 #include "globals.hpp"
 #include "menu.hpp"
@@ -55,6 +56,7 @@ static float mTextHeight = 36.0f;
 // Note: the terrain should be about 1/2 what the
 // perspective z view angle is
 // terrain = 10000 then perspective z = 2000
+
 #define TERRAINVIEW 24.0f  // distance from database
 
 static float m_size_z = 0.01f;
@@ -94,10 +96,7 @@ void Build_StartMsg(void) {}
 // SetFunkyTexture
 // - must be placed right after loadTexture
 // but I didnt want to put it in the actual function
-void SetFunkyTexture(void)
-{
-  funky_texture = 0;
-}
+void SetFunkyTexture(void) { funky_texture = 0; }
 
 // GetFunkyTexture
 int GetFunkyTexture(void) { return funky_texture; }
@@ -210,21 +209,14 @@ int LoadBitmap_Lin(const char* filename, textureImage* texture)
     texture->data[i + 2] = temp;
   }
   return 1;
-
 }
 
 // loadtexture
 // - load a texture based on glaux load bitmap
-void LoadTexture(const char* filename)
-{
-  (void)filename;
-}
+void LoadTexture(const char* filename) { (void)filename; }
 
 // LoadTitleBitmap
-void Load_Titles(void)
-{
-  titlesID = 0;
-}
+void Load_Titles(void) { titlesID = 0; }
 
 // Title_Begin
 static void Title_Begin(void)
@@ -634,11 +626,8 @@ void Toggle_MenuItems(int dir)
     {
       cursor_index--;
       if (cursor_index < 0) cursor_index = MAX_MENU_ITEMS - 1;
-
     }
-
   }
-
 }
 
 // Set_MenuMode
@@ -695,7 +684,6 @@ bool Set_MenuMode(void)
           Reset_FireAnts();
 
           return false;
-
         }
 
         break;
@@ -757,7 +745,6 @@ bool Set_MenuMode(void)
       default:
         break;
     };
-
   }
 
   return false;

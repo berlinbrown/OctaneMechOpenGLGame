@@ -35,6 +35,11 @@
 #include <camera.hpp>
 #include <bot.hpp>
 #include <cmath>
+#include <collision.hpp>
+#include <globals.hpp>
+#include <gldrawlib.hpp>
+#include <legacy_stubs.hpp>
+#include <particles.hpp>
 
 DriverBots::DriverBots() {}
 

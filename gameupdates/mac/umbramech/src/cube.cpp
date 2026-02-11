@@ -34,7 +34,9 @@
 
 // Berlin Brown
 // berlin _dot__ brown  __at_ g_mail _ dot_ com
+
 // cube.cpp
+
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -158,7 +160,6 @@ static void drawcube(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
   //  Draw the right side
   //  Triangle
   v[0][0] = size;

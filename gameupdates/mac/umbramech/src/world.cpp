@@ -42,6 +42,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <bot.hpp>
+#include <world.hpp>
+#include <objects.hpp>
+#include <gldrawlib.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT walls

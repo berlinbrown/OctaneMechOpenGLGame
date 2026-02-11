@@ -51,6 +51,7 @@
 #include <plist.hpp>
 #include <maps.hpp>
 #include <gldrawlib.hpp>
+#include <bot.hpp>
 
 PtrList* map_list;
 

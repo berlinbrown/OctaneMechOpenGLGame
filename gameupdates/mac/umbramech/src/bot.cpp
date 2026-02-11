@@ -30,6 +30,7 @@
  * Description: Simple OpenGL Mech Game
  *
  * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Updated: 2026 for Mac, OpenGL
  */
 
 // bot.cpp
@@ -40,6 +41,8 @@
 // - This is the meat and potatoes of the
 // artificial control
 
+#include "bot.hpp"
+
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -48,13 +51,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bot.hpp"
+#include <camera.hpp>
+
 #include "collision.hpp"
-#include "globals.hpp"
 #include "gldrawlib.hpp"
+#include "globals.hpp"
 #include "objects.hpp"
 #include "plist.hpp"
-#include <camera.hpp>
 
 void ProcessBotEvent(DriverBotPtr bot);
 
@@ -104,7 +107,6 @@ void CreateAnts(int food)
   else
   {
     return;  // cant create any ants at the time
-
   }
 
   if (food >= food_tol)
@@ -127,13 +129,9 @@ void CreateAnts(int food)
         // dont want to over do it
         tmp += INITIAL_ANT_FOOD;
         if (tmp >= food_tol) break;
-
       }
-
     }
-
   }
-
 }
 
 // Find Angle
@@ -210,7 +208,6 @@ void RenderFood(DriverBotPtr bot)
     driver_objects[NORM_CUBE_OBJECT]->render();
 
     END_BOT;
-
   }
 }
 
@@ -239,7 +236,6 @@ void GetAntFood(DriverBotPtr bot)
 
       return;
     }
-
   }
 
   bot->food += food;
@@ -269,13 +265,11 @@ void EatFood(DriverBotPtr bot, float food_rate)
       bot->food += food_amt;
 
       return;
-
     }
 
     // add the food store to edible food
     bot->foodstore -= food_amt;
     bot->food += food_amt;
-
   }
   else
     bot->foodstore = 0;
@@ -390,7 +384,6 @@ void MoveBot(DriverBotPtr bot)
 
       return;
     }
-
   }
 
   // check if we are ok to deposit food
@@ -419,9 +412,7 @@ void MoveBot(DriverBotPtr bot)
       // create a new ant
       CreateAnts(NEST_FOOD_OBJECT);
       SetNestFood(NEST_FOOD_OBJECT);
-
     }
-
   }
 
   bot->numSteps++;
@@ -432,7 +423,6 @@ void MoveBot(DriverBotPtr bot)
     bot->state = CHANGE_DIR_STATE;
 
     return;  // process state else where
-
   }
 
   // Also We need to drop pheromones on the way home
@@ -443,7 +433,6 @@ void MoveBot(DriverBotPtr bot)
     {
       ActivatePheromone(bot->x, bot->y, bot->heading);
     }
-
   }
 
   // If we have a new heading change direction
@@ -463,7 +452,6 @@ void MoveBot(DriverBotPtr bot)
     bot->state = TURN_STATE;
 
     return;
-
   }
 
   bot->x -= (float)sin(bot->heading * PI_180) * bot->linearv;
@@ -603,7 +591,6 @@ void ResetBot(DriverBotPtr bot_ptr)
     bot_ptr->turn_rand = 15;
 
     bot_ptr->straightSteps = (rand() % MAX_STRAIGHT_STEPS_2) + MIN_STRAIGHT_STEPS_2;
-
   }
 }
 
@@ -636,7 +623,6 @@ void RenderBot(DriverBotPtr boid)
     driver_objects[ANT_OBJECT]->render();
 
     END_BOT;
-
   }
 }
 
@@ -648,7 +634,6 @@ void GenerateBots(void)
   for (index = 0; index < MAX_BOTS; index++)
   {
     bot_cluster[index] = CreateBot(index);
-
   }
 
   // create a stack for adding pheromone trails
@@ -656,7 +641,6 @@ void GenerateBots(void)
 }
 
 // InitFood
-// - called after the nest has been loaded
 void InitFood(void)
 {
   int index = 0;
@@ -664,7 +648,6 @@ void InitFood(void)
   for (index = 0; index < MAX_BOTS; index++)
   {
     GetAntFood(bot_cluster[index]);
-
   }
 }
 
