@@ -41,6 +41,10 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
+#include <collision.hpp>
+#include <lights.hpp>
+#include <legacy_stubs.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT pyramid

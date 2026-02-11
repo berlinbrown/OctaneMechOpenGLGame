@@ -40,6 +40,8 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
+#include <legacy_stubs.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT norm_cube
@@ -166,7 +168,6 @@ static void draw_norm_cube(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?
   //  Draw the right side
   //  Triangle
   v[0][0] = size;

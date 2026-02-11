@@ -39,6 +39,11 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
+#include <DriverBots.hpp>
+#include <globals.hpp>
+#include <bot.hpp>
+#include <gldrawlib.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT pheromone

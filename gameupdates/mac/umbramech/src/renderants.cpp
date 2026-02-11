@@ -43,6 +43,10 @@
 #include <string.h>
 #include <time.h>
 
+#include <objects.hpp>
+#include <lights.hpp>
+#include <legacy_stubs.hpp>
+
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT ant
 
@@ -273,7 +277,6 @@ static void init_ant(int list_id)
   // store the id through the function
   // there is probably a better way to do this
   CURRENT_OBJECT.call_id = list_id;
-
 }
 
 // Now the function to actually draw it

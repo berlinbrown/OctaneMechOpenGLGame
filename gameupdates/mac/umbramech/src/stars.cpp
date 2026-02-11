@@ -39,6 +39,8 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
 #include <stdlib.h>
+#include <objects.hpp>
+#include <bot.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT stars

@@ -41,6 +41,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <lights.hpp>
+#include <gldrawlib.hpp>
+#include <bot.hpp>
 
 static GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
 static GLfloat mat_ambient[] = {0.9f, 0.9f, 0.9f, 1.0f};

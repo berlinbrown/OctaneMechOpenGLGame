@@ -16,7 +16,6 @@ file(GLOB_RECURSE SRC_FILES
 
 # Exclude legacy/unused source that doesn't compile in current build.
 list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/DriverBots.cpp")
-list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/umbramain.cpp")
 
 # Header files (optional to list)
 include_directories(

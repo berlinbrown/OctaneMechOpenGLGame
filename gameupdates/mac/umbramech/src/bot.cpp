@@ -54,6 +54,7 @@
 #include "gldrawlib.hpp"
 #include "objects.hpp"
 #include "plist.hpp"
+#include <camera.hpp>
 
 void ProcessBotEvent(DriverBotPtr bot);
 

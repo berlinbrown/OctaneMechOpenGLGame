@@ -40,6 +40,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <legacy_stubs.hpp>
+#include <DriverBots.hpp>
+#include <globals.hpp>
+#include <bot.hpp>
+#include <gldrawlib.hpp>
+#include <objects.hpp>
 
 #undef CURRENT_PTR
 #define CURRENT_PTR StaticBotPtr

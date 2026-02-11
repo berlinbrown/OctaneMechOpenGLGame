@@ -40,6 +40,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <particles.hpp>
+#include <bot.hpp>
 
 static ParticleList* particle_set[MAX_PARTICLE_SET];
 static int particle_index = 0;

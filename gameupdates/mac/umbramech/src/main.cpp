@@ -29,9 +29,10 @@
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
-#include <ctime>
-#include <cstdlib>
 #include <unistd.h>
+
+#include <cstdlib>
+#include <ctime>
 
 #include "bot.hpp"
 #include "camera.hpp"
@@ -205,9 +206,7 @@ static void DrawGLScene(void)
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0f, 180.0f, 220.0f,
-            0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f);
+  gluLookAt(0.0f, 180.0f, 220.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
   BEGIN_BOT;
 

@@ -45,6 +45,13 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include <globals.hpp>
+#include <defaults.hpp>
+#include <text.hpp>
+#include <menu.hpp>
+#include <fireants.hpp>
+#include <bot.hpp>
+#include <gldrawlib.hpp>
 
 #define CONFIG_FILE_NAME "config.ini"
 #define ERROR_FILE_NAME "error.log"

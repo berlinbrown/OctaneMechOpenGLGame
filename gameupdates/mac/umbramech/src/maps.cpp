@@ -48,6 +48,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <plist.hpp>
+#include <maps.hpp>
+#include <gldrawlib.hpp>
 
 PtrList* map_list;
 
