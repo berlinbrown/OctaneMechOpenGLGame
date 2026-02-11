@@ -45,6 +45,18 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <DriverBots.hpp>
+#include <fireants.hpp>
+#include <globals.hpp>
+#include <bot.hpp>
+#include <legacy_stubs.hpp>
+#include <camera.hpp>
+#include <menu.hpp>
+#include <gldrawlib.hpp>
+#include <particles.hpp>
+#include <objects.hpp>
+#include <collision.hpp>
+#include <lights.hpp>
 
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT fireant

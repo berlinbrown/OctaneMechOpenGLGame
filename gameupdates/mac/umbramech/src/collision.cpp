@@ -51,6 +51,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <collision.hpp>
+#include <bot.hpp>
+#include <fireants.hpp>
+#include <camera.hpp>
+#include <gldrawlib.hpp>
 
 static void Reset_DistStack(void);
 static void Insert_DistStack(CollisionPtr ptr);

@@ -1,6 +1,9 @@
-Octane Mech is a 3D, OpenGL based Mech game
+# Octane Mech
+
+Octane Mech is a 3D, OpenGL based Mech game.  This variant is built for mac with OpenGL
 
 <img src="https://github.com/berlinbrown/OctaneMechOpenGLGame/raw/master/octanemech/glAntsMechGameWinNew/media/screenshot_mech_game1.png" />
+
 <img src="https://github.com/berlinbrown/OctaneMechOpenGLGame/raw/master/octanemech/glAntsMechGameWinNew/media/screenshot_mech_game2.png" />
 
 Also see: http://code.google.com/p/octanemech/ 

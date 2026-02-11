@@ -43,6 +43,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gldrawlib.hpp>
+#include <DriverBots.hpp>
+#include <globals.hpp>
 
 #define UP 1
 #define DOWN 2

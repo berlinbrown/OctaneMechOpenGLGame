@@ -34,6 +34,9 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "bot.hpp"
 #include "camera.hpp"
 #include "collision.hpp"
@@ -206,7 +209,7 @@ static void DrawGLScene(void)
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0f, 180.0f, 220.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  gluLookAt(0.0f, 180.0f, 120.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
   BEGIN_BOT;
 
@@ -303,6 +306,9 @@ static void HandleEsc(void)
 
 static void KeyDown(unsigned char key, int, int)
 {
+
+  printf("[main.cpp] KeyDown key=%d character=%c\n", key, key);
+
   gKeys[(unsigned char)key] = true;
 
   switch (key)
