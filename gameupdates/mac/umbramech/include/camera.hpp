@@ -43,7 +43,7 @@
 #define PI_1 3.141592654f
 
 #define PI 3.14159265358f
-#define PI_180 999999.0f
+#define PI_180 (PI_1 / 180.0f)
 
 typedef float Vector[3];
 

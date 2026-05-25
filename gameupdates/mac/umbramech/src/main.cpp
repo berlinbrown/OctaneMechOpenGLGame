@@ -31,6 +31,7 @@
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
+#include <math.h>
 #include <unistd.h>
 
 #include <cstdlib>
@@ -70,6 +71,18 @@ static clock_t gLastTime = 0;
 
 static float newYPos = 0.0f;
 static float newXPos = 0.0f;
+static float gCamYawDeg = 0.0f;
+static float gCamDistance = 120.0f;
+static bool gMouseDrag = false;
+static int gPrevMouseX = 0;
+static int gPrevMouseY = 0;
+
+static float ClampFloat(float value, float minv, float maxv)
+{
+  if (value < minv) return minv;
+  if (value > maxv) return maxv;
+  return value;
+}
 
 
 static void InitKeyCodes(void)
@@ -210,6 +223,10 @@ static void AnimateScene(void)
 
 static void DrawGLScene(void)
 {
+  const float camYawRad = gCamYawDeg * ((float)M_PI / 180.0f);
+  const float camX = sinf(camYawRad) * gCamDistance;
+  const float camZ = cosf(camYawRad) * gCamDistance;
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
 
@@ -218,8 +235,8 @@ static void DrawGLScene(void)
 
   // Document : gluLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
   //.  GLdouble centerX, GLdouble centerY, GLdouble centerZ, GLdouble upX, GLdouble upY, GLdouble upZ)
-  gluLookAt(0.0f, (180.0f + newYPos), 120.0f, 
-      0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  gluLookAt(camX, (180.0f + newYPos), camZ,
+            0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
   BEGIN_BOT;
 
@@ -254,7 +271,9 @@ static void DisplayGL(void)
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective((45.0f+newXPos), (GLfloat)gWindowWidth / (GLfloat)gWindowHeight, 0.1f, PERSPECTIVE_Z);
+  newXPos = ClampFloat(newXPos, -25.0f, 55.0f);
+  gluPerspective((45.0f + newXPos), (GLfloat)gWindowWidth / (GLfloat)gWindowHeight, 0.1f,
+                 PERSPECTIVE_Z);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -316,9 +335,6 @@ static void HandleEsc(void)
 
 static void KeyDown(unsigned char key, int, int)
 {
-
-  printf("[main.cpp] KeyDown key=%d character=%c\n", key, key);
-
   gKeys[(unsigned char)key] = true;
 
   switch (key)
@@ -354,21 +370,43 @@ static void KeyDown(unsigned char key, int, int)
 
     case 'o':
     case 'O':
-      newYPos += 10.0f;
-      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
-      break;      
+      newYPos += 8.0f;
+      break;
 
     case 'l':
     case 'L':
-      newYPos -= 10.0f;
-      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
-      break;            
+      newYPos -= 8.0f;
+      break;
 
     case 'k':
     case 'K':
-      newXPos += 10.0f;
-      printf("[main.cpp] KeyDown -Attempt to Move up- gluLookAt key=%d character=%c\n", key, key);
-      break;        
+      newXPos += 4.0f;
+      break;
+
+    case 'i':
+    case 'I':
+      newXPos -= 4.0f;
+      break;
+
+    case 'a':
+    case 'A':
+      gCamYawDeg -= 5.0f;
+      break;
+
+    case 'd':
+    case 'D':
+      gCamYawDeg += 5.0f;
+      break;
+
+    case '=':
+    case '+':
+      gCamDistance = ClampFloat(gCamDistance - 8.0f, 35.0f, 360.0f);
+      break;
+
+    case '-':
+    case '_':
+      gCamDistance = ClampFloat(gCamDistance + 8.0f, 35.0f, 360.0f);
+      break;
 
     default:
       break;
@@ -380,6 +418,11 @@ static void KeyUp(unsigned char key, int, int) { gKeys[(unsigned char)key] = fal
 static void SpecialKeyDown(int key, int, int)
 {
   gKeys[kSpecialKeyBase + key] = true;
+
+  if (ant_globals && ant_globals->menu_mode == MENU_RUN_MODE)
+  {
+    return;
+  }
 
   switch (key)
   {
@@ -398,7 +441,40 @@ static void SpecialKeyDown(int key, int, int)
 
 static void SpecialKeyUp(int key, int, int) { gKeys[kSpecialKeyBase + key] = false; }
 
-static void MouseMove(int x, int y) { SetMousePosition(x, y); }
+static void MouseButton(int button, int state, int x, int y)
+{
+  if (button == GLUT_LEFT_BUTTON)
+  {
+    gMouseDrag = (state == GLUT_DOWN);
+    gPrevMouseX = x;
+    gPrevMouseY = y;
+    return;
+  }
+
+  // Mouse wheel: 3 up, 4 down in GLUT
+  if ((state == GLUT_DOWN) && (button == 3 || button == 4))
+  {
+    const float delta = (button == 3) ? -6.0f : 6.0f;
+    gCamDistance = ClampFloat(gCamDistance + delta, 35.0f, 360.0f);
+  }
+}
+
+static void MouseMove(int x, int y)
+{
+  SetMousePosition(x, y);
+
+  if (!gMouseDrag) return;
+
+  const int dx = x - gPrevMouseX;
+  const int dy = y - gPrevMouseY;
+
+  gPrevMouseX = x;
+  gPrevMouseY = y;
+
+  gCamYawDeg += dx * 0.35f;
+  newYPos -= dy * 0.45f;
+  newYPos = ClampFloat(newYPos, -140.0f, 220.0f);
+}
 
 static void IdleGL(void) { glutPostRedisplay(); }
 
@@ -415,6 +491,7 @@ int main(int argc, char** argv)
   glutKeyboardUpFunc(KeyUp);
   glutSpecialFunc(SpecialKeyDown);
   glutSpecialUpFunc(SpecialKeyUp);
+  glutMouseFunc(MouseButton);
   glutPassiveMotionFunc(MouseMove);
   glutMotionFunc(MouseMove);
   glutIdleFunc(IdleGL);

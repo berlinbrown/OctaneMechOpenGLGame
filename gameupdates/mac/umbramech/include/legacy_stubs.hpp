@@ -10,7 +10,7 @@
 #endif
 
 #ifndef MED_GREEN
-#define MED_GREEN glColor3f(0.2f, 0.9f, 0.2f)
+#define MED_GREEN glColor3f(0.62f, 0.62f, 0.62f)
 #endif
 
 #ifndef MED_BLUE

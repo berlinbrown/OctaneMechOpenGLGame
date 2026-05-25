@@ -349,7 +349,7 @@ static void draw_pyramid(void)
   v[2][1] = size;
   v[2][2] = size;
 
-  MED_GREEN;
+  CLR_0;
   // Calc normal and draw
   N_2;
   GET_NORMAL;
