@@ -150,7 +150,7 @@ static void InitGame(void)
   chdir("resources");
 
   Super_LoadGlobals();
-  Load_ConfigFile();
+  Load_ConfigDefaultsOnly();
   Super_LoadBots();
   Super_FireAnts();
 

@@ -273,8 +273,7 @@ int GetGardenSize(void);
 void AddAnts(int ants);
 void DestroyGlobals(void);
 
-void Load_ConfigFile(void);
-void Add_ErrorStr(char* str);
+void Load_ConfigDefaultsOnly(void);
 
 void Draw_NetworkScreen(void);
 
