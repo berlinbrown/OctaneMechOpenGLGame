@@ -505,9 +505,9 @@ void LoadBotParms(DriverBotPtr bot_ptr)
 
   bot_ptr->linearv = BOT_SPEED;
 
-  bot_ptr->size[0] = 0.2f;  // scale
-  bot_ptr->size[1] = 0.2f;
-  bot_ptr->size[2] = 0.2f;
+  bot_ptr->size[0] = 0.45f;  // scale
+  bot_ptr->size[1] = 0.45f;
+  bot_ptr->size[2] = 0.45f;
 
   bot_ptr->color[0] = 0.8f;
   bot_ptr->color[1] = ((float)(rand() % 1000) / 2000.0f) + 0.2f;
