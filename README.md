@@ -12,6 +12,11 @@ See the most recent updates under the gameupdates directory
 
 Older code can be found under "legacy"
 
+Code builds and runs on a Mac M1 in 2026, navigate to : 
+https://github.com/berlinbrown/OctaneMechOpenGLGame/tree/master/gameupdates/mac/umbramech
+
+And run make
+
 ## History
 
 The game started around 1999 many years ago.  The goal was to run on Linux and Windows.  When OpenGL was coming out, to support graphics card including 3dfx cards.
