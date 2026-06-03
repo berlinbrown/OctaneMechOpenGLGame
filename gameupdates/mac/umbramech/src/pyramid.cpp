@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,11 +29,11 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // pyramid.cpp
-// - note: at present pyramid is not really a pyramid
+// - note: this object is a simplified pyramid-style mesh
 // but a box
 
 #include <GLUT/glut.h>   // GLUT for window/context
@@ -160,7 +160,6 @@ void InsertWall(float x, float y, float width, float height, float height_2)
 void CreateWalls(void)
 {
   int i = 0;
-  // InsertWall(4.0f, -10.0f, 20.0f, 0.5f, 55.0f);
 
   for (i = 0; i < LEVEL_MAX_WALLS; i++)
   {
@@ -492,8 +491,7 @@ static void init_pyramid(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
 
-  // store the id through the function
-  // there is probably a better way to do this
+  // Store the display list id for this object.
   CURRENT_OBJECT.call_id = list_id;
 
 }
@@ -501,11 +499,9 @@ static void init_pyramid(int list_id)
 // Now the function to actually draw it
 static void render_pyramid(void)
 {
-  // glPushMatrix();
 
   glCallList(CURRENT_OBJECT.call_id);
 
-  // glPopMatrix();
 }
 
 // compile

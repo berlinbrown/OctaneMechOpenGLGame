@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // globals.cpp
@@ -172,7 +172,6 @@ void Mode_SetRunning(void)
   // NOTE NOTE NOTE NOTE!
   // reset the bots here
   // this may take 1a while
-  // Reset_FireAnts();
   Reset_NetworkBots();
 }
 
@@ -487,7 +486,8 @@ void Draw_IntroScreen(void)
 
   glLineWidth(1.0f);
 
-  // DrawText(intro_text);
+  TextBegin(intro_text);
+
   // curr_Time = GetTickCount();
   curr_Time = clock();
 
@@ -506,6 +506,7 @@ void Draw_IntroScreen(void)
   }
 
   DrawText(intro_text);
+  TextEnd();
 }
 
 // Draw_HelpScreen
@@ -541,7 +542,9 @@ void Draw_HelpScreen(void)
 
   glLineWidth(1.0f);
 
+  TextBegin(help_text);
   DrawText(help_text);
+  TextEnd();
 }
 
 // Super_Printf
@@ -594,7 +597,7 @@ void Print_Score(void)
             ant_globals->score_obj[i].score, ant_globals->score_obj[i].kills);
 
     TextBegin(score_text);
-    DrawString(score_text, 10, 4 + (i * 10), buffer);
+    DrawString(score_text, 10, 30 + (i * 10), buffer);
     TextEnd();
 
   }
@@ -602,19 +605,19 @@ void Print_Score(void)
   // Also, print frames per second
   sprintf(buffer, "FPS: %0.2f", framerate);
   TextBegin(score_text);
-  DrawString(score_text, 500, 4, buffer);
+  DrawString(score_text, 500, 30, buffer);
   TextEnd();
 
   // And the score and health
   sprintf(buffer, "Armor: %0.2f", ant_globals->player_health);
   TextBegin(score_text);
-  DrawString(score_text, 300, 4, buffer);
+  DrawString(score_text, 300, 30, buffer);
   TextEnd();
 
   // Print the current position
   sprintf(buffer, "%d/%d Bots", ant_globals->alive_bots, (MAX_FIRE_ANTS - 1));
   TextBegin(score_text);
-  DrawString(score_text, 300, 14, buffer);
+  DrawString(score_text, 300, 44, buffer);
   TextEnd();
 
   // Print some paused text
@@ -644,7 +647,9 @@ void Print_Score(void)
 // Draw Text
 void Super_DrawText(void)
 {
+  TextBegin(main_text);
   DrawText(main_text);
+  TextEnd();
 
   Print_NetRun();
 
@@ -653,7 +658,6 @@ void Super_DrawText(void)
   Print_Score();
 }
 
-// Destroy_MainText(void)
 void Super_KillText(void)
 {
   DestroyTextBox(main_text);
@@ -677,8 +681,6 @@ void Super_KillGlobals(void)
 {
   // free the other allocated
   // arrays
-  // free(ant_globals->score_obj);
-  // free(ant_globals);
 
   RELEASE_OBJECT(ant_globals->score_obj);
 
@@ -784,28 +786,43 @@ DWORD GetGameTick(void) { return ant_globals->ticks; }
 void PrintGlobals(void)
 {
   int i = 0;
+  const int x = 10;
+  const int y0 = 80;
+  const int dy = 14;
 
-  glRasterPos2i(10, 48 + 14);
+  glRasterPos2i(x, y0 + dy * 1);
   PrintText("ANTS: %d", ant_globals->alive_ants);
 
-  glRasterPos2i(10, 48 + 28);
+  glRasterPos2i(x, y0 + dy * 2);
   PrintText("TIME: %0.1f", ant_globals->seconds);
 
-  glRasterPos2i(10, 48 + 42);
+  glRasterPos2i(x, y0 + dy * 3);
   PrintText("TIME_T: %0.0f", ant_globals->time_t);
 
-  glRasterPos2i(10, 48 + 56);
+  glRasterPos2i(x, y0 + dy * 4);
   PrintText("FOOD: %0.0f", ant_globals->nest_food);
 
-  glRasterPos2i(10, 48 + 70);
+  glRasterPos2i(x, y0 + dy * 5);
   PrintText("GARD: %d", ant_globals->garden);
 
-  // note: hud_NEST_FOOD must be turned off
-  glRasterPos2i(10, 48 + 56);
-  PrintText("x: %0.2f y: %0.2f", GetBotX(), GetBotY());
+  glRasterPos2i(x, y0 + dy * 6);
+  PrintText("BOT: %0.1f %0.1f", GetBotX(), GetBotY());
 
-  glRasterPos2i(10, 48 + 70);
-  PrintText("LIFE: %0.2f", ant_globals->player_health);
+  glRasterPos2i(x, y0 + dy * 7);
+  PrintText("LIFE: %0.1f", ant_globals->player_health);
+
+  glRasterPos2i(x, y0 + dy * 8);
+  {
+    int vm = GetCurrentCameraNumber();
+    const char* camName = (vm == 1) ? "THIRD" : (vm == 2) ? "FIRST" : (vm == 3) ? "DEMO" : (vm == 4) ? "CLOSE3" : "?";
+    PrintText("CAM: %d (%s)", vm, camName);
+  }
+
+  glRasterPos2i(x, y0 + dy * 9);
+  PrintText("POS: %0.1f %0.1f %0.1f", GetCameraX(), GetCameraY(), GetCameraZ());
+
+  glRasterPos2i(x, y0 + dy * 10);
+  PrintText("LOOK: %0.1f %0.1f %0.1f", GetCameraLookX(), GetCameraLookY(), GetCameraLookZ());
 }
 
 // RESET_VALUE

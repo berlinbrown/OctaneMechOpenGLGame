@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -74,6 +74,44 @@ static float newXPos = 0.0f;
 static float gCamYawDeg = 0.0f;
 static float gCamDistance = 120.0f;
 static bool gMouseDrag = false;
+
+static void PrintCurrentCameraView(void)
+{
+  const float camYawRad = gCamYawDeg * ((float)M_PI / 180.0f);
+  const int viewMode = GetViewMode();
+
+  if (viewMode == THIRD_PERSON_MODE)
+  {
+    const float camX = sinf(camYawRad) * gCamDistance;
+    const float camZ = cosf(camYawRad) * gCamDistance;
+    printf("Camera 1 (World View) pos=(%.2f, %.2f, %.2f)\n", camX, (180.0f + newYPos), camZ);
+  }
+  else if (viewMode == CLOSE_THIRD_MODE)
+  {
+    const float mechX = GetBotX();
+    const float mechZ = GetBotY();
+    const float forwardX = sinf(camYawRad);
+    const float forwardZ = cosf(camYawRad);
+    const float rightX = cosf(camYawRad);
+    const float rightZ = -sinf(camYawRad);
+    const float eyeX = mechX - forwardX * 10.0f + rightX * 4.0f;
+    const float eyeZ = mechZ - forwardZ * 10.0f + rightZ * 4.0f;
+    printf("Camera 2 (Close Third Person) pos=(%.2f, %.2f, %.2f) target=(%.2f, %.2f, %.2f)\n",
+           eyeX, (14.0f + newYPos), eyeZ, mechX, 3.0f, mechZ);
+  }
+  else if (viewMode == FIRST_PERSON_MODE)
+  {
+    const float mechX = GetBotX();
+    const float mechZ = GetBotY();
+    const float eyeX = mechX - sinf(camYawRad) * 12.0f;
+    const float eyeZ = mechZ - cosf(camYawRad) * 12.0f;
+    printf("Camera 3 (First Person) pos=(%.2f, %.2f, %.2f)\n", eyeX, (18.0f + newYPos), eyeZ);
+  }
+  else if (viewMode == DEMO_MODE)
+  {
+    printf("Camera 4 (Demo Spin) pos=(%.2f, %.2f, %.2f)\n", CAMERA->position[0], CAMERA->position[1], CAMERA->position[2]);
+  }
+}
 static int gPrevMouseX = 0;
 static int gPrevMouseY = 0;
 
@@ -129,16 +167,28 @@ static void DrawHUD(void)
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-
-  gluPerspective(45.0f, (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, PERSPECTIVE_Z);
+  glOrtho(0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, -1.0, 1.0);
 
   glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 
-  GetFramesPerSecond();
+  glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
 
+  glColor3ub(0, 255, 0);
+  PrintGlobals();
+
+  glPopAttrib();
+
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
+
+  GetFramesPerSecond();
 }
 
 static void InitGame(void)
@@ -168,6 +218,8 @@ static void InitGame(void)
   glDepthFunc(GL_LEQUAL);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+  InitMaterial();
+
   quadric = gluNewQuadric();
   gluQuadricNormals(quadric, GLU_SMOOTH);
   gluQuadricTexture(quadric, GL_TRUE);
@@ -195,7 +247,6 @@ static void InitGame(void)
   Build_ParticleSet();
   Reset_FontID();
 
-  Load_Titles();
   Super_MainText();
 
   CreateWalls();
@@ -235,8 +286,39 @@ static void DrawGLScene(void)
 
   // Document : gluLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
   //.  GLdouble centerX, GLdouble centerY, GLdouble centerZ, GLdouble upX, GLdouble upY, GLdouble upZ)
-  gluLookAt(camX, (180.0f + newYPos), camZ,
-            0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  if (ant_globals && ant_globals->paused) {
+    // Paused: spin the camera slowly around the world
+    Paused_Camera();
+  } else if (GetViewMode() == CLOSE_THIRD_MODE) {
+    // Close third-person: raised slightly and centered on the mech body
+    const float mechX = GetBotX();
+    const float mechZ = GetBotY();
+    const float forwardX = sinf(camYawRad);
+    const float forwardZ = cosf(camYawRad);
+    const float rightX = cosf(camYawRad);
+    const float rightZ = -sinf(camYawRad);
+    const float eyeX = mechX - forwardX * 10.0f + rightX * 4.0f;
+    const float eyeZ = mechZ - forwardZ * 10.0f + rightZ * 4.0f;
+    gluLookAt(eyeX, 14.0f + newYPos, eyeZ,
+              mechX, 3.0f, mechZ,  0.0f, 1.0f, 0.0f);
+  } else if (GetViewMode() == FIRST_PERSON_MODE) {
+    // First-person: camera sits just behind and above the mech, looking forward
+    const float mechX = GetBotX();
+    const float mechZ = GetBotY();
+    const float behindX = mechX - sinf(camYawRad) * 12.0f;
+    const float behindZ = mechZ - cosf(camYawRad) * 12.0f;
+    const float lookX   = mechX + sinf(camYawRad) * 30.0f;
+    const float lookZ   = mechZ + cosf(camYawRad) * 30.0f;
+    gluLookAt(behindX, 18.0f + newYPos, behindZ,
+              lookX,  8.0f,             lookZ,  0.0f, 1.0f, 0.0f);
+  } else if (GetViewMode() == DEMO_MODE) {
+    // Demo/attract mode: spinning camera, entities still animate
+    Paused_Camera();
+  } else {
+    // World view: high orbit around the whole map (default)
+    gluLookAt(camX, (180.0f + newYPos), camZ,
+              0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  }
 
   BEGIN_BOT;
 
@@ -341,6 +423,7 @@ static void KeyDown(unsigned char key, int, int)
   {
     case '\t':
       ToggleViewMode();
+      PrintCurrentCameraView();
       break;
 
     case '\r':

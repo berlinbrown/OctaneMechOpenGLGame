@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // fireants.cpp
@@ -70,31 +70,31 @@ static void render_fireant(void);
 static void draw_fireant(void);
 
 // For the bot
-GLfloat red_ambient[] = {0.6f, 0.6f, 0.6f, 1.0f};
-GLfloat red_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-GLfloat red_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat red_ambient[] = {0.24f, 0.20f, 0.20f, 1.0f};
+GLfloat red_diffuse[] = {0.62f, 0.55f, 0.55f, 1.0f};
+GLfloat red_specular[] = {0.82f, 0.82f, 0.84f, 1.0f};
 GLfloat rno_shininess[] = {0.0f};
 GLfloat rlow_shininess[] = {5.0f};
 GLfloat rhigh_shininess[] = {100.0f};
-GLfloat rmat_emission[] = {0.3f, 0.3f, 0.3f, 0.0f};
+GLfloat rmat_emission[] = {0.04f, 0.03f, 0.03f, 0.0f};
 
 // For the nme bot
-GLfloat blue_ambient[] = {0.0f, 0.0f, 0.7f, 1.0f};
-GLfloat blue_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-GLfloat blue_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat blue_ambient[] = {0.16f, 0.18f, 0.28f, 1.0f};
+GLfloat blue_diffuse[] = {0.52f, 0.58f, 0.68f, 1.0f};
+GLfloat blue_specular[] = {0.82f, 0.82f, 0.86f, 1.0f};
 GLfloat bno_shininess[] = {0.0f};
 GLfloat blow_shininess[] = {5.0f};
 GLfloat bhigh_shininess[] = {100.0f};
-GLfloat bmat_emission[] = {0.0f, 0.1f, 0.3f, 0.0f};
+GLfloat bmat_emission[] = {0.02f, 0.03f, 0.05f, 0.0f};
 
 // For the cannon
-GLfloat color_ambient[] = {0.4f, 0.4f, 0.4f, 1.0f};
-GLfloat color_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-GLfloat color_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat color_ambient[] = {0.22f, 0.22f, 0.22f, 1.0f};
+GLfloat color_diffuse[] = {0.55f, 0.55f, 0.58f, 1.0f};
+GLfloat color_specular[] = {0.85f, 0.85f, 0.88f, 1.0f};
 GLfloat yno_shininess[] = {0.0f};
 GLfloat ylow_shininess[] = {5.0f};
 GLfloat yhigh_shininess[] = {100.0f};
-GLfloat ymat_emission[] = {0.1f, 0.1f, 0.1f, 0.0f};
+GLfloat ymat_emission[] = {0.02f, 0.02f, 0.02f, 0.0f};
 
 static int FindBot(DriverBotPtr bot);
 static bool SearchEvent(DriverBotPtr bot);
@@ -212,7 +212,6 @@ void Super_FireAnts(void)
 // Super_KillFires
 void Super_KillFires(void)
 {
-  // ifree(fire_cluster);
   RELEASE_OBJECT(fire_cluster);
 }
 
@@ -1058,8 +1057,6 @@ void DrawBullets(StaticBotPtr boid)
   MED_GREEN;
 
   // Only draw a ball for right now
-  // glTranslatef(boid->position[0], 0.1f, boid->position[2]);
-  // gluSphere(quadric, 0.08f, 18, 8);
   Render_LineStrip(boid->position[0], boid->position[2], boid->old_x, boid->old_y, BULLET_H1,
                    BULLET_H2);
 
@@ -1102,7 +1099,7 @@ static void ChangeFireDir(DriverBotPtr bot)
   bot->target_dir = bot->heading;
 
   // pick a random direction
-  bot->target_dir += rand() % bot->turn_rand;  // 30 degrees ok?
+  bot->target_dir += rand() % bot->turn_rand;  // Apply a bounded random turn.
 
   if (bot->target_dir >= 360) bot->target_dir -= 360;
 
@@ -1624,7 +1621,6 @@ void GenerateFireAnts(void)
     LoadFireAnts(fire_cluster[index]);
 
     // used for collision testing, be careful
-    // InsertColListA(fire_cluster[index]);
     Insert_MovingObj(fire_cluster[index]);
 
   }
@@ -1640,7 +1636,6 @@ void Reset_Fire_Ant(DriverBotPtr bot, int id)
   bot->id = id;
 
   // make sure to kill the bullets
-  // free(bot->bullets);
   RELEASE_OBJECT(bot->bullets);
 
   bot->bullets = (StaticBot*)malloc(MAX_BULLETS * sizeof(StaticBot));
@@ -1795,7 +1790,6 @@ void ShutdownFireAnts(void)
 
   for (index = 0; index < MAX_SAVED_BOTS; index++)
   {
-    // free(fire_cluster[index]->bullets);
     RELEASE_OBJECT(fire_cluster[index]->bullets);
 
     DestroyBot(fire_cluster[index]);
@@ -1824,7 +1818,6 @@ void AnimNetworkBots(void)
     if (index > 0)
     {
       // get data from the network
-      // Run_NetworkBots();
     }
     else if (index == 0)
     {
@@ -1970,8 +1963,7 @@ void DrawFireAnts(void)
   }
   else
   {
-    if (fire_cluster[0]->view_mode == THIRD_PERSON_MODE) RenderFireAnt(fire_cluster[0]);
-
+    RenderFireAnt(fire_cluster[0]);
   }
 
   RenderBullets(fire_cluster[0]);
@@ -2350,8 +2342,7 @@ static void draw_fireant(void)
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
 
-  // This is where I get weird
-  // semi-anime inspired
+  // Shape the upper body profile.
   v[0][0] = -f_size;
   v[0][1] = height_2;
   v[0][2] = -in_size;
@@ -2421,8 +2412,7 @@ static void init_fireant(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
 
-  // store the id through the function
-  // there is probably a better way to do this
+  // Store the display list id for this object.
   CURRENT_OBJECT.call_id = list_id;
 
 }
@@ -2430,11 +2420,9 @@ static void init_fireant(int list_id)
 // Now the function to actually draw it
 static void render_fireant(void)
 {
-  // glPushMatrix();
 
   glCallList(CURRENT_OBJECT.call_id);
 
-  // glPopMatrix();
 }
 
 // compile

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  * Updated: 2026 for Mac, OpenGL
  */
 
@@ -106,7 +106,7 @@ void CreateAnts(int food)
   }
   else
   {
-    return;  // cant create any ants at the time
+    return;  // Not enough food is available to create new ants.
   }
 
   if (food >= food_tol)
@@ -118,7 +118,6 @@ void CreateAnts(int food)
       // look for dead slot
       if (bot_cluster[i]->alive == DEAD_STATE)
       {
-        // DestroyBot(bot_cluster[i]);
         // bot_cluster[i] = CreateBot(i);
         ResetBot(bot_cluster[i]);
 
@@ -212,7 +211,7 @@ void RenderFood(DriverBotPtr bot)
 }
 
 // GetAntFood
-// - intially
+// - initialize the ant's food reserve
 void GetAntFood(DriverBotPtr bot)
 {
   float food;
@@ -231,7 +230,6 @@ void GetAntFood(DriverBotPtr bot)
 
     if (food <= 0)
     {
-      nest.objects[0]->food;
       bot->food = 0;
 
       return;
@@ -259,7 +257,7 @@ void EatFood(DriverBotPtr bot, float food_rate)
       // try to found how much food is left
       food_amt = bot->foodstore;
 
-      bot->foodstore = 0;  // thats all
+      bot->foodstore = 0;  // No stored food remains.
 
       // add the foodstore to the edible food
       bot->food += food_amt;
@@ -312,14 +310,14 @@ void ChangeDirection(DriverBotPtr bot)
   {
     bot->turn_rand = 30;
 
-    // remove if you dont like calling rand
+    // Choose a new straight-line interval.
     bot->straightSteps = (rand() % MAX_STRAIGHT_STEPS) + MIN_STRAIGHT_STEPS;
   }
 
   bot->target_dir = bot->heading;
 
   // pick a random direction
-  bot->target_dir += rand() % bot->turn_rand;  // 30 degrees ok?
+  bot->target_dir += rand() % bot->turn_rand;  // Apply a bounded random turn.
 
   if (bot->target_dir >= 360) bot->target_dir -= 360;
 

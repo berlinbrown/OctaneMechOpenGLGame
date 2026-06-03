@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -30,7 +30,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // commands.cpp - The command interface to have a LaunchCommand

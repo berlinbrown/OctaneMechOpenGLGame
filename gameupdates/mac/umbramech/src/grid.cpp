@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // Berlin Brown
@@ -144,8 +144,7 @@ static void drawbackxz(float gridsize, float sections)
 // - grids in the back for testing
 static void draw_grid(void)
 {
-  drawbackxy(GRID_SIZE, 1.0f);
-  drawbackyz(GRID_SIZE, 1.0f);
+  // background wall planes removed (caused green edge artifact)
 }
 
 // init
@@ -153,8 +152,7 @@ static void draw_grid(void)
 // one important function
 static void init_grid(int list_id)
 {
-  // store the id through the function
-  // there is probably a better way to do this
+  // Store the display list id for this object.
   CURRENT_OBJECT.call_id = list_id;
 
 }
@@ -164,8 +162,8 @@ static void render_grid(void)
 {
   glPushMatrix();
 
-  // standard color - green
-  glColor3f(0.0f, 0.8f, 0.0f);
+  // background grid color - dark neutral
+  glColor3f(0.15f, 0.15f, 0.25f);
 
   glCallList(CURRENT_OBJECT.call_id);
 

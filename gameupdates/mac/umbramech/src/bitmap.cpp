@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -158,17 +158,14 @@ int LoadBitmap_Lin(const char* filename, textureImage* texture)
     printf("Error reading file!\n");
     return 0;
   }
-  // printf("Data at Offset: %ld\n", bfOffBits);
 
   /* skip size of bitmap info header */
   fseek(file, 4, SEEK_CUR);
   /* get the width of the bitmap */
   fread(&texture->width, sizeof(int), 1, file);
-  // printf("Width of Bitmap: %d\n", texture->width);
 
   /* get the height of the bitmap */
   fread(&texture->height, sizeof(int), 1, file);
-  // printf("Height of Bitmap: %d\n", texture->height);
 
   /* get the number of planes (must be set to 1) */
   fread(&biPlanes, sizeof(short int), 1, file);
@@ -184,7 +181,6 @@ int LoadBitmap_Lin(const char* filename, textureImage* texture)
     return 0;
   }
 
-  // printf("Bits per Pixel: %d\n", biBitCount);
   if (biBitCount != 24)
   {
     printf("Bits per Pixel not 24\n");
@@ -192,7 +188,6 @@ int LoadBitmap_Lin(const char* filename, textureImage* texture)
   }
   /* calculate the size of the image in bytes */
   biSizeImage = texture->width * texture->height * 3;
-  // printf("Size of the image data: %ld\n", biSizeImage);
   texture->data = (unsigned char*)malloc(biSizeImage);
   /* seek to the actual data */
   fseek(file, bfOffBits, SEEK_SET);
@@ -522,9 +517,20 @@ void Draw_GameOver(void)
 // Draw_Title
 void Draw_Title(void)
 {
-  return;
   float offset = 34.0f;
   float begin = 120.0f;
+
+  if (ant_globals->paused)
+  {
+    glLineWidth(2.0f);
+
+    Title_Begin();
+    Draw_HelpScreen();
+    Title_End();
+
+    glLineWidth(1.0f);
+    return;
+  }
 
   // Also draw game over
   // if it is turned on
@@ -573,32 +579,42 @@ void Draw_Title(void)
 
       Draw_Shadow();
 
-      glColor4ub(255, 255, 255, 255);
+      {
+        char menu_new_game[] = "NEW GAME";
+        char menu_exit[] = "EXIT";
+        char menu_help[] = "HELP";
+        char menu_settings[] = "SETTINGS";
+        char menu_demo[] = "DEMO";
 
-      // title, newgame, exit, demo
-      if (cursor_index == 0) glColor4ub(255, 255, 0, 255);
-      Render_BText(6, 192.0f, begin + (0 * offset), 0.03f);
+        glRasterPos2i(192, begin + (0 * offset));
+        if (cursor_index == 0) glColor4ub(255, 255, 0, 255);
+        else glColor4ub(255, 255, 255, 255);
+        PrintText(menu_new_game);
 
-      glColor4ub(255, 255, 255, 255);
-      if (cursor_index == 1) glColor4ub(255, 255, 0, 255);
-      Render_BText(5, 192.0f, begin + (1 * offset), 0.016f);
+        glRasterPos2i(192, begin + (1 * offset));
+        if (cursor_index == 1) glColor4ub(255, 255, 0, 255);
+        else glColor4ub(255, 255, 255, 255);
+        PrintText(menu_exit);
 
-      glColor4ub(255, 255, 255, 255);
-      if (cursor_index == 2) glColor4ub(255, 255, 0, 255);
-      Render_BText(4, 192.0f, begin + (2 * offset), -0.015f);
+        glRasterPos2i(192, begin + (2 * offset));
+        if (cursor_index == 2) glColor4ub(255, 255, 0, 255);
+        else glColor4ub(255, 255, 255, 255);
+        PrintText(menu_help);
 
-      glColor4ub(255, 255, 255, 255);
-      if (cursor_index == 3) glColor4ub(255, 255, 0, 255);
-      Render_BText(3, 192.0f, begin + (3 * offset), -0.041f);
+        glRasterPos2i(192, begin + (3 * offset));
+        if (cursor_index == 3) glColor4ub(255, 255, 0, 255);
+        else glColor4ub(255, 255, 255, 255);
+        PrintText(menu_settings);
 
-      glColor4ub(255, 255, 255, 255);
-      if (cursor_index == 4) glColor4ub(255, 255, 0, 255);
-      Render_BText(1, 192.0f, begin + (4 * offset), 0.01f);
+        glRasterPos2i(192, begin + (4 * offset));
+        if (cursor_index == 4) glColor4ub(255, 255, 0, 255);
+        else glColor4ub(255, 255, 255, 255);
+        PrintText(menu_demo);
+      }
 
       // draw the selection tool --
       Draw_Cursor(cursor_heights[cursor_index]);
 
-      // Draw_HelpScreen();
       Draw_IntroScreen();
 
       Title_End();

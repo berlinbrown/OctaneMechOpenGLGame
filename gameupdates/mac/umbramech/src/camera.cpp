@@ -30,7 +30,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // camera.cpp
@@ -66,6 +66,22 @@ void GetCameraBot(DriverBotPtr bot) { camera_bot = bot; }
 float GetBotX(void) { return camera_bot->x; }
 
 float GetBotY(void) { return camera_bot->y; }
+
+int GetViewMode(void) { return camera_bot ? camera_bot->view_mode : THIRD_PERSON_MODE; }
+
+float GetCameraX(void) { return CAMERA->position[0]; }
+
+float GetCameraY(void) { return CAMERA->position[1]; }
+
+float GetCameraZ(void) { return CAMERA->position[2]; }
+
+float GetCameraLookX(void) { return camera_bot ? camera_bot->look_x : 0.0f; }
+
+float GetCameraLookY(void) { return camera_bot ? camera_bot->look_y : 0.0f; }
+
+float GetCameraLookZ(void) { return FIRST_HEIGHT; }
+
+int GetCurrentCameraNumber(void) { return camera_bot ? camera_bot->view_mode : 0; }
 
 // with
 static float camera_speed = 0.6f;
@@ -509,8 +525,7 @@ void MoveRight(void)
 }
 
 // Paused_Camera
-// - gives kind of a matrix effect
-// - not really, but at least I tried
+// - provides a slow orbit while the simulation is paused
 void Paused_Camera(void)
 {
   if (!camera_bot) return;
@@ -571,8 +586,7 @@ void Paused_Camera(void)
   // with your own function
   gluLookAt(cam_x, (CAMERA_HEIGHT * zoom), cam_y, x, 0.0f, y, 0.0f, 1.0f, 0.0f);
 
-  // Rotate the paused camera a bot
-  // based on the frame rate
+  // Rotate the paused camera based on the frame rate.
   if (framerate <= 8.0f) framerate = 30.0f;
 
   t = 0.38f / framerate;
@@ -604,7 +618,49 @@ static void FirstPersonMode(bool* keys)
   gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, h, y, 0.0f, 1.0f,
             0.0f);
 
-  // player control, strange place I know
+  // Keep player control here so camera updates and movement stay in sync.
+  Player_Control(keys);
+}
+
+// CloseThirdPersonMode
+// - close third-person view that follows the character
+static void CloseThirdPersonMode(bool* keys)
+{
+  float look_x, look_y;
+  float cam_x, cam_y;
+  float ang;
+  float rad;
+  float tmp_heading;
+  float tmp_x;
+  float tmp_y;
+  float close_distance = 10.0f;  // distance behind character
+  float close_height = 14.0f;    // camera height for close third-person
+
+  if (!camera_bot) return;
+
+  // Calculate where to look (slightly ahead of character)
+  look_x = camera_bot->x;
+  look_y = camera_bot->y;
+
+  // Calculate camera position behind character
+  ang = camera_bot->heading + 180.0f;  // behind the character
+  if (ang > 360.0f) ang -= 360.0f;
+
+  rad = ang / RAD_TO_DEG;
+  
+  tmp_x = close_distance * (float)cos(rad);
+  tmp_y = close_distance * (float)sin(rad);
+
+  cam_x = tmp_x + camera_bot->x;
+  cam_y = (-tmp_y) + camera_bot->y;
+
+  Pos_Camera(cam_x, close_height, cam_y);
+
+  // Look at the character
+  gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], look_x, 3.0f, look_y,
+            0.0f, 1.0f, 0.0f);
+
+  // Keep player control here so camera updates and movement stay in sync.
   Player_Control(keys);
 }
 
@@ -659,7 +715,7 @@ static void ThirdPersonMode(bool* keys)
   gluLookAt(CAMERA->position[0], CAMERA->position[1], CAMERA->position[2], x, FIRST_HEIGHT, y, 0.0f,
             1.0f, 0.0f);
 
-  // player control, strange place I know
+  // Keep player control here so camera updates and movement stay in sync.
   Player_Control(keys);
 }
 
@@ -678,8 +734,13 @@ void ToggleViewMode(void)
       return;
     }
 
+    // Cycle: world view -> close third-person -> first-person -> demo (spin) -> world view
     if (camera_bot->view_mode == THIRD_PERSON_MODE)
+      camera_bot->view_mode = CLOSE_THIRD_MODE;
+    else if (camera_bot->view_mode == CLOSE_THIRD_MODE)
       camera_bot->view_mode = FIRST_PERSON_MODE;
+    else if (camera_bot->view_mode == FIRST_PERSON_MODE)
+      camera_bot->view_mode = DEMO_MODE;
     else
       camera_bot->view_mode = THIRD_PERSON_MODE;
   }
@@ -718,10 +779,15 @@ void HandleCameraKeys(bool* keys)
     {
       ThirdPersonMode(keys);
     }
+    else if (camera_bot->view_mode == CLOSE_THIRD_MODE)
+    {
+      CloseThirdPersonMode(keys);
+    }
     else if (camera_bot->view_mode == FIRST_PERSON_MODE)
     {
       FirstPersonMode(keys);
     }
+    // DEMO_MODE: Paused_Camera spins continuously; no key handling
   }
   else
   {

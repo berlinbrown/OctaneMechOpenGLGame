@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // lights.cpp
@@ -56,6 +56,11 @@ static GLfloat low_shininess[] = {5.0f};
 static GLfloat high_shininess[] = {100.0f};
 static GLfloat mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
+static GLfloat scene_ambient[] = {0.28f, 0.28f, 0.31f, 1.0f};
+static GLfloat light_ambient[] = {0.18f, 0.18f, 0.22f, 1.0f};
+static GLfloat light_diffuse[] = {0.72f, 0.72f, 0.76f, 1.0f};
+static GLfloat light_specular[] = {0.42f, 0.42f, 0.46f, 1.0f};
+
 static DriverLights* light_ptrs[MAX_LIGHTS] = {NULL};
 
 // Materials
@@ -73,6 +78,9 @@ void InitMaterial(void)
 {
   // Change the main properities for all objects
   setmaterial(no_mat, mat_diffuse, mat_specular, low_shininess, no_mat);
+
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, scene_ambient);
+  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 }
 
 // CreateBot
@@ -101,7 +109,6 @@ DriverLights* CreateLight(int id)
 // DestroyLight
 void DestroyLight(DriverLightsPtr b)
 {
-  // free(b);
   RELEASE_OBJECT(b);
 
 }
@@ -133,6 +140,9 @@ void set_Light(DriverLightsPtr bulb)
     glEnable(bulb->light_id);
 
     // Setup the light
+    glLightfv(bulb->light_id, GL_AMBIENT, light_ambient);
+    glLightfv(bulb->light_id, GL_DIFFUSE, light_diffuse);
+    glLightfv(bulb->light_id, GL_SPECULAR, light_specular);
     glLightfv(bulb->light_id, GL_POSITION, bulb->position);
     glDisable(GL_LIGHTING);
 

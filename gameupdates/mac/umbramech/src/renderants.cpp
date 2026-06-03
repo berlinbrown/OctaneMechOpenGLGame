@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // ant.cpp
@@ -56,13 +56,13 @@ static void draw_ant(void);
 static void render_ant(void);
 static void draw_ant(void);
 
-GLfloat xmat_ambient[] = {0.0f, 0.9f, 0.0f, 1.0f};
-GLfloat xmat_diffuse[] = {0.9f, 0.8f, 0.8f, 1.0f};
-GLfloat xmat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat xmat_ambient[] = {0.18f, 0.22f, 0.18f, 1.0f};
+GLfloat xmat_diffuse[] = {0.58f, 0.62f, 0.58f, 1.0f};
+GLfloat xmat_specular[] = {0.75f, 0.75f, 0.78f, 1.0f};
 GLfloat xno_shininess[] = {0.0f};
 GLfloat xlow_shininess[] = {5.0f};
 GLfloat xhigh_shininess[] = {100.0f};
-GLfloat xmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
+GLfloat xmat_emission[] = {0.03f, 0.03f, 0.03f, 0.0f};
 
 // simple objects library
 // - make sure to change the number of objects
@@ -274,19 +274,16 @@ static void init_ant(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
 
-  // store the id through the function
-  // there is probably a better way to do this
+  // Store the display list id for this object.
   CURRENT_OBJECT.call_id = list_id;
 }
 
 // Now the function to actually draw it
 static void render_ant(void)
 {
-  // glPushMatrix();
 
   glCallList(CURRENT_OBJECT.call_id);
 
-  // glPopMatrix();
 }
 
 // compile
