@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -30,7 +30,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 // static.cpp
 // - This really should be called
@@ -210,9 +210,6 @@ static void RenderSentinel(CURRENT_PTR boid)
 
   // This may or may not change the color
   glColor3f(boid->color[0], boid->color[1], boid->color[2]);
-
-  // draw the object to screen
-  // driver_objects[ANT_OBJECT]->render();
 
   // set the material for this object
   setmaterial(funk_ambient, funk_diffuse, funk_specular, zlow_shininess, zmat_emission);

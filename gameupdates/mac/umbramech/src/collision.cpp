@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // collision.cpp - test a collision against any object
@@ -97,7 +97,6 @@ CollisionList* moving_list;
 
 // similar to plist.cpp, except uses CollisionObj
 
-// Reset_DistStack(void)
 static void Reset_DistStack(void) { dist_stack_ctr = 0; }
 
 // Insert_DistStack
@@ -714,7 +713,6 @@ void RemoveFront(CollisionList* list)
     else
       list->front = list->front->next;
 
-    // free(temp_ptr);
     RELEASE_OBJECT(temp_ptr);
 
     list->objects--;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // world.cpp
@@ -107,7 +107,7 @@ void DestroyWorld(DriverWorldPtr world)
   RELEASE_OBJECT(world);
 }
 
-// wrapper functions(kind of hidden isnt it)
+// Wrapper functions for world lifecycle management.
 void CreateWorld(void) { world_ptr = InitWorld(); }
 
 void ShutdownWorld(void) {}
@@ -121,8 +121,7 @@ static void init_walls(int list_id)
 {
   CURRENT_OBJECT.visible = 1;
 
-  // store the id through the function
-  // there is probably a better way to do this
+  // Store the display list id for this object.
   CURRENT_OBJECT.call_id = list_id;
 }
 

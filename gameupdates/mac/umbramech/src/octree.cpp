@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // bsp.cpp
@@ -275,7 +275,6 @@ void pheromoneBuild(void) { pheromone_tree = GenerateOctree(); }
 // - make sure this called
 void pheromoneDestroy(void) { DeleteOctree(pheromone_tree); }
 
-// pheromoneInsert(StaticBotPtr bot)
 void pheromoneInsert(StaticBotPtr bot) { InsertOctree(pheromone_tree, bot); }
 
 // pheromoneSearch

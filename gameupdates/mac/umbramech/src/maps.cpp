@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // maps.cpp
@@ -94,8 +94,6 @@ void LoadMap(Map* map, float x_min, float x_max, float y_min, float y_max)
 // DeleteMap
 void DeleteMap(Map* map)
 {
-  // free(map->list);
-  // free(map);
   RELEASE_OBJECT(map->list);
   RELEASE_OBJECT(map);
 }

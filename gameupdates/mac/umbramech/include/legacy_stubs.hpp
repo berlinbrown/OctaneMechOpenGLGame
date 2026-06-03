@@ -4,6 +4,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cmath>
 
 #ifndef MED_RED
 #define MED_RED glColor3f(0.9f, 0.2f, 0.2f)
@@ -43,7 +44,31 @@
 #endif
 
 #ifndef GET_NORMAL
-#define GET_NORMAL ((void)0)
+inline void Compute_Normal_From_Vertices(const float vertices[3][3], float normal[3])
+{
+  const float ux = vertices[1][0] - vertices[0][0];
+  const float uy = vertices[1][1] - vertices[0][1];
+  const float uz = vertices[1][2] - vertices[0][2];
+
+  const float vx = vertices[2][0] - vertices[0][0];
+  const float vy = vertices[2][1] - vertices[0][1];
+  const float vz = vertices[2][2] - vertices[0][2];
+
+  normal[0] = (uy * vz) - (uz * vy);
+  normal[1] = (uz * vx) - (ux * vz);
+  normal[2] = (ux * vy) - (uy * vx);
+
+  const float length = std::sqrt((normal[0] * normal[0]) + (normal[1] * normal[1]) +
+                                 (normal[2] * normal[2]));
+  if (length > 0.0f)
+  {
+    normal[0] /= length;
+    normal[1] /= length;
+    normal[2] /= length;
+  }
+}
+
+#define GET_NORMAL Compute_Normal_From_Vertices(v, n)
 #endif
 
 #ifndef MOVE_FORWARD

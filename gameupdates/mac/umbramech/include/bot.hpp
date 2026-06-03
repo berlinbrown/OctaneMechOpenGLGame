@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
 // bot.hpp
@@ -47,6 +47,8 @@
 // use TAB to toggle between modes
 #define THIRD_PERSON_MODE 1
 #define FIRST_PERSON_MODE 2
+#define DEMO_MODE 3
+#define CLOSE_THIRD_MODE 4
 
 // crosshairs
 #define CROSSHAIRS_SCALE 4.5f

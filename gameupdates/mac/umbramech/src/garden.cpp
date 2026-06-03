@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 // garden.cpp
 // the place where the ants live
@@ -310,7 +310,6 @@ static void Shutdown_Gardens(void)
   }
 
   // Shrug, free the ptr-to-ptrs
-  // free(CURRENT_BOT.objects);
   RELEASE_OBJECT(CURRENT_BOT.objects);
 }
 
@@ -466,7 +465,6 @@ void ResetGarden(CURRENT_PTR bot)
 // DestroyBot
 static void DestroyGarden(CURRENT_PTR b)
 {
-  // free(b);
   RELEASE_OBJECT(b);
 
 }

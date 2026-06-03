@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2011 Berlin Brown.  All Rights Reserved
+ * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
  * http://www.opensource.org/licenses/bsd-license.php
  * All rights reserved.
@@ -29,7 +29,7 @@
  *
  * Description: Simple OpenGL Mech Game
  *
- * Contact: Berlin Brown <berlin dot brown at gmail.com>
+ * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 // particles.cpp
 // particles or explosion engine
@@ -162,7 +162,6 @@ void Build_ParticleSet(void)
   particle_index = 0;
 }
 
-// Destroy_Particles(void)
 void Destroy_ParticleSet(void)
 {
   int i = 0;
