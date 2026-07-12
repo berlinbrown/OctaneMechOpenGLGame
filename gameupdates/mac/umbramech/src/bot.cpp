@@ -204,6 +204,8 @@ void RenderFood(DriverBotPtr bot)
 {
   if (bot->foodstore > 0)
   {
+    GLboolean color_material_was_enabled = GL_FALSE;
+
     BEGIN_BOT;
 
     // place over the ant --
@@ -211,7 +213,22 @@ void RenderFood(DriverBotPtr bot)
 
     glScalef(0.1f, 0.1f, 0.1f);
 
+    // Keep carried-food cubes on the same explicit material model as moving entities.
+    color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, bot_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, bot_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, bot_specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, bot_shininess);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bot_emission);
+
     driver_objects[NORM_CUBE_OBJECT]->render();
+
+    if (color_material_was_enabled)
+    {
+      glEnable(GL_COLOR_MATERIAL);
+    }
 
     END_BOT;
   }
