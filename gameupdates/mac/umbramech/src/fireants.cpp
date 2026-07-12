@@ -1498,24 +1498,12 @@ static void RenderFireAnt(DriverBotPtr boid)
     glGetIntegerv(GL_LIGHT_MODEL_TWO_SIDE, &two_side_lighting_was_enabled);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
-    if (boid->id == PLAYER_0)
-    {
-      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
-      driver_objects[FIREANT_OBJECT]->render();
-    }
-    else
-    {
-      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, blue_ambient);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blue_diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue_specular);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blow_shininess);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bmat_emission);
-      driver_objects[FIREANT_OBJECT]->render();
-    }
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
+    driver_objects[FIREANT_OBJECT]->render();
 
     if (color_material_was_enabled)
     {
@@ -1576,22 +1564,11 @@ static void RenderFireAnt(DriverBotPtr boid)
     turret_color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
     glDisable(GL_COLOR_MATERIAL);
 
-    if (boid->id == PLAYER_0)
-    {
-      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
-    }
-    else
-    {
-      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, blue_ambient);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blue_diffuse);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue_specular);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blow_shininess);
-      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bmat_emission);
-    }
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
 
     driver_objects[NORM_CUBE_OBJECT]->render();
 

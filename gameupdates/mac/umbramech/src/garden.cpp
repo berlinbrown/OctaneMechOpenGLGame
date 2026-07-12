@@ -58,6 +58,13 @@
 
 #define CUBE_SIZE 1.5f
 
+// Shared shiny grey/blush material for moving garden cube entities.
+static GLfloat garden_ambient[] = {0.20f, 0.20f, 0.22f, 1.0f};
+static GLfloat garden_diffuse[] = {0.70f, 0.68f, 0.70f, 1.0f};
+static GLfloat garden_specular[] = {0.96f, 0.96f, 0.98f, 1.0f};
+static GLfloat garden_shininess[] = {120.0f};
+static GLfloat garden_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
 static CURRENT_PTR CreateGarden(int bot_id);
 static void RenderGarden(CURRENT_PTR boid);
 static void DestroyGarden(CURRENT_PTR b);
@@ -472,6 +479,8 @@ static void DestroyGarden(CURRENT_PTR b)
 // RenderBot
 static void RenderGarden(CURRENT_PTR boid)
 {
+  GLboolean color_material_was_enabled = GL_FALSE;
+
   if (boid->state == DEAD_STATE) return;
 
   BEGIN_BOT;
@@ -488,13 +497,25 @@ static void RenderGarden(CURRENT_PTR boid)
 
   glScalef(boid->size[0], boid->size[1], boid->size[2]);
 
-  // This may or may not change the color
-  glColor3f(boid->color[0], boid->color[1], boid->color[2]);
+  // Use explicit material so spinning garden cubes stay visually consistent.
+  color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
+  glDisable(GL_COLOR_MATERIAL);
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, garden_ambient);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, garden_diffuse);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, garden_specular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, garden_shininess);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, garden_emission);
 
   // draw the object to screen
   // driver_objects[ANT_OBJECT]->render();
   // gluSphere(quadric, 0.5f, 18, 8);	// draw sphere for hood
   driver_objects[NORM_CUBE_OBJECT]->render();
+
+  if (color_material_was_enabled)
+  {
+    glEnable(GL_COLOR_MATERIAL);
+  }
 
   END_BOT;
 }
