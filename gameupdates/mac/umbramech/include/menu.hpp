@@ -40,13 +40,11 @@
 #define MENU_TITLE_MODE 1
 #define MENU_RUN_MODE 2
 #define MENU_HELP_MODE 3
-#define MENU_SETTINGS_MODE 4
 
 #define NEW_GAME_ID 0
 #define EXIT_ID 1
 #define HELP_ID 2
-#define SETTINGS_ID 3
-#define DEMO_ID 4
+#define DEMO_ID 3
 
 // These are used with _menu_state
 #define MENU_DEAD_MODE 4

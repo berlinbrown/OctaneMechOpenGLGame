@@ -32,7 +32,7 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// bsp.cpp
+// bsp.cpp:
 // This may border on octree but they are similar
 // the goal is to use this code with the pheremones
 // when they are dropped by the ants

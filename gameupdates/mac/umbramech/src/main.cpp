@@ -405,11 +405,6 @@ static void HandleEsc(void)
     ant_globals->paused = 1;
     ant_globals->menu_mode = MENU_TITLE_MODE;
   }
-  else if (ant_globals->menu_mode == MENU_SETTINGS_MODE)
-  {
-    ant_globals->paused = 1;
-    ant_globals->menu_mode = MENU_TITLE_MODE;
-  }
   else
   {
     ant_globals->paused = 1;

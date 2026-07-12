@@ -122,8 +122,6 @@ bool SearchTree(TreeNode** node_ptr, TreeNode* current)
   }
   else
   {
-    // printf(" (%d) ", (*node_ptr)->data);
-
     // check if we found the data
     if (current->data == (*node_ptr)->data) return true;
 

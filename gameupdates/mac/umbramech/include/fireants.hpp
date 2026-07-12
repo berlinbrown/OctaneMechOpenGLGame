@@ -96,4 +96,6 @@ void Prepare_DemoMode(void);
 
 void Run_NetworkBots(void);
 
+DriverBotPtr GetFireAnt(int index);
+
 extern int keyCodes[20];
