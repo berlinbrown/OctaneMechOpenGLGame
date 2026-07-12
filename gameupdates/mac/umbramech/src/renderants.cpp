@@ -70,6 +70,17 @@
 #undef CLR_3
 #define CLR_3 ((void)0)
 
+// The legacy N_* macros are stubs in this port; bind them to computed normals
+// so lighting uses valid face normals instead of uninitialized data.
+#undef N_0
+#define N_0 GET_NORMAL
+#undef N_1
+#define N_1 GET_NORMAL
+#undef N_2
+#define N_2 GET_NORMAL
+#undef N_3
+#define N_3 GET_NORMAL
+
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT ant
 
@@ -81,11 +92,11 @@ static void draw_ant(void);
 
 GLfloat xmat_ambient[] = {0.18f, 0.22f, 0.18f, 1.0f};
 GLfloat xmat_diffuse[] = {0.58f, 0.62f, 0.58f, 1.0f};
-GLfloat xmat_specular[] = {0.75f, 0.75f, 0.78f, 1.0f};
+GLfloat xmat_specular[] = {0.96f, 0.96f, 0.98f, 1.0f};
 GLfloat xno_shininess[] = {0.0f};
 GLfloat xlow_shininess[] = {5.0f};
-GLfloat xhigh_shininess[] = {100.0f};
-GLfloat xmat_emission[] = {0.03f, 0.03f, 0.03f, 0.0f};
+GLfloat xhigh_shininess[] = {120.0f};
+GLfloat xmat_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 // simple objects library
 // - make sure to change the number of objects
@@ -108,7 +119,7 @@ static void draw_ant(void)
 
   // Keep color material control from RenderBot(glColor3f), but retain specular highlights.
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, xmat_specular);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, xlow_shininess);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, xhigh_shininess);
   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, xmat_emission);
 
   // change the size here
