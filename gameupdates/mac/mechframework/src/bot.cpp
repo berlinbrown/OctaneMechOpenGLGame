@@ -71,13 +71,6 @@ void SetNestFood(float d);
 
 static DriverBotPtr* bot_cluster;
 
-// Shared shiny grey/blush material for bot entities.
-static GLfloat bot_ambient[] = {0.20f, 0.20f, 0.22f, 1.0f};
-static GLfloat bot_diffuse[] = {0.70f, 0.68f, 0.70f, 1.0f};
-static GLfloat bot_specular[] = {0.96f, 0.96f, 0.98f, 1.0f};
-static GLfloat bot_shininess[] = {120.0f};
-static GLfloat bot_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
-
 // created with the bots
 PtrList* trail_stack;
 
@@ -607,8 +600,6 @@ void RenderBot(DriverBotPtr boid)
 {
   if (boid->alive == ALIVE_STATE)
   {
-    GLboolean color_material_was_enabled = GL_FALSE;
-
     // If there is food, draw that also
     RenderFood(boid);
 
@@ -623,23 +614,11 @@ void RenderBot(DriverBotPtr boid)
     // Scale accordingly
     glScalef(boid->size[0], boid->size[1], boid->size[2]);
 
-    // Use explicit material so bot visuals are consistent and not randomized by glColor.
-    color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
-    glDisable(GL_COLOR_MATERIAL);
-
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, bot_ambient);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, bot_diffuse);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, bot_specular);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, bot_shininess);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bot_emission);
+    // This may or may not change the color
+    glColor3f(boid->color[0], boid->color[1], boid->color[2]);
 
     // draw the object to screen
     driver_objects[ANT_OBJECT]->render();
-
-    if (color_material_was_enabled)
-    {
-      glEnable(GL_COLOR_MATERIAL);
-    }
 
     END_BOT;
   }

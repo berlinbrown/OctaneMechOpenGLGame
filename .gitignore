@@ -2,4 +2,5 @@ build
 *.jar
 *.class
 *.o
+.idea
 

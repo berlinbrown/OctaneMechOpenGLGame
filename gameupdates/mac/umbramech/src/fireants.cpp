@@ -58,6 +58,17 @@
 #include <collision.hpp>
 #include <lights.hpp>
 
+// The legacy N_* macros are stubs in this port; bind them to computed normals
+// so lighting uses valid face normals instead of uninitialized data.
+#undef N_0
+#define N_0 GET_NORMAL
+#undef N_1
+#define N_1 GET_NORMAL
+#undef N_2
+#define N_2 GET_NORMAL
+#undef N_3
+#define N_3 GET_NORMAL
+
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT fireant
 
@@ -78,14 +89,21 @@ GLfloat rlow_shininess[] = {5.0f};
 GLfloat rhigh_shininess[] = {100.0f};
 GLfloat rmat_emission[] = {0.04f, 0.03f, 0.03f, 0.0f};
 
+// Player (fire_cluster[0]) metallic silver-blue profile.
+GLfloat player_ambient[] = {0.10f, 0.11f, 0.14f, 1.0f};
+GLfloat player_diffuse[] = {0.52f, 0.56f, 0.66f, 1.0f};
+GLfloat player_specular[] = {0.98f, 0.98f, 1.00f, 1.0f};
+GLfloat player_shininess[] = {120.0f};
+GLfloat player_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
 // For the nme bot
 GLfloat blue_ambient[] = {0.16f, 0.18f, 0.28f, 1.0f};
 GLfloat blue_diffuse[] = {0.52f, 0.58f, 0.68f, 1.0f};
-GLfloat blue_specular[] = {0.82f, 0.82f, 0.86f, 1.0f};
+GLfloat blue_specular[] = {0.92f, 0.92f, 0.95f, 1.0f};
 GLfloat bno_shininess[] = {0.0f};
-GLfloat blow_shininess[] = {5.0f};
+GLfloat blow_shininess[] = {96.0f};
 GLfloat bhigh_shininess[] = {100.0f};
-GLfloat bmat_emission[] = {0.02f, 0.03f, 0.05f, 0.0f};
+GLfloat bmat_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 // For the cannon
 GLfloat color_ambient[] = {0.22f, 0.22f, 0.22f, 1.0f};
@@ -1446,6 +1464,9 @@ void Render_Tri(float size, float offset)
 static void RenderFireAnt(DriverBotPtr boid)
 {
   float len = 0;
+  GLboolean color_material_was_enabled = GL_FALSE;
+  GLboolean turret_color_material_was_enabled = GL_FALSE;
+  GLint two_side_lighting_was_enabled = GL_FALSE;
 
   if (boid == NULL) return;
 
@@ -1468,13 +1489,40 @@ static void RenderFireAnt(DriverBotPtr boid)
     // draw the object to screen
     // also check the color:
 
-    // set the material for this object
-    if (boid->id == 0)
-      setmaterial(red_ambient, red_diffuse, red_specular, rlow_shininess, rmat_emission);
-    else
-      setmaterial(blue_ambient, blue_diffuse, blue_specular, blow_shininess, bmat_emission);
+    // Keep fireant body shading explicit and independent of global color-material state.
+    color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
 
-    driver_objects[FIREANT_OBJECT]->render();
+    // Fireant triangles have mixed winding in this legacy mesh; two-sided lighting
+    // prevents dark back-face panels while preserving explicit material control.
+    glGetIntegerv(GL_LIGHT_MODEL_TWO_SIDE, &two_side_lighting_was_enabled);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+
+    if (boid->id == PLAYER_0)
+    {
+      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
+      driver_objects[FIREANT_OBJECT]->render();
+    }
+    else
+    {
+      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, blue_ambient);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blue_diffuse);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue_specular);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blow_shininess);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bmat_emission);
+      driver_objects[FIREANT_OBJECT]->render();
+    }
+
+    if (color_material_was_enabled)
+    {
+      glEnable(GL_COLOR_MATERIAL);
+    }
+
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, two_side_lighting_was_enabled ? GL_TRUE : GL_FALSE);
 
     // Create a shooter, aimer object thing
     // - crosshairs
@@ -1524,10 +1572,34 @@ static void RenderFireAnt(DriverBotPtr boid)
 
     glScalef(0.1f, 0.2f, 0.25f);
 
-    // set the material for this object
-    setmaterial(color_ambient, color_diffuse, color_specular, ylow_shininess, ymat_emission);
+    // Keep turret material matched to fireant body material.
+    turret_color_material_was_enabled = glIsEnabled(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
+
+    if (boid->id == PLAYER_0)
+    {
+      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, player_ambient);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, player_diffuse);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, player_specular);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, player_shininess);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, player_emission);
+    }
+    else
+    {
+      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, blue_ambient);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blue_diffuse);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue_specular);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blow_shininess);
+      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, bmat_emission);
+    }
 
     driver_objects[NORM_CUBE_OBJECT]->render();
+
+    if (turret_color_material_was_enabled)
+    {
+      glEnable(GL_COLOR_MATERIAL);
+    }
+
     END_BOT;
 
     END_BOT;
@@ -1590,6 +1662,13 @@ static void LoadFireAnts_A(DriverBotPtr bot)
   bot->y_max = bot->size[2] * size * 1.52f;
 
   bot->look_h = FIRST_HEIGHT;  // first person y
+
+  if (bot->id == PLAYER_0)
+  {
+    bot->color[0] = 0.95f;
+    bot->color[1] = 0.50f;
+    bot->color[2] = 0.25f;
+  }
 
   ResetBullets(bot);
 

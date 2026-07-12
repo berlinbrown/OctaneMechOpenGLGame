@@ -62,11 +62,6 @@ GLfloat dno_shininess[] = {0.0f};
 GLfloat dlow_shininess[] = {5.0f};
 GLfloat dhigh_shininess[] = {100.0f};
 GLfloat dmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
-GLfloat stone_ambient[] = {0.22f, 0.22f, 0.24f, 1.0f};
-GLfloat stone_diffuse[] = {0.55f, 0.55f, 0.58f, 1.0f};
-GLfloat stone_specular[] = {0.30f, 0.30f, 0.32f, 1.0f};
-GLfloat stone_emission[] = {0.0f, 0.0f, 0.0f, 0.0f};
-GLfloat stone_shininess[] = {8.0f};
 
 // here is the level
 // 14 walls, 5 cols
@@ -221,8 +216,7 @@ static void draw_pyramid(void)
   float size = 0.5f;
 
   // set the material for this object
-  glDisable(GL_COLOR_MATERIAL);
-  setmaterial(stone_ambient, stone_diffuse, stone_specular, stone_shininess, stone_emission);
+  setmaterial(dmat_ambient, dmat_diffuse, dmat_specular, dlow_shininess, dmat_emission);
 
   // Note: normals are messed up for now
   // select between n0-n3
@@ -249,7 +243,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
 
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
@@ -272,7 +265,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
 
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
@@ -295,7 +287,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom bac
@@ -317,7 +308,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom front
@@ -341,7 +331,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom bac
@@ -363,7 +352,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom bac
@@ -385,7 +373,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left bottom bac
@@ -408,7 +395,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left side
@@ -430,7 +416,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left side
@@ -452,7 +437,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left side
@@ -473,7 +457,6 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left side
@@ -494,13 +477,11 @@ static void draw_pyramid(void)
   // Calc normal and draw
   N_2;
   GET_NORMAL;
-  glNormal3fv(n);
   glVertex3fv(v[0]);
   glVertex3fv(v[1]);
   glVertex3fv(v[2]);  // triangle left side
 
   glEnd();
-  glEnable(GL_COLOR_MATERIAL);
 }
 
 // init
