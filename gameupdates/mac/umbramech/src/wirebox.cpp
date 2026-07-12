@@ -106,9 +106,6 @@ static void draw_wirebox(void)
   glEnd();
 }
 
-// init
-// - load anything special about the
-// one important function
 static void init_wirebox(int list_id)
 {
   CURRENT_OBJECT.visible = 1;

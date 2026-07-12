@@ -145,23 +145,6 @@
 #define ID_MOVE_FOOD_RATE 31
 #define ID_FOOD_RATE 32
 
-#define CLIENT_NET_MENU 0  // 0
-#define END_CLIENT_NET 4
-#define C_HORZ_MENU 5
-#define END_C_HORZ 10
-#define CONNECT_TO_SERVER 11
-#define SERVER_SETTINGS 12  // 12
-#define CLIENT_SETTINGS 13
-#define SERVER_NET_MENU 14
-#define END_SERVER_NET 17
-#define S_SERV_HORZ 18
-#define E_SERV_HORZ 21
-
-#define _TEXT_CONNECT_ 22
-#define _TEXT_DISCONNECT_ 23
-#define _TEXT_START_ 24
-#define _TEXT_SHUTDOWN_ 25
-
 // a score container
 class ScoreObj
 {
@@ -243,7 +226,6 @@ void Super_KillText(void);
 
 void Super_BeginPaused(void);
 void Draw_HelpScreen(void);
-void Draw_IntroScreen(void);
 // Use Super_Printf for diagnostic output.
 void Super_Printf(char* fmt, ...);
 void Print_Score(void);
@@ -274,11 +256,6 @@ void AddAnts(int ants);
 void DestroyGlobals(void);
 
 void Load_ConfigDefaultsOnly(void);
-
-void Draw_NetworkScreen(void);
-
-void Draw_TString(int x, int y, char* str);
-void Mode_TitleScreen(void);
 
 void Mode_SetRunning(void);
 

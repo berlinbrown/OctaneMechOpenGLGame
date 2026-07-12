@@ -58,63 +58,15 @@
 
 AntGlobals* ant_globals;
 
-// intro_str
-char intro_str[] = {
-    "glAnts is a mech game.\n"
-    "It is loosely based on spectreVR.\n"
-    "glAnts was created with GCCv2.96... \n"
-    "just kidding, it will be though... \n"
-    "visit glants.sourceforge.net for updates\n"
-    "Linux version coming soon..."
-    "\n(berlin ltd.)\n\n\n\n"
-    "Microsoft has issued\n"
-    "yet another critical update.\n"
-    "Software Piracy is \nGood for Microsoft\n\n"};
+static const int HELP_TEXT_LEFT = 230;
+static const int HELP_TEXT_RIGHT = 500;
+static const int HELP_TEXT_TOP = 180;
+static const int HELP_TEXT_BOTTOM = 400;
 
-// text used to fill the network window
-char network_str_[26][80] = {"::Player Name: Player1",      // 0
-                             "::IP Address: 127.0.0.1",     // 1
-                             "::Send Bots Only: false",     // 2
-                             "::Network Bots: 1",           // 3
-                             "Total Players to Send: ",     // 4
-                             "IP Address-",                 // 5
-                             "Server-",                     // 6
-                             "Ping-",                       // 7
-                             "Cur/Max-",                    // 8
-                             "Vers-",                       // 9
-                             "OS",                          // 10
-                             "Connect To Server",           // 11
-                             "Server Settings",             // 12
-                             "Client Settings",             // 13
-                             "::Server Name: Server1",      // 14
-                             "::Current IP: 127.0.0.1",     // 15
-                             "::Use Bots Only: false",      // 16
-                             "::Host Bots: 1",              // 17
-                             "IP Address-",                 // 18
-                             "Client-",                     // 19
-                             "Ping-",                       // 20
-                             "OS-",                         // 21
-                             "  (Connect to Server)",       // 22
-                             "  (Disconnect from Server)",  // 23
-                             "  (Start Server)",            // 24
-                             "  (Shutdown Server)"};        // 25
-
-#define HORZ_TYPE_ 2
-#define VERT_TYPE_ 4
-#define STAT_TYPE_ 6
-
-#define N_TITLE_X 200
-#define N_TITLE_YY1 200
-#define N_TITLE_YY2 220
-
-// strlength is taken into consideration
-#define TEXT_HORZ_START 60.0f
-#define TEXT_HORZ_WIDTH 40
-#define TEXT_VERT_START 60.0f
-#define TEXT_VERT_STARTY2 240
-#define TEXT_VERT_HEIGHT 16
-#define TXT_V_START 160.0f
-#define TXT_V_STARTYY2 330
+static const float HELP_BOX_LEFT = 220.0f;
+static const float HELP_BOX_TOP = 160.0f;
+static const float HELP_BOX_RIGHT = 480.0f;
+static const float HELP_BOX_BOTTOM = 450.0f;
 
 // x positions
 #define T_COL_1 160
@@ -130,10 +82,6 @@ char network_str_[26][80] = {"::Player Name: Player1",      // 0
 #define T_ROW_3 414
 #define T_ROW_4 424
 
-static char* _tmp_str = NULL;
-static clock_t curr_Time;
-static clock_t next_Time = 0;
-
 // WRAPPER FUNCTIONS FOR TEXT--
 
 // There are three different text areas
@@ -147,17 +95,6 @@ static clock_t next_Time = 0;
 TextBoxPtr main_text = NULL;
 TextBoxPtr score_text = NULL;
 TextBoxPtr help_text = NULL;
-TextBoxPtr intro_text = NULL;
-TextBoxPtr network_text = NULL;
-
-// Set_TitleScreen
-// - put the state in title screen mode
-// - usaully used by the network interface
-void Mode_TitleScreen(void)
-{
-  ant_globals->paused = 1;
-  ant_globals->menu_mode = MENU_TITLE_MODE;
-}
 
 // Set into running mode
 // play - game
@@ -189,7 +126,7 @@ void Super_MainText(void)
   SetTextColor(score_text, 0, 255, 0);
 
   // Build the help screen text --
-  help_text = InitTextBox(230, 500, 180, 370);
+  help_text = InitTextBox(HELP_TEXT_LEFT, HELP_TEXT_RIGHT, HELP_TEXT_TOP, HELP_TEXT_BOTTOM);
   SetTextMode(help_text, TEXT_NONE);
   SetTextColor(help_text, 255, 255, 255);
 
@@ -202,311 +139,6 @@ void Super_MainText(void)
   Printf(help_text, "[SPACE] - Fire\n\n");
   Printf(help_text, "[S,F,R MOUSE] - Adjust View\n");
   Printf(help_text, "[F1] - Full Screen\n\n");
-
-  // Intro text
-  intro_text = InitTextBox(340, 630, 340, 430);
-  SetTextMode(intro_text, TEXT_NONE);
-  SetTextColor(intro_text, 255, 255, 255);
-
-  _tmp_str = intro_str;
-
-  // network_text
-  network_text = InitTextBox(340, 630, 340, 430);
-  SetTextMode(network_text, TEXT_NONE);
-  SetTextColor(network_text, 255, 255, 255);
-}
-
-// Draw_TString
-void Draw_TString(int x, int y, char* str)
-{
-  TextBegin(network_text);
-  DrawString(network_text, x, y, str);
-  TextEnd();
-
-}
-
-// Set_Net_Menu(int
-// - setup the horizontal or vertical positions
-// and draw the text --
-static void Setup_NetMenu(int start_pos, int end_pos, int h_type)
-{
-  int i;
-  float horz_pos;
-  float vert_pos;
-
-  // set the text changes before the code below
-
-  switch (h_type)
-  {
-    case HORZ_TYPE_:
-
-      // we only have two diferent cases to handle
-      if (start_pos == C_HORZ_MENU)
-      {
-        horz_pos = TEXT_HORZ_START;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU]);
-        TextEnd();
-
-        // next col --
-        horz_pos = T_COL_1;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 1]);
-        TextEnd();
-
-        // next col --
-        horz_pos = T_COL_2;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 2]);
-        TextEnd();
-
-        // next col --
-        horz_pos = T_COL_3;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 3]);
-        TextEnd();
-
-        // next col --
-        horz_pos = T_COL_4;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 4]);
-        TextEnd();
-
-        // next col --
-        horz_pos = T_COL_5;
-        vert_pos = TXT_V_START;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[C_HORZ_MENU + 5]);
-        TextEnd();
-
-      }
-      else
-      {
-        horz_pos = TEXT_HORZ_START;
-        vert_pos = TXT_V_STARTYY2;
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ]);
-        TextEnd();
-
-        // next col
-        horz_pos = T_COL_1;
-        vert_pos = TXT_V_STARTYY2;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 1]);
-        TextEnd();
-
-        horz_pos = T_COL_2;
-        vert_pos = TXT_V_STARTYY2;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 2]);
-        TextEnd();
-
-        horz_pos = T_COL_3;
-        vert_pos = TXT_V_STARTYY2;
-
-        TextBegin(network_text);
-        DrawString(network_text, horz_pos, vert_pos, network_str_[S_SERV_HORZ + 3]);
-        TextEnd();
-
-      }
-
-      break;
-
-    case VERT_TYPE_:
-
-      if (start_pos == CLIENT_NET_MENU)
-        vert_pos = TEXT_VERT_START;
-      else
-        vert_pos = TEXT_VERT_STARTY2;
-
-      for (i = start_pos; i <= end_pos; i++)
-      {
-        TextBegin(network_text);
-        DrawString(network_text, TEXT_HORZ_START, vert_pos, network_str_[i]);
-        TextEnd();
-
-        vert_pos = vert_pos + TEXT_VERT_HEIGHT;
-
-      }
-
-      break;
-
-    case STAT_TYPE_:
-      break;
-
-    case SERVER_SETTINGS:
-      TextBegin(network_text);
-      DrawString(network_text, start_pos, end_pos, network_str_[SERVER_SETTINGS]);
-      TextEnd();
-
-      break;
-
-    case CLIENT_SETTINGS:
-      TextBegin(network_text);
-      DrawString(network_text, start_pos, end_pos, network_str_[CLIENT_SETTINGS]);
-      TextEnd();
-
-      break;
-  };
-}
-
-// Draw_NetworkScreen
-void Draw_NetworkScreen(void)
-{
-  const float box_x_min = 50.0f;
-  const float box_x_max = 500.0f;
-  const float box_y_min = 50.0f;
-  const float box_y_max = 440.0f;
-
-  const float msg_y = box_y_max - 32.0f;
-
-  char buffer[80];
-
-  glDisable(GL_TEXTURE_2D);
-
-  // Draw a blue screen
-  // in the background
-
-  glColor3ub(20, 120, 235);
-
-  glLineWidth(3.0f);
-  glBegin(GL_QUADS);
-  glVertex3f(box_x_min, box_y_min, 0.0f);
-  glVertex3f(box_x_max, box_y_min, 0.0f);
-
-  glVertex3f(box_x_max, box_y_max, 0.0f);
-  glVertex3f(box_x_min, box_y_max, 0.0f);
-
-  glEnd();
-
-  // draw outline around object
-  glColor3ub(255, 255, 255);
-  glBegin(GL_LINE_LOOP);
-  glVertex3f(box_x_min, box_y_min, 0.0f);
-  glVertex3f(box_x_max, box_y_min, 0.0f);
-
-  glVertex3f(box_x_max, box_y_max, 0.0f);
-  glVertex3f(box_x_min, box_y_max, 0.0f);
-  glEnd();
-
-  // The next line
-  // will be used for the message screen
-  glBegin(GL_LINE_LOOP);
-  glVertex3f(box_x_min, msg_y, 0.0f);
-  glVertex3f(box_x_max, msg_y, 0.0f);
-  glEnd();
-
-  glLineWidth(1.0f);
-
-  // before drawing the name, save selection
-  Display_NetSel(network_str_);
-
-  // Print the actual text
-  Setup_NetMenu(CLIENT_NET_MENU, END_CLIENT_NET, VERT_TYPE_);
-  Setup_NetMenu(C_HORZ_MENU, END_CLIENT_NET, HORZ_TYPE_);
-
-  Setup_NetMenu(N_TITLE_X, N_TITLE_YY2, SERVER_SETTINGS);
-  Setup_NetMenu(SERVER_NET_MENU, END_SERVER_NET, VERT_TYPE_);
-  Setup_NetMenu(S_SERV_HORZ, E_SERV_HORZ, HORZ_TYPE_);
-
-  // Draw the static text
-  TextBegin(network_text);
-  DrawString(network_text, T_COL_6, T_ROW_1, network_str_[_TEXT_CONNECT_]);
-  TextEnd();
-
-  TextBegin(network_text);
-  DrawString(network_text, T_COL_7, T_ROW_1, network_str_[_TEXT_DISCONNECT_]);
-  TextEnd();
-
-  // Server buttons --
-  TextBegin(network_text);
-  DrawString(network_text, T_COL_6, T_ROW_2, network_str_[_TEXT_START_]);
-  TextEnd();
-
-  TextBegin(network_text);
-  DrawString(network_text, T_COL_7, T_ROW_2, network_str_[_TEXT_SHUTDOWN_]);
-  TextEnd();
-
-  // And at the bottom
-  // the network and help screens and messages
-  TextBegin(network_text);
-
-  // get network message
-  Get_NetworkMsg(buffer);
-  DrawString(network_text, TEXT_HORZ_START, T_ROW_3, buffer);
-  TextEnd();
-
-  // print connections if there are any
-  printConnections();
-
-}
-
-// Draw_HelpScreen
-void Draw_IntroScreen(void)
-{
-  glDisable(GL_TEXTURE_2D);
-
-  // Draw a blue screen
-  // in the background
-  glColor3ub(20, 120, 235);
-
-  glLineWidth(2.0f);
-  glBegin(GL_QUADS);
-  glVertex3f(320.0f, 320.0f, 0.0f);
-  glVertex3f(635.0f, 320.0f, 0.0f);
-
-  glVertex3f(635.0f, 440.0f, 0.0f);
-  glVertex3f(320.0f, 440.0f, 0.0f);
-
-  glEnd();
-
-  // draw outline around object
-  glColor3ub(255, 255, 255);
-  glBegin(GL_LINE_LOOP);
-  glVertex3f(320.0f, 320.0f, 0.0f);
-  glVertex3f(635.0f, 320.0f, 0.0f);
-
-  glVertex3f(635.0f, 440.0f, 0.0f);
-  glVertex3f(320.0f, 440.0f, 0.0f);
-
-  glEnd();
-
-  glLineWidth(1.0f);
-
-  TextBegin(intro_text);
-
-  // curr_Time = GetTickCount();
-  curr_Time = clock();
-
-  if (curr_Time > next_Time)
-  {
-    Printf(intro_text, "%c", *_tmp_str);
-
-    next_Time = curr_Time + (800 * 1.4);
-
-    // delay a little bit
-    if (*(_tmp_str) == ')') next_Time = curr_Time + (8000 * 1.4);
-
-    // update the char
-    if (*(++_tmp_str) == '\0') _tmp_str = intro_str;
-
-  }
-
-  DrawText(intro_text);
-  TextEnd();
 }
 
 // Draw_HelpScreen
@@ -521,22 +153,22 @@ void Draw_HelpScreen(void)
 
   glLineWidth(2.0f);
   glBegin(GL_QUADS);
-  glVertex3f(220.0f, 160.0f, 0.0f);
-  glVertex3f(480.0f, 160.0f, 0.0f);
+  glVertex3f(HELP_BOX_LEFT, HELP_BOX_TOP, 0.0f);
+  glVertex3f(HELP_BOX_RIGHT, HELP_BOX_TOP, 0.0f);
 
-  glVertex3f(480.0f, 320.0f, 0.0f);
-  glVertex3f(220.0f, 320.0f, 0.0f);
+  glVertex3f(HELP_BOX_RIGHT, HELP_BOX_BOTTOM, 0.0f);
+  glVertex3f(HELP_BOX_LEFT, HELP_BOX_BOTTOM, 0.0f);
 
   glEnd();
 
   // draw outline around object
   glColor3ub(255, 255, 255);
   glBegin(GL_LINE_LOOP);
-  glVertex3f(220.0f, 160.0f, 0.0f);
-  glVertex3f(480.0f, 160.0f, 0.0f);
+  glVertex3f(HELP_BOX_LEFT, HELP_BOX_TOP, 0.0f);
+  glVertex3f(HELP_BOX_RIGHT, HELP_BOX_TOP, 0.0f);
 
-  glVertex3f(480.0f, 320.0f, 0.0f);
-  glVertex3f(220.0f, 320.0f, 0.0f);
+  glVertex3f(HELP_BOX_RIGHT, HELP_BOX_BOTTOM, 0.0f);
+  glVertex3f(HELP_BOX_LEFT, HELP_BOX_BOTTOM, 0.0f);
 
   glEnd();
 
@@ -548,7 +180,6 @@ void Draw_HelpScreen(void)
 }
 
 // Super_Printf
-// - print the debug text screen
 void Super_Printf(char* fmt, ...)
 {
   va_list vlist;
@@ -663,9 +294,6 @@ void Super_KillText(void)
   DestroyTextBox(main_text);
   DestroyTextBox(score_text);
   DestroyTextBox(help_text);
-  DestroyTextBox(intro_text);
-
-  DestroyTextBox(network_text);
 }
 
 // Super
@@ -782,6 +410,11 @@ void GameTick(void) { ant_globals->ticks += 1; }
 // GetGameTick
 DWORD GetGameTick(void) { return ant_globals->ticks; }
 
+static const char* GetAliveStateLabel(int alive)
+{
+  return (alive == ALIVE_STATE) ? "ALIVE" : "DEAD";
+}
+
 // PrintGlobals
 void PrintGlobals(void)
 {
@@ -823,6 +456,29 @@ void PrintGlobals(void)
 
   glRasterPos2i(x, y0 + dy * 10);
   PrintText("LOOK: %0.1f %0.1f %0.1f", GetCameraLookX(), GetCameraLookY(), GetCameraLookZ());
+
+  for (i = 1; i < MAX_FIRE_ANTS; i++)
+  {
+    DriverBotPtr fire_ant = GetFireAnt(i);
+
+    glRasterPos2i(x, y0 + dy * (10 + i));
+
+    if (fire_ant == NULL)
+    {
+      PrintText("FA%d: NULL", i);
+      continue;
+    }
+
+    {
+      const float dx = fire_ant->x - GetCameraX();
+      const float dz = fire_ant->y - GetCameraZ();
+      const float dist = sqrtf((dx * dx) + (dz * dz));
+
+      PrintText("FA%d: %s ST:%d HP:%0.1f POS:%0.1f,%0.1f CAM:%0.1f", i,
+                GetAliveStateLabel(fire_ant->alive), fire_ant->state, fire_ant->food,
+                fire_ant->x, fire_ant->y, dist);
+    }
+  }
 }
 
 // RESET_VALUE

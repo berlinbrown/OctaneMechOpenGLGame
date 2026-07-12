@@ -68,14 +68,13 @@ static int funky_texture = 0;
 static unsigned int titlesID = 5;
 
 // cursor_heights
-#define MAX_MENU_ITEMS 5
+#define MAX_MENU_ITEMS 4
 #define NEW_GAME_H 140
 #define EXIT_H 171
 #define HELP_H 205
-#define SETTINGS_H 239
-#define DEMO_H 273
+#define DEMO_H 239
 
-static int cursor_heights[MAX_MENU_ITEMS] = {NEW_GAME_H, EXIT_H, HELP_H, SETTINGS_H, DEMO_H};
+static int cursor_heights[MAX_MENU_ITEMS] = {NEW_GAME_H, EXIT_H, HELP_H, DEMO_H};
 static int cursor_index = NEW_GAME_ID;
 
 // Texture Image
@@ -549,25 +548,7 @@ void Draw_Title(void)
 
       Draw_HelpScreen();
 
-      glDisable(GL_LIGHTING);
-
-      Draw_IntroScreen();
-
-      glEnable(GL_LIGHTING);
-
       Title_End();
-      glLineWidth(1.0f);
-
-      break;
-
-    case MENU_SETTINGS_MODE:
-
-      glLineWidth(2.0f);
-
-      Title_Begin();
-      Draw_NetworkScreen();
-      Title_End();
-
       glLineWidth(1.0f);
 
       break;
@@ -583,7 +564,6 @@ void Draw_Title(void)
         char menu_new_game[] = "NEW GAME";
         char menu_exit[] = "EXIT";
         char menu_help[] = "HELP";
-        char menu_settings[] = "SETTINGS";
         char menu_demo[] = "DEMO";
 
         glRasterPos2i(192, begin + (0 * offset));
@@ -604,18 +584,11 @@ void Draw_Title(void)
         glRasterPos2i(192, begin + (3 * offset));
         if (cursor_index == 3) glColor4ub(255, 255, 0, 255);
         else glColor4ub(255, 255, 255, 255);
-        PrintText(menu_settings);
-
-        glRasterPos2i(192, begin + (4 * offset));
-        if (cursor_index == 4) glColor4ub(255, 255, 0, 255);
-        else glColor4ub(255, 255, 255, 255);
         PrintText(menu_demo);
       }
 
       // draw the selection tool --
       Draw_Cursor(cursor_heights[cursor_index]);
-
-      Draw_IntroScreen();
 
       Title_End();
 
@@ -701,18 +674,6 @@ bool Set_MenuMode(void)
 
           return false;
         }
-
-        break;
-
-      case SETTINGS_ID:
-
-        if (ant_globals->_menu_state == FIRST_TIME_TRUE)
-          cursor_index = NEW_GAME_ID;
-        else
-          cursor_index = HELP_ID;
-
-        ant_globals->paused = 1;
-        ant_globals->menu_mode = MENU_SETTINGS_MODE;
 
         break;
 

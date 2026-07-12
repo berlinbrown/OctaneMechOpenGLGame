@@ -74,6 +74,8 @@
 
 #define DEATH_WAIT_COUNT 120
 
+static const float FIREANT_INITIAL_HEALTH = 50000.0f;
+
 static void init_fireant(int list_id);
 static void compile_fireant(void);
 static void draw_fireant(void);
@@ -131,6 +133,15 @@ float rand_bot_pos[MAX_RAND_POS][4] = {{60, -110, (WORLD_X_MAX + 177), 177},  //
 
 // Create a fire ant struct
 static DriverBotPtr* fire_cluster;
+
+DriverBotPtr GetFireAnt(int index)
+{
+  if (fire_cluster == NULL) return NULL;
+  if (index < 0) return NULL;
+  if (index >= MAX_FIRE_ANTS) return NULL;
+
+  return fire_cluster[index];
+}
 
 // - used with networking,
 // the network bots need some kind of conversion tool
@@ -1601,7 +1612,7 @@ static void LoadFireAnts_A(DriverBotPtr bot)
   bot->turning_speed *= 1.4f;
 
   // give the bot food
-  bot->food = INITIAL_ANT_FOOD;
+  bot->food = FIREANT_INITIAL_HEALTH;
 
   // we also need some way to check if the
   // bot winds up in a building
