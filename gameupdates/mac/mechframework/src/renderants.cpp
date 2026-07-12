@@ -47,29 +47,6 @@
 #include <lights.hpp>
 #include <legacy_stubs.hpp>
 
-// Preserve entity color set by caller (RenderBot/RenderFireAnt) by disabling
-// legacy per-face color macros for this mesh.
-#undef MED_RED
-#define MED_RED ((void)0)
-#undef MED_GREEN
-#define MED_GREEN ((void)0)
-#undef MED_BLUE
-#define MED_BLUE ((void)0)
-#undef MED_PURPLE
-#define MED_PURPLE ((void)0)
-#undef MED_YELLOW
-#define MED_YELLOW ((void)0)
-#undef MED_CYAN
-#define MED_CYAN ((void)0)
-#undef CLR_0
-#define CLR_0 ((void)0)
-#undef CLR_1
-#define CLR_1 ((void)0)
-#undef CLR_2
-#define CLR_2 ((void)0)
-#undef CLR_3
-#define CLR_3 ((void)0)
-
 #undef CURRENT_OBJECT
 #define CURRENT_OBJECT ant
 
