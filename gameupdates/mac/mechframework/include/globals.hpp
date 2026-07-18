@@ -236,51 +236,14 @@ class AntGlobals
 
 using AntGlobalsPtr = AntGlobals*;
 
-// Text Library
-void Super_MainText(void);
-void Super_DrawText(void);
-void Super_KillText(void);
-
-void Super_BeginPaused(void);
-void Draw_HelpScreen(void);
-void Draw_IntroScreen(void);
-// Use Super_Printf for diagnostic output.
-void Super_Printf(const char* fmt, ...);
-void Print_Score(void);
-
-void Load_Score(float score, float kills, int id, int i);
-
 void Super_LoadGlobals(void);
-void Super_KillGlobals(void);
-
 void InitGlobals(void);
 void SubtractAnts(int ants);
-
-void TogglePaused(void);
-
-void PrintGlobals(void);
-void AddSeconds(float delta);
-void AddTime(float delta);
-void SetNestFood(float d);
-int GetAnts(void);
-void GameTick(void);
-unsigned long GetGameTick(void);
-void SetPlayerHealth(float d);
-
-void SetGardenSize(int v);
-int GetGardenSize(void);
-
 void AddAnts(int ants);
-void DestroyGlobals(void);
-
-void Load_ConfigDefaultsOnly(void);
-
-void Draw_NetworkScreen(void);
-
-void Draw_TString(int x, int y, const char* str);
-void Mode_TitleScreen(void);
-
-void Mode_SetRunning(void);
+int  GetAnts(void);
+void SetNestFood(float d);
+void SetGardenSize(int v);
+int  GetGardenSize(void);
 
 extern AntGlobals* ant_globals;
 extern float framerate;

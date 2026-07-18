@@ -32,8 +32,6 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// Berlin Brown
-// berlin _dot__ brown  __at_ g_mail _ dot_ com
 
 // cube.cpp
 

@@ -32,10 +32,6 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// world.cpp
-// the environment
-// in which the bots live
-
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
@@ -108,9 +104,6 @@ void ShutdownWorld(void) {}
 
 static void draw_walls(void) {}
 
-// init
-// - load anything special about the
-// one important function
 static void init_walls(int list_id)
 {
   CURRENT_OBJECT.visible = 1;

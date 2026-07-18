@@ -32,9 +32,6 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// wirebox.cpp
-// - do we need a file for each object....yes!
-
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library

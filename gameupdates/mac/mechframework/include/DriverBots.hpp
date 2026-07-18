@@ -175,7 +175,6 @@ class DriverBots
   float y_min;
   float y_max;
 
-  // crosshair object
   int crosshair_state;
   float crosshair_scale;
 
