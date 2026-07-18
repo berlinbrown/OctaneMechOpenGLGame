@@ -32,10 +32,6 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// Berlin Brown
-// berlin _dot__ brown  __at_ g_mail _ dot_ com
-// objects.h
-// driver for object source
 
 #pragma once
 
@@ -45,12 +41,11 @@
 #define WORLD_OBJECT 3
 #define WIREBOX_OBJECT 4
 #define NORM_CUBE_OBJECT 5
-#define SQUARE_OBJECT 6
-#define PLANE_OBJECT 7
-#define PYRAMID_OBJECT 8
-#define STARS_OBJECT 9
+#define PLANE_OBJECT 6
+#define PYRAMID_OBJECT 7
+#define STARS_OBJECT 8
 
-#define MAX_OBJECTS 10
+#define MAX_OBJECTS 9
 
 #define GRID_SIZE 300.0f
 
@@ -87,7 +82,6 @@ extern DriverObjects ant;
 extern DriverObjects walls;
 extern DriverObjects wirebox;
 extern DriverObjects norm_cube;
-extern DriverObjects pheromone;
 extern DriverObjects plane;
 extern DriverObjects pyramid;
 extern DriverObjects stars;

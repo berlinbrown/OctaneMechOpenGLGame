@@ -9,7 +9,6 @@
 
 #include "bot.hpp"
 #include "camera.hpp"
-#include "collision.hpp"
 #include "defaults.hpp"
 #include "fireants.hpp"
 #include "gldrawlib.hpp"

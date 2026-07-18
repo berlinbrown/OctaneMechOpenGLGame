@@ -33,14 +33,6 @@
  * Updated: 2026 for Mac, OpenGL
  */
 
-// bot.cpp
-// - This really should be called
-// objects but it was taken up already
-// basically bots have attributes and
-// use objects for drawing
-// - This is the meat and potatoes of the
-// artificial control
-
 #include "bot.hpp"
 
 #include <GLUT/glut.h>   // GLUT for window/context
@@ -53,7 +45,6 @@
 
 #include <camera.hpp>
 
-#include "collision.hpp"
 #include "gldrawlib.hpp"
 #include "globals.hpp"
 #include "objects.hpp"
@@ -73,6 +64,11 @@ static DriverBotPtr* bot_cluster;
 
 // created with the bots
 PtrList* trail_stack;
+
+// Runtime note (2026): the current main loop uses a single player bot path
+// (CreateBot + RenderBot in main.cpp). The swarm lifecycle entry points below
+// are kept for legacy colony mode and are not called by the current loop:
+// Super_LoadBots, Super_KillBots, GenerateBots, InitFood, DrawBots, ShutdownBots.
 
 // Super_LoadBots
 // - if this is not loaded
@@ -103,9 +99,7 @@ void CreateAnts(int food)
   if (perct > 1)
   {
     food_tol = (int)perct * INITIAL_ANT_FOOD;
-  }
-  else
-  {
+  } else {
     return;  // Not enough food is available to create new ants.
   }
 
@@ -362,8 +356,6 @@ void MoveBot(DriverBotPtr bot)
   float* last_heading = NULL;
   float tmp_heading = 0.0f;
 
-  CollisionPtr col_ptr;
-
   // if we have our max food move on
   if (bot->foodstore <= MAX_FOOD_RATE)
   {
@@ -421,16 +413,6 @@ void MoveBot(DriverBotPtr bot)
     bot->state = CHANGE_DIR_STATE;
 
     return;  // process state else where
-  }
-
-  // Also We need to drop pheromones on the way home
-  // Note: pretty slow algo
-  if (bot->go_home)
-  {
-    if ((bot->numSteps % PHEROMONE_DROP) == 0)
-    {
-      ActivatePheromone(bot->x, bot->y, bot->heading);
-    }
   }
 
   // If we have a new heading change direction

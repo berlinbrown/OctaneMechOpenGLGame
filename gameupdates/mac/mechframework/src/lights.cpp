@@ -60,7 +60,7 @@ static GLfloat mat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 static GLfloat scene_ambient[] = {0.28f, 0.28f, 0.31f, 1.0f};
 static GLfloat light_ambient[] = {0.18f, 0.18f, 0.22f, 1.0f};
 static GLfloat light_diffuse[] = {0.72f, 0.72f, 0.76f, 1.0f};
-static GLfloat light_specular[] = {0.42f, 0.42f, 0.46f, 1.0f};
+static GLfloat light_specular[] = {0.85f, 0.85f, 0.90f, 1.0f};
 
 static DriverLights* light_ptrs[MAX_LIGHTS] = {NULL};
 

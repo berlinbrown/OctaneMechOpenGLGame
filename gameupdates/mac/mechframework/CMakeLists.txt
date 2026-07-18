@@ -22,7 +22,6 @@ set(SRC_FILES
     src/grid.cpp
     src/cube.cpp
     src/norm_cube.cpp
-    src/pheromone.cpp
     src/static.cpp
     src/pyramid.cpp
     src/stars.cpp
@@ -30,7 +29,6 @@ set(SRC_FILES
     src/wirebox.cpp
     src/plist.cpp
     src/garden.cpp
-    src/collision.cpp
     src/legacy_stubs.cpp
 )
 

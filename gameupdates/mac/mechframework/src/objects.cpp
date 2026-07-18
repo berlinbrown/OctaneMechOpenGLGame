@@ -61,14 +61,14 @@ static GLfloat grey_ambient[] = {0.0f, 0.3f, 0.4f, 1.0f};
 static GLfloat grey_diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
 static GLfloat grey_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 static GLfloat ino_shininess[] = {0.0f};
-static GLfloat ilow_shininess[] = {5.0f};
+static GLfloat ilow_shininess[] = {100.0f};
 static GLfloat ihigh_shininess[] = {100.0f};
 static GLfloat imat_emission[] = {0.15f, 0.1f, 0.1f, 0.0f};
 
 // Array of driver objects
 DriverObjects* driver_objects[MAX_OBJECTS] = {
     &colorcube,  // cube object
-    &grid,      &ant, &walls, &wirebox, &norm_cube, &pheromone, &plane, &pyramid, &stars,
+    &grid,      &ant, &walls, &wirebox, &norm_cube, &plane, &pyramid, &stars,
 };
 
 // For the art of saving from adding another object
@@ -316,6 +316,7 @@ static void draw_plane(void)
   glDisable(GL_TEXTURE_2D);
 
   glBegin(GL_QUADS);
+  glNormal3f(0.0f, 1.0f, 0.0f);
   glColor3f(0.2f, 0.25f, 0.3f);
   glVertex3f(-size, bottom, -size);
   glVertex3f(size, bottom, -size);

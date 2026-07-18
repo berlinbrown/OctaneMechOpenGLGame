@@ -32,9 +32,7 @@
  * Contact: Berlin Brown <berlin _dot_ brown at email>
  */
 
-// pyramid.cpp
-// - note: this object is a simplified pyramid-style mesh
-// but a box
+// pyramid.cpp - note: this object is a simplified pyramid-style mesh but a box
 
 #include <GLUT/glut.h>   // GLUT for window/context
 #include <OpenGL/gl.h>   // Core OpenGL functions
@@ -42,7 +40,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <objects.hpp>
-#include <collision.hpp>
 #include <lights.hpp>
 #include <legacy_stubs.hpp>
 
@@ -63,24 +60,6 @@ GLfloat dlow_shininess[] = {5.0f};
 GLfloat dhigh_shininess[] = {100.0f};
 GLfloat dmat_emission[] = {0.3f, 0.2f, 0.2f, 0.0f};
 
-// here is the level
-// 14 walls, 5 cols
-// 60.0f is a good height
-#define LEVEL_MAX_WALLS 10
-static float level_0[LEVEL_MAX_WALLS][5] = {
-    {-200.0f, 260.0f, 100.0f, 30.0f, 70.0f},  // 1
-    {-110.0f, 200.0f, 50.0f, 40.0f, 70.0f},   // 2
-    {-70.0f, 0.0f, 20.0f, 40.0f, 80.0f},      // 3
-    {70.0f, 0.0f, 20.0f, 40.0f, 56.0f},       // 4
-    {0.0f, 70.0f, 50.0f, 30.0f, 66.0f},       // 5
-    {0.0f, -70.0f, 50.0f, 30.0f, 60.0f},      // 6
-    {-220.0f, -240.0f, 70.0f, 40.0f, 70.0f},  // 7
-    {180.0f, -100.0f, 50.0f, 30.0f, 55.0f},   // 8
-    {260.0f, 100.0f, 80.0f, 30.0f, 68.0f},    // 9
-    {220.0f, 80.0f, 40.0f, 30.0f, 55.0f}      // 10
-
-};
-
 // simple objects library
 // - make sure to change the number of objects
 // in objects.h
@@ -92,122 +71,6 @@ DriverObjects CURRENT_OBJECT = {
     0                 // loaded by INIT
 };
 
-static CollisionList* wall_list;
-
-// WALLSOBJECTS GO HERE
-
-static void SetupWall(CollisionObj** ptr)
-{
-  (*ptr) = CreateCollisionObj();
-
-  (*ptr)->id = wall_list->objects;
-
-  InsertColFront(wall_list, *ptr);
-}
-
-// InsertWall
-void InsertWall(float x, float y, float width, float height, float height_2)
-{
-  float x_min, x_max, y_min, y_max;
-
-  // set up the struct
-  CollisionObj* ptr = NULL;
-
-  SetupWall(&(ptr));  // inserted into standard list
-
-  ptr->movement_type = PLANE_COL_TYPE;  // moves
-
-  ptr->box_x = x;
-  ptr->box_y = y;
-
-  if (width <= 0) width = 1.0f;
-
-  if (height <= 0) height = 1.0f;
-
-  ptr->size[0] = width;
-  ptr->size[1] = height_2;
-  ptr->size[2] = height;
-
-  // increase the width a little so it doesnt
-  // look like the objects are crossing over
-  width *= 1.1f;
-  height *= 1.1f;
-
-  x_min = x - (width / 2.0f);
-  x_max = x + (width / 2.0f);
-
-  y_min = y - (height / 2.0f);
-  y_max = y + (height / 2.0f);
-
-  // In order to insert a wall of the box
-  // we need the xmins and maxes and the normals
-  // 4 differnt walls
-
-  // front wall
-  InsertColSegment(x_min, y_max, x_max, y_max);
-
-  // right wall
-  InsertColSegment(x_max, y_min, x_max, y_max);
-
-  // back wall (top)
-  InsertColSegment(x_min, y_min, x_max, y_min);
-
-  // left wall
-  InsertColSegment(x_min, y_min, x_min, y_max);
-}
-
-// Create Walls
-void CreateWalls(void)
-{
-  int i = 0;
-
-  for (i = 0; i < LEVEL_MAX_WALLS; i++)
-  {
-    InsertWall(level_0[i][0], level_0[i][1], level_0[i][2], level_0[i][3], level_0[i][4]);
-  }
-
-}
-
-// PrintList
-void Draw_Walls(CollisionList* list)
-{
-  CollisionObj* current_ptr;
-
-  if (list->front == NULL) return;
-
-  current_ptr = list->front;
-
-  while (current_ptr != NULL)
-  {
-    // draw the wall
-    glPushMatrix();
-
-    glTranslatef(current_ptr->box_x, 0.0f, current_ptr->box_y);
-
-    glScalef(current_ptr->size[0], current_ptr->size[1], current_ptr->size[2]);
-
-    driver_objects[PYRAMID_OBJECT]->render();
-
-    glPopMatrix();
-
-    current_ptr = current_ptr->next;
-
-  }
-}
-
-// Create wall list
-void Create_Wall_List(void) { wall_list = CreateCollisionList(); }
-
-// Delelet Col List
-void Delete_Wall_List(void) { DestroyColList(wall_list); }
-
-// Print_Col_List
-void Print_Wall_List(void) { PrintCollisionList(wall_list); }
-
-// Draw_Wall_List
-void Draw_Wall_List(void) { Draw_Walls(wall_list); }
-
-// END WALLOBJECTS
 static void draw_pyramid(void)
 {
   float v[3][3] = {0};

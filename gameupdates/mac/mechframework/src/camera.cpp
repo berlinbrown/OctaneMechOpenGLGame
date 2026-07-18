@@ -196,9 +196,6 @@ void SpringDamp(Vector currPos,
 
   Vector_Add(currPos, mx, result);
 
-  // result[0] = currPos[0];
-  // result[1] = currPos[1];
-  // result[2] = currPos[2];
 }
 
 // For each specific camera

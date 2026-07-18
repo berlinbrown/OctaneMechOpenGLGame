@@ -125,7 +125,6 @@ float FindAngle(float dir, float x1, float y1, float x2, float y2);
 
 void CheckRespawn(void);
 
-void ActivatePheromone(float x, float y, float dir);
 
 void AnimNetworkBots(void);
 
@@ -137,4 +136,3 @@ void InitFood(void);
 
 extern DriverSentinel nest;
 extern DriverSentinel garden;
-extern DriverSentinel trail_set;

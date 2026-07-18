@@ -9,6 +9,8 @@
 #include <bot.hpp>
 #include <objects.hpp>
 #include <lights.hpp>
+#include <gldrawlib.hpp>
+#include <globals.hpp>
 
 void RenderBot(DriverBotPtr boid);
 DriverBotPtr CreateBot(int bot_id);
@@ -102,10 +104,12 @@ void InitPlayerBot() {
 }
 
 void HandlePlayerBotKeys() {
-  if (!gPlayerBot || gPlayerBot->alive == DEAD_STATE) return;
+  if (!gPlayerBot || gPlayerBot->alive == DEAD_STATE) {
+    return;
+  } 
 
-  const float turnSpeed = 2.0f;
-  const float moveSpeed = 0.55f;
+  const float turnSpeed = 1.0f;
+  const float moveSpeed = 0.15f;
 
   if (gKeys['a'] || gKeys['A'] || gKeys[kSpecialKeyBase + GLUT_KEY_LEFT]) {
     gPlayerBot->heading -= turnSpeed;
@@ -127,7 +131,9 @@ void HandlePlayerBotKeys() {
 }
 
 void DrawPlayerCharacter() {
-  if (!gPlayerBot) return;
+  if (!gPlayerBot) { 
+    return;
+  }
 
   RenderBot(gPlayerBot);
 }
@@ -176,13 +182,26 @@ void DrawHUD() {
 }
 
 void HandleCameraKeys() {
-  if (gKeys['a'] || gKeys['A']) gCamYawDeg -= 1.8f;
-  if (gKeys['d'] || gKeys['D']) gCamYawDeg += 1.8f;
-  if (gKeys['i'] || gKeys['I']) gFovOffset -= 0.45f;
-  if (gKeys['k'] || gKeys['K']) gFovOffset += 0.45f;
+  if (gKeys['a'] || gKeys['A']) {
+    gCamYawDeg -= 1.8f;
+  }
+  if (gKeys['d'] || gKeys['D']) {
+    gCamYawDeg += 1.8f;
+  }
+  if (gKeys['i'] || gKeys['I']) {
+    gFovOffset -= 0.45f;
+  }
+  if (gKeys['k'] || gKeys['K']) {
+    gFovOffset += 0.45f;
+  }
 
-  if (gKeys['o'] || gKeys['O']) gPitchOffset += 0.9f;
-  if (gKeys['l'] || gKeys['L']) gPitchOffset -= 0.9f;
+  if (gKeys['o'] || gKeys['O']) {
+    gPitchOffset += 0.9f;
+  }
+
+  if (gKeys['l'] || gKeys['L']) {
+    gPitchOffset -= 0.9f;
+  }
 
   gPitchOffset = ClampFloat(gPitchOffset, -140.0f, 220.0f);
   gFovOffset = ClampFloat(gFovOffset, -20.0f, 30.0f);
@@ -216,8 +235,8 @@ void DisplayGL() {
   SetLights();
 
   DrawStars();
-  DrawGround();
   glEnable(GL_LIGHTING);
+  DrawGround();
   DrawPlayerCharacter();
   DrawHUD();
 
@@ -324,7 +343,9 @@ int main(int argc, char** argv) {
   glShadeModel(GL_SMOOTH);
   glEnable(GL_COLOR_MATERIAL);
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
   Super_LoadGlobals();
+
   InitGlobals();
   InitMaterial();
   GenerateLights();
