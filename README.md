@@ -21,6 +21,9 @@ Use: cd ./gameupdates/mac/umbramech
 
 make build run 
 ```
+Code builds and runs on a Mac M1 in 2026, navigate to : 
+https://github.com/berlinbrown/OctaneMechOpenGLGame/tree/master/gameupdates/mac/umbramech
+
 
 ## History
 
