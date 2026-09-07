@@ -168,7 +168,7 @@ static void Draw_Pheromones(void)
 
   for (index = 0; index < CURRENT_BOT.max_items; index++)
   {
-    CURRENT_BOT.process(CURRENT_BOT.objects[index]);
+    if (!ant_globals->paused) CURRENT_BOT.process(CURRENT_BOT.objects[index]);
 
     CURRENT_BOT.render(CURRENT_BOT.objects[index]);
 

@@ -12,10 +12,18 @@ See the most recent updates under the gameupdates directory
 
 Older code can be found under "legacy"
 
+## Quick Start for Main Game
+
+* 2026 - Now builds and run with Mac OS
+
+```text
+Use: cd ./gameupdates/mac/umbramech
+
+make build run 
+```
 Code builds and runs on a Mac M1 in 2026, navigate to : 
 https://github.com/berlinbrown/OctaneMechOpenGLGame/tree/master/gameupdates/mac/umbramech
 
-And run make
 
 ## History
 

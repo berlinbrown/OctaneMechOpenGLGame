@@ -1,3 +1,5 @@
+#include "walls.hpp"
+#include "audio.hpp"
 /**
  * Copyright (c) 2006-2026 Berlin Brown.  All Rights Reserved
  *
@@ -224,12 +226,19 @@ void BotPlacement(DriverBotPtr bot, float x, float y, float width, float height)
 // - set the bots initial position
 void PositionBot(DriverBotPtr bot)
 {
-  int rand_no;
-
-  rand_no = rand() % MAX_RAND_POS;
-
-  BotPlacement(bot, rand_bot_pos[rand_no][0], rand_bot_pos[rand_no][1], rand_bot_pos[rand_no][2],
-               rand_bot_pos[rand_no][3]);
+  // Bounded rejection sampling; the map's central clearing is the fallback.
+  constexpr float clearance = 6.0f;
+  for (int attempt = 0; attempt < 128; ++attempt)
+  {
+    int rand_no = rand() % MAX_RAND_POS;
+    BotPlacement(bot, rand_bot_pos[rand_no][0], rand_bot_pos[rand_no][1],
+                 rand_bot_pos[rand_no][2], rand_bot_pos[rand_no][3]);
+    if (fabsf(bot->x) < WORLD_X_MAX - clearance &&
+        fabsf(bot->y) < WORLD_Y_MAX - clearance &&
+        IsBuildingClear(bot->x, bot->y, clearance)) return;
+  }
+  bot->x = 0.0f;
+  bot->y = 0.0f;
 }
 
 // Supers
@@ -838,10 +847,8 @@ void MoveBullets(StaticBotPtr boid)
   // else doesnt turn it off
   if (boid->travel > MAX_BULLET_TRAVEL) boid->state = DEAD_STATE;
 
-  if (boid->max_dist == 0)
-  {
-    boid->max_dist = 0.000001f;
-  }
+  // No ray hit: expire at the range limit without a fabricated impact.
+  if (boid->state != ALIVE_STATE || boid->max_dist <= 0.0f) return;
 
   v = boid->travel / boid->max_dist;
 
@@ -870,6 +877,7 @@ void ResetBullets(DriverBotPtr bot)
 
   for (index = 0; index < MAX_BULLETS; index++)
   {
+    bot->bullets[index] = {};
     bot->bullets[index].state = READY_STATE;
 
     bot->bullets[index].position[0] = bot->x;
@@ -900,7 +908,7 @@ void Player_Shoot(DriverBotPtr bot)
   // turns a bullet on
   if (bot->bullets[gun_index].state == READY_STATE)
   {
-    Do_FireSound();
+    if (bot->id == PLAYER_0) PlayShot();
 
     // fire the crosshairs also
     // also add the crosshair
@@ -923,6 +931,8 @@ void Player_Shoot(DriverBotPtr bot)
     bot->bullets[gun_index].linearv = (float)(rand() % 1000) / 5000.0f + MIN_BULLET_SPEED;
 
     bot->bullets[gun_index].travel = 0;
+    // A reused slot must not retain its previous shot's wall hit.
+    bot->bullets[gun_index].max_dist = 0;
 
     // with our new algorithm
     // for collision detection
@@ -972,7 +982,7 @@ void FireBullets(DriverBotPtr bot, int next_state)
   // turns a bullet on
   if (bot->bullets[gun_index].state == READY_STATE)
   {
-    Do_FireSound();
+    if (bot->id == PLAYER_0) PlayShot();
 
     // also add the crosshair
     Reset_CrossHairs(bot);
@@ -994,6 +1004,8 @@ void FireBullets(DriverBotPtr bot, int next_state)
     bot->bullets[gun_index].linearv = (float)(rand() % 1000) / 5000.0f + MIN_BULLET_SPEED;
 
     bot->bullets[gun_index].travel = 0;
+    // A reused slot must not retain its previous shot's wall hit.
+    bot->bullets[gun_index].max_dist = 0;
 
     // with our new algorithm
     // for collision detection
@@ -1075,22 +1087,62 @@ void Render_LineStrip(float x_1, float y_1, float x_2, float y_2, float height1,
 
 }
 
-// DrawBullets
+// Crossed, tapered ribbons stay visible from above and over the shoulder.
+// Local +Z is behind the projectile: movement follows local -Z.
+static void DrawTracerRibbon(float width, float length, float r, float g, float b, float alpha)
+{
+  for (int plane = 0; plane < 2; ++plane)
+  {
+    glPushMatrix();
+    glRotatef(90.0f * plane, 0.0f, 0.0f, 1.0f);
+    glBegin(GL_TRIANGLES);
+    glColor4f(r, g, b, alpha);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-width, 0.0f, length * 0.18f);
+    glColor4f(r, g, b, 0.0f);
+    glVertex3f(0.0f, 0.0f, length);
+    glColor4f(r, g, b, alpha);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glColor4f(r, g, b, 0.0f);
+    glVertex3f(0.0f, 0.0f, length);
+    glColor4f(r, g, b, alpha);
+    glVertex3f(width, 0.0f, length * 0.18f);
+    glEnd();
+    glPopMatrix();
+  }
+}
+
+// DrawBullets: a narrow ion dart with a cold core and fading red afterglow.
 void DrawBullets(StaticBotPtr boid)
 {
-  MoveBullets(boid);
+  if (!ant_globals->paused) MoveBullets(boid);
+  if (boid->state != ALIVE_STATE) return;
 
   BEGIN_BOT;
-
+  glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT | GL_COLOR_BUFFER_BIT |
+               GL_DEPTH_BUFFER_BIT | GL_LIGHTING_BIT);
   glDisable(GL_LIGHTING);
-  MED_GREEN;
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  glDepthMask(GL_FALSE);
+  glShadeModel(GL_SMOOTH);
 
-  // Only draw a ball for right now
-  Render_LineStrip(boid->position[0], boid->position[2], boid->old_x, boid->old_y, BULLET_H1,
-                   BULLET_H2);
+  glTranslatef(boid->position[0], BULLET_H2, boid->position[2]);
+  glRotatef(boid->virt_heading, 0.0f, 1.0f, 0.0f);
 
-  glEnable(GL_LIGHTING);
+  // Fixed world-space proportions, independent of speed and frame rate.
+  const float length = fminf(9.0f, fmaxf(1.0f, boid->travel));
+  DrawTracerRibbon(0.48f, length, 0.05f, 0.55f, 0.80f, 0.22f);
+  DrawTracerRibbon(0.20f, length * 0.72f, 0.12f, 0.85f, 1.0f, 0.65f);
+  DrawTracerRibbon(0.075f, length * 0.48f, 0.80f, 0.95f, 1.0f, 1.0f);
 
+  glTranslatef(0.0f, 0.0f, length * 0.55f);
+  DrawTracerRibbon(0.12f, length * 0.45f, 0.85f, 0.06f, 0.10f, 0.40f);
+
+  glPopAttrib();
   END_BOT;
 }
 
@@ -1111,7 +1163,8 @@ void RenderBullets(DriverBotPtr bot)
     // in order to reset
     if (bot->bullets[index].state == DEAD_STATE)
     {
-      bot->bullets[index].state = READY_STATE;
+      bot->bullets[index] = {};
+    bot->bullets[index].state = READY_STATE;
 
       bot->bullets[index].position[0] = bot->x;
       bot->bullets[index].position[2] = bot->y;
@@ -1633,7 +1686,7 @@ static void LoadFireAnts_A(DriverBotPtr bot)
 
   bot->attack_angle = 0.0f;
 
-  bot->view_mode = THIRD_PERSON_MODE;
+  bot->view_mode = CLOSE_THIRD_MODE;
 
   // Change the size
   bot->size[0] = 3.2f;
@@ -1698,12 +1751,11 @@ void GenerateFireAnts(void)
 // Reset_Fire_Ant
 void Reset_Fire_Ant(DriverBotPtr bot, int id)
 {
+  // Release before LoadBotParms zeroes the pointer.
+  RELEASE_OBJECT(bot->bullets);
   LoadBotParms(bot);
 
   bot->id = id;
-
-  // make sure to kill the bullets
-  RELEASE_OBJECT(bot->bullets);
 
   bot->bullets = (StaticBot*)malloc(MAX_BULLETS * sizeof(StaticBot));
 
@@ -1871,7 +1923,7 @@ void AnimNetworkBots(void)
   int j = 0;
   float max = -10000;
   int id = 0;
-  int max_id;
+  int max_id = -1;
 
   // Check Network snapshots first
   Perform_Snapshots();
@@ -2495,7 +2547,7 @@ static void render_fireant(void)
 // compile
 static void compile_fireant(void)
 {
-  int id;
+  int id = -1;
   // setup a spot for display list for background
   // object = getcurrentobject();
   id = CURRENT_OBJECT.call_id;

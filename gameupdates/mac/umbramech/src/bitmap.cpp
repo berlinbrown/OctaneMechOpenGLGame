@@ -37,6 +37,7 @@ permission.
 #include <float.h>       // used for _control
 #include <math.h>        // math libraries
 #include <stdio.h>
+#include <cstdint>
 #include <stdlib.h>
 #include <time.h>  // used for randomizing
 
@@ -104,9 +105,9 @@ int GetFunkyTexture(void) { return funky_texture; }
 void NextTexture(void)
 {
   textureindex++;  // up the index
-  if (textureindex > MAX_TEXTURES)
+  if (textureindex >= MAX_TEXTURES)
   {
-    textureindex = MAX_TEXTURES;
+    textureindex = MAX_TEXTURES - 1;
   }
 }
 
@@ -116,93 +117,66 @@ void NextTexture(void)
 void* LoadBitmap(char* filename) { return NULL; }
 
 // GetTexture
-unsigned int GetTexture(int index) { return texture[index]; }
+unsigned int GetTexture(int index)
+{
+  return (index >= 0 && index < MAX_TEXTURES) ? texture[index] : 0;
+}
 
 // LoadBitmap for linux
 int LoadBitmap_Lin(const char* filename, textureImage* texture)
 {
-  FILE* file;
+  if (!filename || !texture) return 0;
+  FILE* file = fopen(filename, "rb");
+  if (!file) return 0;
 
-  unsigned short int bfType;
-  long int bfOffBits;
-  short int biPlanes;
-  short int biBitCount;
-  long int biSizeImage;
-  int i;
-  unsigned char temp;
+  // BMP headers use fixed-width little-endian fields, including on 64-bit macOS.
+  unsigned char header[54];
+  unsigned char* pixels = NULL;
+  const auto load = [&]() -> bool {
+    if (fread(header, 1, sizeof(header), file) != sizeof(header)) return false;
+    const auto u16 = [&](int at) -> uint16_t {
+      return uint16_t(header[at]) | (uint16_t(header[at + 1]) << 8);
+    };
+    const auto u32 = [&](int at) -> uint32_t {
+      return uint32_t(u16(at)) | (uint32_t(u16(at + 2)) << 16);
+    };
+    const uint32_t offset = u32(10), dibSize = u32(14);
+    const int32_t width = static_cast<int32_t>(u32(18));
+    const int32_t height = static_cast<int32_t>(u32(22));
+    if (u16(0) != 0x4d42 || dibSize < 40 || width <= 0 || height <= 0 ||
+        u16(26) != 1 || u16(28) != 24 || u32(30) != 0 ||
+        uint64_t(offset) < 14ULL + dibSize) return false;
 
-  /* make sure the file is there and open it read-only (binary) */
-  if ((file = fopen(filename, "rb")) == NULL)
-  {
-    printf("File not found : %s\n", filename);
-    return 0;
-  }
-  if (!fread(&bfType, sizeof(short int), 1, file))
-  {
-    printf("Error reading file!\n");
-    return 0;
-  }
-  /* check if file is a bitmap */
-  if (bfType != 19778)
-  {
-    printf("Not a Bitmap-File!\n");
-    return 0;
-  }
-  /* get the file size */
-  /* skip file size and reserved fields of bitmap file header */
-  fseek(file, 8, SEEK_CUR);
-  /* get the position of the actual bitmap data */
-  if (!fread(&bfOffBits, sizeof(long int), 1, file))
-  {
-    printf("Error reading file!\n");
-    return 0;
-  }
+    const uint64_t rowBytes = uint64_t(width) * 3;
+    const uint64_t stride = (rowBytes + 3) & ~uint64_t(3);
+    if (fseek(file, 0, SEEK_END) != 0) return false;
+    const long fileSize = ftell(file);
+    if (fileSize < 0 || uint64_t(offset) + stride * height > uint64_t(fileSize)) return false;
+    if (fseek(file, offset, SEEK_SET) != 0) return false;
 
-  /* skip size of bitmap info header */
-  fseek(file, 4, SEEK_CUR);
-  /* get the width of the bitmap */
-  fread(&texture->width, sizeof(int), 1, file);
-
-  /* get the height of the bitmap */
-  fread(&texture->height, sizeof(int), 1, file);
-
-  /* get the number of planes (must be set to 1) */
-  fread(&biPlanes, sizeof(short int), 1, file);
-  if (biPlanes != 1)
-  {
-    printf("Error: number of Planes not 1!\n");
-    return 0;
-  }
-  /* get the number of bits per pixel */
-  if (!fread(&biBitCount, sizeof(short int), 1, file))
-  {
-    printf("Error reading file!\n");
-    return 0;
-  }
-
-  if (biBitCount != 24)
-  {
-    printf("Bits per Pixel not 24\n");
-    return 0;
-  }
-  /* calculate the size of the image in bytes */
-  biSizeImage = texture->width * texture->height * 3;
-  texture->data = (unsigned char*)malloc(biSizeImage);
-  /* seek to the actual data */
-  fseek(file, bfOffBits, SEEK_SET);
-  if (!fread(texture->data, biSizeImage, 1, file))
-  {
-    printf("Error loading file!\n");
-    return 0;
-  }
-  /* swap red and blue (bgr -> rgb) */
-  for (i = 0; i < biSizeImage; i += 3)
-  {
-    temp = texture->data[i];
-    texture->data[i] = texture->data[i + 2];
-    texture->data[i + 2] = temp;
-  }
-  return 1;
+    pixels = static_cast<unsigned char*>(malloc(static_cast<size_t>(rowBytes * height)));
+    if (!pixels) return false;
+    for (int row = 0; row < height; ++row)
+    {
+      unsigned char* dest = pixels + row * rowBytes;
+      if (fread(dest, 1, rowBytes, file) != rowBytes ||
+          fseek(file, static_cast<long>(stride - rowBytes), SEEK_CUR) != 0) return false;
+      for (uint64_t x = 0; x < rowBytes; x += 3)
+      {
+        const unsigned char blue = dest[x];
+        dest[x] = dest[x + 2];
+        dest[x + 2] = blue;
+      }
+    }
+    texture->width = width;
+    texture->height = height;
+    texture->data = pixels;
+    return true;
+  };
+  const bool loaded = load();
+  fclose(file);
+  if (!loaded) free(pixels);
+  return loaded ? 1 : 0;
 }
 
 // loadtexture

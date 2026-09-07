@@ -95,52 +95,29 @@ void DeleteOctree(Octree** tree_ptr)
 // and a pointer to a list
 Octree** GenerateOctree(void)
 {
-  float i, j;
-  float width = 7.5f;
-  float height = width;  // square grid
-  float x_min, x_max, y_min, y_max;
-  int hash_key = 0;
-  int count = 0;
-  int z = 0;
-  int index = 0;
-  Octree** tree_ptr;
+  // The fixed 60-unit grid contains exactly 8 x 8 cells. Integer indexing
+  // keeps allocation and population in agreement without float loop counts.
+  constexpr int cellsPerAxis = 8;
+  constexpr int count = cellsPerAxis * cellsPerAxis;
+  constexpr float width = 7.5f;
+  Octree** tree_ptr = (Octree**)malloc(count * sizeof(Octree*));
+  if (!tree_ptr) abort();
 
-  for (i = -30.0f; i < 30.0f; i += height)
-    for (j = -30.0f; j < 30.0f; j += width)
-    {
-      count++;
-    }
-
-  // First we have to create an array of pointers
-  tree_ptr = (Octree**)malloc(count * sizeof(Octree*));
-
-  // Create each node
-  for (index = 0; index < count; index++) tree_ptr[index] = CreateOctree();
-
-  z = 0;  // reset counter
-
-  // populate the tree with data
-  for (i = -30.0f; i < 30.0f; i += height)
+  for (int row = 0; row < cellsPerAxis; ++row)
   {
-    for (j = -30.0f; j < 30.0f; j += width)
+    for (int column = 0; column < cellsPerAxis; ++column)
     {
-      x_min = j;
-      y_min = i;
-      x_max = j + width;
-      y_max = i + width;
-
-      tree_ptr[z]->list = CreatePtrList();
-      tree_ptr[z]->x_max = x_max;
-      tree_ptr[z]->x_min = x_min;
-      tree_ptr[z]->y_max = y_max;
-      tree_ptr[z]->y_min = y_min;
-      tree_ptr[z]->max_elements = count;
-
-      z++;
+      const int index = row * cellsPerAxis + column;
+      tree_ptr[index] = CreateOctree();
+      if (!tree_ptr[index]) abort();
+      tree_ptr[index]->list = CreatePtrList();
+      tree_ptr[index]->x_min = -30.0f + column * width;
+      tree_ptr[index]->x_max = tree_ptr[index]->x_min + width;
+      tree_ptr[index]->y_min = -30.0f + row * width;
+      tree_ptr[index]->y_max = tree_ptr[index]->y_min + width;
+      tree_ptr[index]->max_elements = count;
     }
-
   }
-
   return tree_ptr;
 }
 

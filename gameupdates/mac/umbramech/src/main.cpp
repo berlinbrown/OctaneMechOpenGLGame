@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "audio.hpp"
 #include "bot.hpp"
 #include "camera.hpp"
 #include "collision.hpp"
@@ -67,12 +68,12 @@ extern float framerate;
 extern int keyCodes[20];
 
 static int gFrames = 0;
-static clock_t gLastTime = 0;
+static unsigned long gLastTime = 0;
 
 static float newYPos = 0.0f;
 static float newXPos = 0.0f;
 static float gCamYawDeg = 0.0f;
-static float gCamDistance = 120.0f;
+static float gCamDistance = 40.0f;
 static bool gMouseDrag = false;
 
 static void PrintCurrentCameraView(void)
@@ -90,14 +91,12 @@ static void PrintCurrentCameraView(void)
   {
     const float mechX = GetBotX();
     const float mechZ = GetBotY();
-    const float forwardX = sinf(camYawRad);
-    const float forwardZ = cosf(camYawRad);
-    const float rightX = cosf(camYawRad);
-    const float rightZ = -sinf(camYawRad);
-    const float eyeX = mechX - forwardX * 10.0f + rightX * 4.0f;
-    const float eyeZ = mechZ - forwardZ * 10.0f + rightZ * 4.0f;
+    const float forwardX = sinf((GetBotHeading() + gCamYawDeg) * PI_180);
+    const float forwardZ = cosf((GetBotHeading() + gCamYawDeg) * PI_180);
+    const float eyeX = mechX + forwardX * gCamDistance;
+    const float eyeZ = mechZ + forwardZ * gCamDistance;
     printf("Camera 2 (Close Third Person) pos=(%.2f, %.2f, %.2f) target=(%.2f, %.2f, %.2f)\n",
-           eyeX, (14.0f + newYPos), eyeZ, mechX, 3.0f, mechZ);
+           eyeX, (fmaxf(6.0f, 0.5f * gCamDistance + newYPos)), eyeZ, mechX, 3.0f, mechZ);
   }
   else if (viewMode == FIRST_PERSON_MODE)
   {
@@ -142,21 +141,25 @@ static void InitKeyCodes(void)
 
 static void GetFramesPerSecond(void)
 {
-  clock_t now;
-  float delta;
+  const unsigned long now = getclock();
+  const unsigned long elapsed = now - gLastTime;
+  gLastTime = now;
+  static unsigned long sampleMilliseconds = 0;
+  sampleMilliseconds += elapsed;
 
-  GameTick();
-  CheckRespawn();
-
-  if (gFrames++ >= kFrameRateSamples)
+  if (!ant_globals->paused)
   {
-    now = clock();
-    delta = (now - gLastTime) / (float)CLOCKS_PER_SEC;
-    AddTime((float)(now - gLastTime));
-    AddSeconds(delta);
-    gLastTime = now;
-    framerate = kFrameRateSamples / delta;
+    GameTick();
+    CheckRespawn();
+    AddSeconds(elapsed / 1000.0f);
+    AddTime(elapsed * (CLOCKS_PER_SEC / 1000.0f));
+  }
+
+  if (++gFrames >= kFrameRateSamples && sampleMilliseconds > 0)
+  {
+    framerate = gFrames * 1000.0f / sampleMilliseconds;
     gFrames = 0;
+    sampleMilliseconds = 0;
   }
 }
 
@@ -195,9 +198,9 @@ static void InitGame(void)
 {
   srand((unsigned int)time(NULL));
   InitKeyCodes();
-  gLastTime = clock();
+  gLastTime = getclock();
 
-  chdir("resources");
+  InitAudio();
 
   Super_LoadGlobals();
   Load_ConfigDefaultsOnly();
@@ -258,9 +261,10 @@ static void InitGame(void)
   InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_max, world_ptr->y_min);
   InsertColSegment(world_ptr->x_min, world_ptr->y_min, world_ptr->x_min, world_ptr->y_max);
 
-  ant_globals->paused = 0;
-  ant_globals->menu_mode = MENU_RUN_MODE;
-  ant_globals->_menu_state = FIRST_TIME_FALSE;
+  ant_globals->paused = 1;
+  ant_globals->menu_mode = MENU_TITLE_MODE;
+  ant_globals->_menu_state = FIRST_TIME_TRUE;
+  gLastTime = getclock();
   gGameReady = true;
 }
 
@@ -271,7 +275,7 @@ static void AnimateScene(void)
     AnimFireAnts();
   }
 
-  AnimateExplosions();
+  if (!ant_globals->paused) AnimateExplosions();
 }
 
 static void DrawGLScene(void)
@@ -288,20 +292,15 @@ static void DrawGLScene(void)
 
   // Document : gluLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
   //.  GLdouble centerX, GLdouble centerY, GLdouble centerZ, GLdouble upX, GLdouble upY, GLdouble upZ)
-  if (ant_globals && ant_globals->paused) {
-    // Paused: spin the camera slowly around the world
-    Paused_Camera();
-  } else if (GetViewMode() == CLOSE_THIRD_MODE) {
-    // Close third-person: raised slightly and centered on the mech body
+  if (GetViewMode() == CLOSE_THIRD_MODE) {
+    // Raised third-person camera follows the mech heading and zoom distance.
     const float mechX = GetBotX();
     const float mechZ = GetBotY();
-    const float forwardX = sinf(camYawRad);
-    const float forwardZ = cosf(camYawRad);
-    const float rightX = cosf(camYawRad);
-    const float rightZ = -sinf(camYawRad);
-    const float eyeX = mechX - forwardX * 10.0f + rightX * 4.0f;
-    const float eyeZ = mechZ - forwardZ * 10.0f + rightZ * 4.0f;
-    gluLookAt(eyeX, 14.0f + newYPos, eyeZ,
+    const float forwardX = sinf((GetBotHeading() + gCamYawDeg) * PI_180);
+    const float forwardZ = cosf((GetBotHeading() + gCamYawDeg) * PI_180);
+    const float eyeX = mechX + forwardX * gCamDistance;
+    const float eyeZ = mechZ + forwardZ * gCamDistance;
+    gluLookAt(eyeX, fmaxf(6.0f, 0.5f * gCamDistance + newYPos), eyeZ,
               mechX, 3.0f, mechZ,  0.0f, 1.0f, 0.0f);
   } else if (GetViewMode() == FIRST_PERSON_MODE) {
     // First-person: camera sits just behind and above the mech, looking forward
@@ -362,7 +361,15 @@ static void DisplayGL(void)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+  const float oldX = GetBotX(), oldZ = GetBotY();
+  if (!ant_globals->paused)
+  {
+    if (gKeys['f'] || gKeys['F']) gCamYawDeg += 2.0f;
+    if (gKeys['s'] || gKeys['S']) gCamYawDeg -= 2.0f;
+    if (gKeys['r'] || gKeys['R']) gCamYawDeg = 0.0f;
+  }
   HandleCameraKeys(gKeys);
+  UpdateAudio(ant_globals->paused != 0, GetBotX() != oldX || GetBotY() != oldZ);
   AnimateScene();
   DrawGLScene();
 
@@ -386,24 +393,32 @@ static void ResizeGL(int width, int height)
   glLoadIdentity();
 }
 
+static void HandlePause(void)
+{
+  if (!ant_globals) return;
+  if (ant_globals->paused)
+  {
+    // Resume the current world, including the initial paused menu, without resetting it.
+    ant_globals->paused = 0;
+    ant_globals->menu_mode = MENU_RUN_MODE;
+    ant_globals->_menu_state = FIRST_TIME_FALSE;
+  }
+  else
+  {
+    ant_globals->paused = 1;
+  }
+}
+
 static void HandleEsc(void)
 {
-  if (ant_globals->menu_mode == MENU_TITLE_MODE)
-  {
-    if (ant_globals->_menu_state == FIRST_TIME_TRUE)
-    {
-      std::exit(0);
-    }
-    else
-    {
-      ant_globals->paused = 0;
-      ant_globals->menu_mode = MENU_RUN_MODE;
-    }
-  }
-  else if (ant_globals->menu_mode == MENU_HELP_MODE)
+  if (ant_globals->menu_mode == MENU_HELP_MODE)
   {
     ant_globals->paused = 1;
     ant_globals->menu_mode = MENU_TITLE_MODE;
+  }
+  else if (ant_globals->paused)
+  {
+    HandlePause();
   }
   else
   {
@@ -414,7 +429,9 @@ static void HandleEsc(void)
 
 static void KeyDown(unsigned char key, int, int)
 {
+  if (!gGameReady) return;
   gKeys[(unsigned char)key] = true;
+  // GLUT suppresses auto-repeat; never gate toggles on potentially stale held-key state.
 
   switch (key)
   {
@@ -424,6 +441,13 @@ static void KeyDown(unsigned char key, int, int)
       break;
 
     case '\r':
+      if (ant_globals->paused && ant_globals->menu_mode == MENU_RUN_MODE)
+      {
+        HandlePause();
+        break;
+      }
+      // In a menu, Enter and Space activate the selected item.
+      [[fallthrough]];
     case ' ':
       if (Set_MenuMode())
       {
@@ -437,10 +461,12 @@ static void KeyDown(unsigned char key, int, int)
 
     case 'p':
     case 'P':
-      if (ant_globals->menu_mode == MENU_RUN_MODE)
-      {
-        TogglePaused();
-      }
+      HandlePause();
+      break;
+
+    case 'm':
+    case 'M':
+      ToggleAudioMute();
       break;
 
     case 'q':
@@ -497,6 +523,7 @@ static void KeyUp(unsigned char key, int, int) { gKeys[(unsigned char)key] = fal
 
 static void SpecialKeyDown(int key, int, int)
 {
+  if (!gGameReady || key < 0 || key >= 512 - kSpecialKeyBase) return;
   gKeys[kSpecialKeyBase + key] = true;
 
   if (ant_globals && ant_globals->menu_mode == MENU_RUN_MODE)
@@ -519,7 +546,10 @@ static void SpecialKeyDown(int key, int, int)
   }
 }
 
-static void SpecialKeyUp(int key, int, int) { gKeys[kSpecialKeyBase + key] = false; }
+static void SpecialKeyUp(int key, int, int)
+{
+  if (key >= 0 && key < 512 - kSpecialKeyBase) gKeys[kSpecialKeyBase + key] = false;
+}
 
 static void MouseButton(int button, int state, int x, int y)
 {
@@ -564,6 +594,7 @@ int main(int argc, char** argv)
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
   glutInitWindowSize(gWindowWidth, gWindowHeight);
   glutCreateWindow("UmbraMech");
+  glutIgnoreKeyRepeat(1);
 
   glutDisplayFunc(DisplayGL);
   glutReshapeFunc(ResizeGL);

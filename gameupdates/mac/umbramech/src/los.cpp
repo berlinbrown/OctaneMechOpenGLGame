@@ -90,8 +90,8 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
   float tmp_x3;
   float tmp_y3;
   float a1, b1, a2, b2, a3, b3, a4, b4;
-  float m1, m2, m3;
-  float bb1, bb2, bb3;
+  float m1 = 0.0f, m2 = 0.0f, m3 = 0.0f;
+  float bb1 = 0.0f, bb2 = 0.0f, bb3 = 0.0f;
   float center_x, center_y;
   int direction;
   bool AB_vert;
@@ -167,7 +167,7 @@ bool CheckSight(DriverBotPtr bot, DriverBotPtr nme)
     m3 = (b1 - b3) / (a1 - a3);
     bb3 = (b3) - (m3 * a3);
   }
-  else if ((a3 - a2) == 0)
+  else if ((a1 - a3) == 0)
   {
     CA_vert = true;
   }

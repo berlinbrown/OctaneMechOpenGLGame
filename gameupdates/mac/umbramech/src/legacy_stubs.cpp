@@ -162,7 +162,7 @@ void DrawText(TextBoxPtr text)
 	}
 }
 
-void Printf(TextBoxPtr text, char* fmt, ...)
+void Printf(TextBoxPtr text, const char* fmt, ...)
 {
 	if (!text || !text->buffer || !fmt) return;
 

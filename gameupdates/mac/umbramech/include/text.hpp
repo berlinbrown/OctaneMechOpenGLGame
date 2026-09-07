@@ -93,7 +93,7 @@ TextBoxPtr InitTextBox(int inL, int inR, int inT, int inB);
 void DestroyTextBox(TextBoxPtr text);
 void SetTextMode(TextBoxPtr text, unsigned int modeIn);
 void DrawText(TextBoxPtr text);
-void Printf(TextBoxPtr text, char* fmt, ...);
+void Printf(TextBoxPtr text, const char* fmt, ...);
 
 void FormatStrCat(TextBoxPtr text, char* str);
 

@@ -40,6 +40,7 @@
 #include <OpenGL/gl.h>   // Core OpenGL functions
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <stdio.h>
+#include <cmath>
 #include <stdlib.h>
 #include <objects.hpp>
 #include <collision.hpp>
@@ -85,6 +86,15 @@ static float level_0[LEVEL_MAX_WALLS][5] = {
     {220.0f, 80.0f, 40.0f, 30.0f, 55.0f}      // 10
 
 };
+
+bool IsBuildingClear(float x, float z, float radius)
+{
+  for (const auto& wall : level_0)
+    if (fabsf(x - wall[0]) <= wall[2] * 0.55f + radius &&
+        fabsf(z - wall[1]) <= wall[3] * 0.55f + radius)
+      return false;
+  return true;
+}
 
 // simple objects library
 // - make sure to change the number of objects

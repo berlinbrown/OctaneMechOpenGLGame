@@ -227,7 +227,7 @@ void Super_KillText(void);
 void Super_BeginPaused(void);
 void Draw_HelpScreen(void);
 // Use Super_Printf for diagnostic output.
-void Super_Printf(char* fmt, ...);
+void Super_Printf(const char* fmt, ...);
 void Print_Score(void);
 
 void Load_Score(float score, float kills, int id, int i);

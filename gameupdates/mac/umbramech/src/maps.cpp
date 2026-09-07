@@ -94,7 +94,7 @@ void LoadMap(Map* map, float x_min, float x_max, float y_min, float y_max)
 // DeleteMap
 void DeleteMap(Map* map)
 {
-  RELEASE_OBJECT(map->list);
+  DestroyPtrList(map->list);
   RELEASE_OBJECT(map);
 }
 
@@ -153,7 +153,7 @@ void BuildMap(void)
   CREATE_MAPS;
 
   // Build a set a of maps
-  for (i = MAP_MIN; i < MAP_MAX; i += map_height)
+  for (i = MAP_MIN; i < MAP_MAX && index < MAX_MAPS; i += map_height)
   {
     for (j = MAP_MIN; j < MAP_MAX; j += map_width)
     {
