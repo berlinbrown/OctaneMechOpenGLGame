@@ -12,6 +12,16 @@ See the most recent updates under the gameupdates directory
 
 Older code can be found under "legacy"
 
+## Quick Start for Main Game
+
+* 2026 - Now builds and run with Mac OS
+
+```text
+Use: cd ./gameupdates/mac/umbramech
+
+make build run 
+```
+
 ## History
 
 The game started around 1999 many years ago.  The goal was to run on Linux and Windows.  When OpenGL was coming out, to support graphics card including 3dfx cards.

@@ -96,14 +96,14 @@ void InsertTest(TreeNode** node_ptr, TreeNode* current)
   }
   else
   {
-    if (TestFuncB(current->data, current->data))
+    if (TestFuncB(current->data, (*node_ptr)->data))
     {
       // recursive call to above
       InsertTest(&((*node_ptr)->left), current);
     }
     else
     {
-      if (!TestFuncB(current->data, current->data)) InsertTest(&((*node_ptr)->right), current);
+      if (!TestFuncB(current->data, (*node_ptr)->data)) InsertTest(&((*node_ptr)->right), current);
 
     }
 
@@ -128,11 +128,11 @@ bool SearchTree(TreeNode** node_ptr, TreeNode* current)
     if (current->data < (*node_ptr)->data)
     {
       // recursive call to above
-      SearchTree(&((*node_ptr)->left), current);
+      return SearchTree(&((*node_ptr)->left), current);
     }
     else
     {
-      if (current->data > (*node_ptr)->data) SearchTree(&((*node_ptr)->right), current);
+      if (current->data > (*node_ptr)->data) return SearchTree(&((*node_ptr)->right), current);
 
     }
 
@@ -156,18 +156,18 @@ int SearchTest(TreeNode** node_ptr, TreeNode* current)
     // check if we found the data
     if (current->data == (*node_ptr)->data) return current->data;
 
-    if (TestFuncB(current->data, current->data))
+    if (TestFuncB(current->data, (*node_ptr)->data))
     {
       // printf(" [%d] ", (*node_ptr)->data);
 
       // recursive call to above
-      SearchTest(&((*node_ptr)->left), current);
+      return SearchTest(&((*node_ptr)->left), current);
     }
     else
     {
       // printf(" [%d] ", (*node_ptr)->data);
 
-      if (!TestFuncB(current->data, current->data)) SearchTest(&((*node_ptr)->right), current);
+      if (!TestFuncB(current->data, (*node_ptr)->data)) return SearchTest(&((*node_ptr)->right), current);
 
     }
 
@@ -257,7 +257,7 @@ void TreeFuncTest(void)
   TreeNode* current;
   TreeNode* search;
   int i;
-  int values[10];
+  int values[12];
   int targets;
   int ret;
 
@@ -288,10 +288,10 @@ void TreeFuncTest(void)
 
   search = CreateTreeNode(targets);
 
-  if (ret = SearchTest(&tree->root, search))
-    printf("\nNode found in: %d -- %d\n", tree_searches, ret);
+  if ((ret = SearchTest(&tree->root, search)) != 0)
+    printf("\nNode found in: %lu -- %d\n", tree_searches, ret);
   else
-    printf("\nCould not find node in: %d %d\n", tree_searches, ret);
+    printf("\nCould not find node in: %lu %d\n", tree_searches, ret);
 
   free(search);
 
@@ -335,9 +335,9 @@ void TreeTest(void)
   search = CreateTreeNode(target);
 
   if (SearchTree(&tree->root, search))
-    printf("Node found in: %d\n", tree_searches);
+    printf("Node found in: %lu\n", tree_searches);
   else
-    printf("Could not find node in: %d\n", tree_searches);
+    printf("Could not find node in: %lu\n", tree_searches);
 
   free(search);
 

@@ -132,13 +132,13 @@ void Super_MainText(void)
 
   // Build the help text here
   Printf(help_text, "[ESC] - Main Screen\n\n");
-  Printf(help_text, "[P] - Pause\n\n");
+  Printf(help_text, "[P] - Pause / Resume\n\n");
   Printf(help_text, "[Q] - Quit\n\n");
-  Printf(help_text, "[TAB] - First/Third View Mode\n\n");
-  Printf(help_text, "[ARROW KEYS] - Turn\n\n");
+  Printf(help_text, "[TAB] - Cycle Camera Views\n\n");
+  Printf(help_text, "[ARROW KEYS] - Move / Turn\n\n");
   Printf(help_text, "[SPACE] - Fire\n\n");
   Printf(help_text, "[S,F,R MOUSE] - Adjust View\n");
-  Printf(help_text, "[F1] - Full Screen\n\n");
+  Printf(help_text, "[M] - Mute / Unmute Audio\n\n");
 }
 
 // Draw_HelpScreen
@@ -180,14 +180,14 @@ void Draw_HelpScreen(void)
 }
 
 // Super_Printf
-void Super_Printf(char* fmt, ...)
+void Super_Printf(const char* fmt, ...)
 {
   va_list vlist;
   char buff[MAX_STR];
 
   // Get output string
   va_start(vlist, fmt);
-  vsprintf(buff, fmt, vlist);
+  vsnprintf(buff, sizeof(buff), fmt, vlist);
 
   FormatStrCat(main_text, buff);
 
@@ -195,14 +195,14 @@ void Super_Printf(char* fmt, ...)
 }
 
 // Score
-void Score_Printf(char* fmt, ...)
+void Score_Printf(const char* fmt, ...)
 {
   va_list vlist;
   char buff[MAX_STR];
 
   // Get output string
   va_start(vlist, fmt);
-  vsprintf(buff, fmt, vlist);
+  vsnprintf(buff, sizeof(buff), fmt, vlist);
 
   FormatStrCat(score_text, buff);
 

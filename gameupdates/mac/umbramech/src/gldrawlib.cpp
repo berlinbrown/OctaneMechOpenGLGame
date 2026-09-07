@@ -37,6 +37,7 @@
 #include <OpenGL/glu.h>  // OpenGL Utility Library
 #include <math.h>
 #include <stdio.h>
+#include <chrono>
 #include <stdlib.h>
 
 // Reduces a normal vector specified as a set of three coordinates,
@@ -131,13 +132,11 @@ void CalcNormal(float p[3], float p1[3], float p2[3], float n[3])
 // get clock
 unsigned long getclock(void)
 {
-  // this function returns the current tick count
-
-  // return tim
-
-  // return(GetTickCount());
-
-}  // end Get_Clock
+  using Clock = std::chrono::steady_clock;
+  static const auto start = Clock::now();
+  return static_cast<unsigned long>(
+      std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count());
+}
 
 // Draw Objects
 void DrawObjects(void)

@@ -35,6 +35,9 @@
 // octree.h
 #pragma once
 
+#include "plist.hpp"
+#include "DriverBots.hpp"
+
 #define MAX_TRAIL_STEPS 500
 
 #define MAX_OCTREE 2000

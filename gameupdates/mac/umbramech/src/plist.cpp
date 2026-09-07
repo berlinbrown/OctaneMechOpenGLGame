@@ -108,7 +108,10 @@ void DeletePtrNode(PtrList* list, void* val)
       if (previous != NULL)
       {
         previous->next = current->next;
-
+      }
+      else
+      {
+        list->head = current->next;
       }
 
       list->items--;

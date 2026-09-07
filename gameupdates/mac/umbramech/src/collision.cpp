@@ -102,9 +102,9 @@ static void Reset_DistStack(void) { dist_stack_ctr = 0; }
 // Insert_DistStack
 static void Insert_DistStack(CollisionPtr ptr)
 {
+  if (dist_stack_ctr >= MAX_DIST_STACK) return;
   dist_stack[dist_stack_ctr] = ptr;
 
-  // Note: we are not checking for the max, sorry
   dist_stack_ctr++;
 }
 
@@ -567,6 +567,8 @@ bool CheckHitBot(CollisionPtr ptr, DriverBotPtr bot)
 // CheckHitLines
 bool CheckHitLines(CollisionPtr ptr, void* test_obj, int type)
 {
+  if (type != RAY_COL_TYPE || !test_obj) return false;
+
   StaticBotPtr static_ptr = NULL;
   float orig[2];
   float dest[2];
@@ -677,7 +679,7 @@ bool CheckCollisionBot(DriverBotPtr test_obj)
   CollisionObj* current_ptr;
 
   // we should never assume list is empty but, ahh..
-  if (IsEmpty(collision_list)) return NULL;
+  if (IsEmpty(collision_list)) return false;
 
   current_ptr = collision_list->front;
 

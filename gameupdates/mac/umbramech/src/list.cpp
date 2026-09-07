@@ -87,7 +87,10 @@ void DeleteNode(List* list, int val)
       if (previous != NULL)
       {
         previous->next = current->next;
-
+      }
+      else
+      {
+        list->head = current->next;
       }
 
       RELEASE_OBJECT(current);
