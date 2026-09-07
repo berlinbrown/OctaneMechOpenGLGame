@@ -150,6 +150,8 @@ float FindAngle(float dir, float x1, float y1, float x2, float y2)
   float dist;
   float angle;
 
+  if (x1 == x2 && y1 == y2) return dir;
+
   if (x1 < x2)
   {
     dx = x2 - x1;
@@ -708,7 +710,7 @@ void DrawBots(void)
 
   for (index = 0; index < MAX_BOTS; index++)
   {
-    ProcessBotEvent(bot_cluster[index]);
+    if (!ant_globals->paused) ProcessBotEvent(bot_cluster[index]);
 
     RenderBot(bot_cluster[index]);
   }

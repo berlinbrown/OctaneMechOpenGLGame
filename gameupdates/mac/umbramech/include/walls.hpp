@@ -43,3 +43,6 @@ void Delete_Wall_List(void);
 void Print_Wall_List(void);
 
 void CreateWalls(void);
+
+// Includes collision padding plus the mech footprint. Safe before wall creation.
+bool IsBuildingClear(float x, float z, float radius);

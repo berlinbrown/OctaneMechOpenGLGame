@@ -120,3 +120,5 @@ extern int current_camera;
 #define SELECT_CAMERA(idx) (current_camera = (idx))
 
 void ToggleViewMode(void);
+
+float GetBotHeading(void);

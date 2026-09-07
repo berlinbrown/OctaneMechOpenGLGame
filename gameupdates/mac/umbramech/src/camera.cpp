@@ -63,6 +63,8 @@ static DriverBotPtr camera_bot;
 void GetCameraBot(DriverBotPtr bot) { camera_bot = bot; }
 
 // GetBotX
+float GetBotHeading(void) { return camera_bot ? camera_bot->heading : 0.0f; }
+
 float GetBotX(void) { return camera_bot->x; }
 
 float GetBotY(void) { return camera_bot->y; }
@@ -723,8 +725,8 @@ static void ThirdPersonMode(bool* keys)
 // Note: this should be called in WinProc, Winmain
 void ToggleViewMode(void)
 {
-  // cant change mode while paused
-  if (ant_globals->paused == 1) return;
+  // Camera selection also works in the paused startup menu.
+  if (!camera_bot) return;
 
   if (camera_bot->id == PLAYER_0)
   {
@@ -754,6 +756,7 @@ void ToggleViewMode(void)
 // Also handles the following camera
 void HandleCameraKeys(bool* keys)
 {
+  if (!ant_globals) return;
   if (!camera_bot)
   {
     if ((sLogCounter++ % 120) == 0)
